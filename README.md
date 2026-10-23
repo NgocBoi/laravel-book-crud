@@ -12,14 +12,16 @@
 4. [Cài đặt Composer](#4-cài-đặt-composer)
 5. [Kiểm tra môi trường trước khi làm](#5-kiểm-tra-môi-trường-trước-khi-làm)
 6. [Tạo dự án Laravel mới](#6-tạo-dự-án-laravel-mới)
-7. [Cấu hình database](#7-cấu-hình-database)
+7. [Cấu hình database, Storage Link & Dữ liệu mẫu](#7-cấu-hình-database-storage-link--dữ-liệu-mẫu)
 8. [Thành viên clone repository](#8-thành-viên-clone-repository)
-9. [Chạy dự án hằng ngày](#9-chạy-dự-án-hằng-ngày)
-10. [Lỗi thường gặp và cách xử lý](#10-lỗi-thường-gặp-và-cách-xử-lý)
-11. [Nhật ký xử lý lỗi bảng `sessions`](#11-nhật-ký-xử-lý-lỗi-bảng-sessions)
-12. [Quy ước Git của nhóm](#12-quy-ước-git-của-nhóm)
-13. [Checklist thành viên mới](#13-checklist-thành-viên-mới)
-14. [Liên kết chính thức](#14-liên-kết-chính-thức)
+9. [Phân công nhiệm vụ nhóm 8 thành viên](#9-phân-công-nhiệm-vụ-nhóm-8-thành-viên)
+10. [Cấu trúc CSDL, Model quan hệ & Quy ước lập trình](#10-cấu-trúc-csdl-model-quan-hệ--quy-ước-lập-trình)
+11. [Chạy dự án hằng ngày](#11-chạy-dự-án-hằng-ngày)
+12. [Lỗi thường gặp và cách xử lý](#12-lỗi-thường-gặp-và-cách-xử-lý)
+13. [Nhật ký xử lý lỗi bảng `sessions`](#13-nhật-ký-xử-lý-lỗi-bảng-sessions)
+14. [Quy ước Git của nhóm](#14-quy-ước-git-của-nhóm)
+15. [Checklist thành viên mới](#15-checklist-thành-viên-mới)
+16. [Liên kết chính thức](#16-liên-kết-chính-thức)
 
 ---
 
@@ -294,7 +296,28 @@ C:\xampp\php_new\php.exe artisan config:clear
 C:\xampp\php_new\php.exe artisan migrate
 ```
 
-Laravel sẽ chạy các migration chưa được ghi nhận trong bảng `migrations`.
+Laravel sẽ tạo bảng `categories`, `books` (kèm SoftDeletes) cùng các bảng mặc định của hệ thống (`users`, `sessions`, `cache`, `jobs`).
+
+### 7.4. Tạo liên kết Symbolic Link cho ảnh lưu trữ
+
+Hệ thống lưu trữ ảnh bìa sách trong thư mục `storage/app/public/books`. Để trình duyệt web có thể truy cập được ảnh qua URL `public/storage/books/...`, bắt buộc chạy lệnh:
+
+```bat
+C:\xampp\php_new\php.exe artisan storage:link
+```
+
+### 7.5. Chạy Seeder nạp dữ liệu sách thật
+
+Dự án đã chuẩn bị sẵn bộ dữ liệu **6 thể loại** và **58 đầu sách thực tế** kèm đầy đủ ảnh bìa:
+
+```bat
+C:\xampp\php_new\php.exe artisan db:seed
+```
+
+Lệnh này sẽ tự động chạy:
+- `CategorySeeder`: Nạp 6 danh mục chính (*Tâm Lý - Kĩ Năng Sống*, *Văn Học*, *Kinh Tế*, *Thiếu Nhi*, *Sách Học Ngoại Ngữ*, *Sách Giáo Khoa - Tham Khảo*).
+- `BookSeeder`: Nạp 58 đầu sách từ file JSON chuẩn hóa, map đúng danh mục, đồng bộ ảnh bìa vào `storage/app/public/books`.
+- Tạo sẵn tài khoản Admin dùng thử: `admin@example.com` / `password`.
 
 **Cảnh báo:** `migrate:fresh` xóa toàn bộ bảng rồi tạo lại. Không dùng trên database có dữ liệu cần giữ.
 
@@ -387,22 +410,33 @@ C:\xampp\php_new\php.exe artisan key:generate
 
 Lệnh này tạo khóa cho môi trường local của thành viên. Không gửi hoặc commit `.env` của máy cá nhân cho cả nhóm.
 
-### 8.6. Tạo database và migrate
+### 8.6. Tạo database, liên kết storage và nạp dữ liệu mẫu
 
-Tạo database `book_store_db` trong phpMyAdmin, rồi chạy:
+1. Mở phpMyAdmin và tạo database `book_store_db`.
+2. Tạo symbolic link cho thư viện ảnh:
+
+```bat
+C:\xampp\php_new\php.exe artisan storage:link
+```
+
+3. Chạy migration tạo cấu trúc bảng:
 
 ```bat
 C:\xampp\php_new\php.exe artisan config:clear
 C:\xampp\php_new\php.exe artisan migrate
 ```
 
-Chỉ chạy seeder nếu nhóm đã cung cấp và hướng dẫn sử dụng:
+4. Nạp 58 cuốn sách mẫu và tài khoản quản trị:
 
 ```bat
 C:\xampp\php_new\php.exe artisan db:seed
 ```
 
-Không chạy `migrate:fresh` nếu chưa chắc database có thể xóa.
+Tài khoản Admin mặc định:
+- **Email:** `admin@example.com`
+- **Mật khẩu:** `password`
+
+Không tự ý chạy `migrate:fresh` nếu chưa chắc chắn có thể xóa sạch CSDL.
 
 ### 8.7. Frontend (nếu có)
 
@@ -434,7 +468,48 @@ Mở URL được in trong terminal.
 
 ---
 
-## 9. Chạy dự án hằng ngày
+## 9. Phân công nhiệm vụ nhóm 8 thành viên
+
+Dự án được phân rã thành các tính năng độc lập, mỗi thành viên chịu trách nhiệm các file riêng biệt nhằm tránh xung đột mã nguồn (dựa trên kế hoạch chi tiết tại [KeHoachTrienKhaiDuAn.xlsx](public/KeHoachTrienKhaiDuAn.xlsx)):
+
+| TT | Vai trò / Tính năng | Nhiệm vụ chính | Các file phụ trách riêng (Không đụng người khác) | Kiến thức Laravel áp dụng |
+|:---:|---|---|---|---|
+| **TV1** | **Kiến trúc dữ liệu & Khởi tạo** | - Khởi tạo Repo Git, file `.env.example`<br>- Viết Migration bảng `categories` và `books`<br>- Viết `CategorySeeder` & `BookSeeder` nạp 58 cuốn sách thật kèm ảnh vào CSDL | - `database/migrations/...`<br>- `database/seeders/CategorySeeder.php`<br>- `database/seeders/BookSeeder.php`<br>- `app/Models/Category.php`<br>- `app/Models/Book.php` | Migration, Foreign Key, Model Relationship (`hasMany`, `belongsTo`), Database Seeding |
+| **TV2** | **Hiển thị danh sách & Bộ lọc** | - Xây dựng giao diện danh sách sách (`index`)<br>- Tìm kiếm từ khóa theo nhan đề, tác giả, NXB<br>- Lọc theo thể loại, khoảng giá tiền<br>- Sắp xếp theo giá tăng/giảm, mới nhất | - `app/Http/Controllers/BookController.php` (hàm `index`)<br>- `resources/views/books/index.blade.php`<br>- `resources/views/books/partials/filter-bar.blade.php` | Eloquent Query Scope, `when()`, Pagination Bootstrap 5, `withQueryString()` |
+| **TV3** | **Thêm mới & Upload ảnh** | - Form thêm mới đầu sách có validate kỹ càng<br>- Xử lý upload ảnh vào `storage/app/public/books`<br>- Viết JS xem trước ảnh (Preview) ngay khi chọn file<br>- Validate mã sách không trùng, giá > 0 | - `app/Http/Requests/StoreBookRequest.php`<br>- `resources/views/books/create.blade.php`<br>- `BookController.php` (hàm `create`, `store`) | Form Request Validation, File Upload, File System (`Storage::disk`), JavaScript DOM |
+| **TV4** | **Chi tiết & Gợi ý** | - Thiết kế trang xem chi tiết 1 đầu sách như Tiki/Fahasa<br>- Hiển thị thông số sách, tóm tắt nội dung<br>- Truy vấn danh sách "Sách cùng thể loại gợi ý" ở phía dưới<br>- Làm popup xem nhanh (Quick View Modal) | - `resources/views/books/show.blade.php`<br>- `resources/views/books/partials/quick-view-modal.blade.php`<br>- `BookController.php` (hàm `show`) | Route Model Binding, Sub-query Eloquent, Bootstrap Modal |
+| **TV5** | **Cập nhật & Vòng đời ảnh** | - Form cập nhật thông tin sách<br>- Khóa không cho sửa `book_code` (chỉ đọc readonly)<br>- Xử lý logic ảnh: Nếu người dùng upload ảnh mới $\rightarrow$ tự động xóa file ảnh cũ trong storage tránh rác ổ cứng | - `app/Http/Requests/UpdateBookRequest.php`<br>- `resources/views/books/edit.blade.php`<br>- `BookController.php` (hàm `edit`, `update`) | `Storage::disk('public')->delete()`, Form Validation ngoại trừ ID hiện tại |
+| **TV6** | **Xóa an toàn & Thùng rác** | - Không xóa cứng mà dùng Soft Delete của Laravel<br>- Làm trang Thùng rác (`books/trash`) xem các sách đã xóa<br>- Nút Khôi phục (Restore) sách<br>- Nút Xóa vĩnh viễn (Force Delete) | - Migration bổ sung `softDeletes()`<br>- `resources/views/books/trash.blade.php`<br>- `app/Http/Controllers/BookTrashController.php` | SoftDeletes Trait, `withTrashed()`, `restore()`, `forceDelete()` |
+| **TV7** | **Nghiệp vụ Nhập kho & Tồn kho** | - Đặc tả yêu cầu: "Cập nhật thêm số lượng cho đầu sách đã có"<br>- Làm Modal "Nhập thêm hàng"<br>- Cộng dồn số lượng `increment('stock', $qty)`<br>- Đổi màu cảnh báo nếu số lượng = 0 (Hết hàng) hoặc < 5 (Sắp hết) | - `resources/views/books/partials/stock-modal.blade.php`<br>- `app/Http/Controllers/BookStockController.php`<br>- Thêm route `POST /books/{id}/stock-in` | Eloquent `increment()`, Business Logic tồn kho, Badge động |
+| **TV8** | **Xuất báo cáo & Phân quyền bảo mật** | - Tính năng nút Xuất danh sách ra file Excel / CSV (dùng thư viện `maatwebsite/excel`)<br>- Phân quyền: Tạo `BookPolicy`<br>+ Admin: thấy nút Thêm, Sửa, Xóa, Nhập kho.<br>+ Khách/User: chỉ thấy nút Xem chi tiết | - `app/Http/Controllers/BookExportController.php`<br>- `app/Policies/BookPolicy.php`<br>- `resources/views/books/partials/action-buttons.blade.php` | Laravel Packages, Laravel Authorization (Gates/Policies), Blade Directive `@can` |
+
+---
+
+## 10. Cấu trúc CSDL, Model quan hệ & Quy ước lập trình
+
+### 10.1. Thiết kế bảng CSDL
+
+- **`categories`**: `id`, `name`, `slug`, `description`, `timestamps`.
+- **`books`**: `id`, `category_id` (foreign key $\rightarrow$ `categories.id`), `book_code` (unique), `isbn`, `title`, `author`, `translator`, `publisher`, `supplier`, `publish_year`, `language`, `weight`, `dimensions`, `pages`, `original_price`, `price`, `stock`, `sold_quantity`, `cover_image`, `description`, `is_trending`, `badge_type`, `timestamps`, `deleted_at` (`softDeletes`).
+
+### 10.2. Quy ước dùng Model & Lấy ảnh bìa
+
+1. **Hiển thị ảnh bìa:** Toàn bộ ảnh được lưu trữ trong `storage/app/public/books/`. Khi render trong Blade View:
+   ```blade
+   <img src="{{ asset('storage/books/' . $book->cover_image) }}" alt="{{ $book->title }}">
+   ```
+   Hoặc gọi qua accessor định nghĩa sẵn trong Model:
+   ```blade
+   <img src="{{ $book->cover_image_url }}" alt="{{ $book->title }}">
+   ```
+2. **Số lượng tồn kho (`stock` và `quantity`):**
+   Trong CSDL cột tên là `stock`. Model `Book` đã có Accessor đồng bộ alias: `$book->quantity` $\longleftrightarrow$ `$book->stock`. Thành viên TV7 có thể dùng linh hoạt cả 2 cách gọi.
+3. **Mã sách (`book_code`):**
+   Định dạng `BK-{ISBN}` (ví dụ `BK-8935325032561`). Mã này là duy nhất; khi sửa sách (TV5) phải để trường này ở chế độ `readonly`.
+
+---
+
+## 11. Chạy dự án hằng ngày
 
 Khi đã cài đặt xong, thông thường bạn chỉ cần:
 
@@ -470,7 +545,7 @@ Nếu Composer PHAR không nằm ở đường dẫn ví dụ, hãy thay bằng 
 
 ---
 
-## 10. Lỗi thường gặp và cách xử lý
+## 12. Lỗi thường gặp và cách xử lý
 
 ### Lỗi 1 — `php -v` vẫn ra PHP 8.2
 
@@ -639,7 +714,7 @@ Không chia sẻ file `.env` công khai vì có thể chứa thông tin nhạy c
 
 ---
 
-## 11. Nhật ký xử lý lỗi bảng `sessions`
+## 13. Nhật ký xử lý lỗi bảng `sessions`
 
 Phần này ghi lại lỗi thực tế gặp trong quá trình thiết lập dự án.
 
@@ -807,7 +882,7 @@ Người dùng xác nhận website đã chạy được.
 
 ---
 
-## 12. Quy ước Git của nhóm
+## 14. Quy ước Git của nhóm
 
 ### Nên commit
 
@@ -851,7 +926,7 @@ Không tự ý chạy `composer update` hoặc `migrate:fresh` khi chưa có lý
 
 ---
 
-## 13. Checklist thành viên mới
+## 15. Checklist thành viên mới
 
 - [ ] Cài Git for Windows.
 - [ ] Cài XAMPP và xác nhận MySQL chạy được.
@@ -862,17 +937,19 @@ Không tự ý chạy `composer update` hoặc `migrate:fresh` khi chưa có lý
 - [ ] Clone đúng repository và branch.
 - [ ] Chạy `composer install`.
 - [ ] Tạo `.env` từ `.env.example`.
-- [ ] Tạo database đúng tên trong `.env`.
-- [ ] Chạy `php artisan key:generate` nếu cần.
-- [ ] Chạy `php artisan migrate`.
+- [ ] Tạo database `book_store_db` trong phpMyAdmin.
+- [ ] Chạy `php artisan key:generate`.
+- [ ] Chạy `php artisan storage:link` (Tạo liên kết thư mục ảnh bìa).
+- [ ] Chạy `php artisan migrate` (Tạo bảng categories và books).
+- [ ] Chạy `php artisan db:seed` (Nạp 58 đầu sách thật và tài khoản Admin).
 - [ ] Cài Node.js và chạy npm nếu dự án dùng Vite.
 - [ ] Chạy `php artisan serve`.
-- [ ] Mở được website tại URL hiển thị trong terminal.
+- [ ] Mở website tại URL hiển thị trong terminal, kiểm tra hiển thị 58 đầu sách kèm ảnh bìa.
 - [ ] Không commit `.env`, `vendor/` hoặc `node_modules/`.
 
 ---
 
-## 14. Liên kết chính thức
+## 16. Liên kết chính thức
 
 - Laravel: <https://laravel.com/docs>
 - Laravel installation: <https://laravel.com/docs/installation>
