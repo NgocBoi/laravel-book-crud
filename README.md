@@ -884,25 +884,6 @@ Người dùng xác nhận website đã chạy được.
 
 ## 14. Quy ước Git của nhóm
 
-### Nên commit
-
-- Mã nguồn dự án.
-- `composer.json`, `composer.lock`.
-- Migration, seeder, factory.
-- `.env.example` với giá trị mẫu không có bí mật.
-- `package.json` và lockfile npm nếu dự án dùng npm.
-- Tài liệu hướng dẫn và README.
-
-### Không nên commit
-
-- `.env` chứa cấu hình cá nhân hoặc bí mật.
-- `vendor/` (cài lại bằng Composer).
-- `node_modules/` (cài lại bằng npm).
-- Log và cache sinh tự động không cần thiết.
-- Mật khẩu database, API token hoặc khóa bí mật.
-
-Kiểm tra `.gitignore` của Laravel trước khi commit.
-
 ### Khi pull code mới
 
 ```bat
