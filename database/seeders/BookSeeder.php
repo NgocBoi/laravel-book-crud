@@ -16,14 +16,17 @@ class BookSeeder extends Seeder
      */
     public function run(): void
     {
-        // Đường dẫn file JSON
-        $jsonPath = storage_path('app/public/books.json');
+        // Đường dẫn file JSON: ưu tiên database/data/books.json -> storage/app/public/books.json -> public/books.json
+        $jsonPath = database_path('data/books.json');
+        if (!File::exists($jsonPath)) {
+            $jsonPath = storage_path('app/public/books.json');
+        }
         if (!File::exists($jsonPath)) {
             $jsonPath = public_path('books.json');
         }
 
         if (!File::exists($jsonPath)) {
-            $this->command->error("Không tìm thấy file books.json tại: {$jsonPath}");
+            $this->command->error("Không tìm thấy file books.json tại bất kỳ đường dẫn nào.");
             return;
         }
 

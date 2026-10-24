@@ -1,2 +1,5 @@
 *
 !.gitignore
+!books.json
+!books/
+!books/**
