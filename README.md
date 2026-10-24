@@ -1,272 +1,333 @@
-# Hướng dẫn thiết lập môi trường và khởi chạy Laravel — Book Management
+# TÀI LIỆU HƯỚNG DẪN KỸ THUẬT: CÀI ĐẶT VÀ PHÁT TRIỂN ỨNG DỤNG WEB VỚI LARAVEL
+## Bài thực hành: Quản lý đầu sách (CRUD) — Mô hình MVC
 
-> Tài liệu dành cho thành viên nhóm phát triển dự án **Book Management** trên Windows, sử dụng XAMPP, PHP 8.4, Composer, Laravel và MySQL.
->
-> **Quy ước:** Dự án đang sử dụng Laravel 13 và PHP 8.4.x. Trước khi đổi phiên bản, cả nhóm cần thống nhất và cập nhật tài liệu này. Các đường dẫn dưới đây dựa trên máy mẫu; nếu máy của bạn khác, hãy thay bằng đường dẫn thực tế.
+> **Học phần:** Phát triển ứng dụng web với mã nguồn mở  
+> **Đơn vị:** Khoa Công nghệ thông tin — Trường Kỹ thuật và Công nghệ — Đại học Trà Vinh  
+> **Lớp:** DA23TTD — **Nhóm thực hiện:** Nhóm 3  
+> **Trưởng nhóm:** Huỳnh Thị Ngọc Bội (MSSV: 110123071)  
+> **Nền tảng kỹ thuật:** Laravel 13, PHP 8.4.x, Composer 2.x, MySQL (XAMPP), Bootstrap 5
+
+---
 
 ## Mục lục
 
-1. [Môi trường cần có](#1-môi-trường-cần-có)
-2. [Cài đặt XAMPP](#2-cài-đặt-xampp)
-3. [Cài đặt PHP 8.4](#3-cài-đặt-php-84)
-4. [Cài đặt Composer](#4-cài-đặt-composer)
-5. [Kiểm tra môi trường trước khi làm](#5-kiểm-tra-môi-trường-trước-khi-làm)
-6. [Tạo dự án Laravel mới](#6-tạo-dự-án-laravel-mới)
-7. [Cấu hình database, Storage Link & Dữ liệu mẫu](#7-cấu-hình-database-storage-link--dữ-liệu-mẫu)
-8. [Thành viên clone repository](#8-thành-viên-clone-repository)
-9. [Phân công nhiệm vụ nhóm 8 thành viên](#9-phân-công-nhiệm-vụ-nhóm-8-thành-viên)
-10. [Cấu trúc CSDL, Model quan hệ & Quy ước lập trình](#10-cấu-trúc-csdl-model-quan-hệ--quy-ước-lập-trình)
-11. [Chạy dự án hằng ngày](#11-chạy-dự-án-hằng-ngày)
-12. [Lỗi thường gặp và cách xử lý](#12-lỗi-thường-gặp-và-cách-xử-lý)
-13. [Nhật ký xử lý lỗi bảng `sessions`](#13-nhật-ký-xử-lý-lỗi-bảng-sessions)
-14. [Quy ước Git của nhóm](#14-quy-ước-git-của-nhóm)
-15. [Checklist thành viên mới](#15-checklist-thành-viên-mới)
-16. [Liên kết chính thức](#16-liên-kết-chính-thức)
+1. [Giới thiệu và mục tiêu dự án](#1-giới-thiệu-và-mục-tiêu-dự-án)
+   - 1.1. Phạm vi dự án
+   - 1.2. Kết quả đầu ra yêu cầu
+   - 1.3. Luồng xử lý chuẩn theo mô hình MVC
+2. [Hướng dẫn thiết lập và khởi chạy dự án cho thành viên nhóm](#2-hướng-dẫn-thiết-lập-và-khởi-chạy-dự-án-cho-thành-viên-nhóm)
+   - 2.1. Quy trình thiết lập nhanh
+   - 2.2. Tài khoản kiểm thử hệ thống
+3. [Chuẩn bị môi trường và kiểm tra cài đặt](#3-chuẩn-bị-môi-trường-và-kiểm-tra-cài-đặt)
+   - 3.1. Bảng yêu cầu môi trường
+   - 3.2. Kiểm tra phiên bản công cụ
+   - 3.3. Cấu hình extension PHP 8.4
+4. [Nhận diện cấu trúc thư mục của dự án](#4-nhận-diện-cấu-trúc-thư-mục-của-dự-án)
+5. [Thiết kế cơ sở dữ liệu và cấu hình kết nối](#5-thiết-kế-cơ-sở-dữ-liệu-và-cấu-hình-kết-nối)
+   - 5.1. Sơ đồ quan hệ thực thể (ERD 3NF)
+   - 5.2. Đặc tả chi tiết các bảng dữ liệu
+   - 5.3. Tạo cơ sở dữ liệu và cấu hình file `.env`
+6. [Xây dựng chức năng CRUD theo mô hình MVC](#6-xây-dựng-chức-năng-crud-theo-mô-hình-mvc)
+   - 6.1. Định tuyến (Routes)
+   - 6.2. Bộ điều khiển (Controllers)
+   - 6.3. Mô hình dữ liệu (Models & Eloquent Relationships)
+   - 6.4. Giao diện người dùng (Blade Views & Bootstrap 5)
+   - 6.5. Quy ước xử lý ảnh bìa và số lượng kho
+7. [Phân công nhiệm vụ nhóm 8 thành viên](#7-phân-công-nhiệm-vụ-nhóm-8-thành-viên)
+8. [Quy ước làm việc với Git của nhóm](#8-quy-ước-làm-việc-với-git-của-nhóm)
+9. [Bảng tổng hợp các lỗi thực tế và cách xử lý](#9-bảng-tổng-hợp-các-lỗi-thực-tế-và-cách-xử-lý)
+10. [Kết luận và hướng phát triển](#10-kết-luận-và-hướng-phát-triển)
 
 ---
 
-## 1. Môi trường cần có
+## 1. Giới thiệu và mục tiêu dự án
 
-| Công cụ | Mục đích | Ghi chú |
-|---|---|---|
-| Windows 10/11 | Hệ điều hành | Máy cá nhân của thành viên |
-| Git for Windows | Clone, pull, commit, push | Cần quyền truy cập repository |
-| XAMPP | MySQL/MariaDB và phpMyAdmin | Apache không bắt buộc khi dùng `artisan serve` |
-| PHP 8.4.x | Chạy Laravel và Composer | Nhóm nên thống nhất cùng phiên bản |
-| Composer 2.x | Quản lý thư viện PHP | Phải chạy bằng PHP phù hợp |
-| VS Code | Viết code | Khuyến nghị |
-| Node.js/npm | Build frontend bằng Vite | Chỉ cần nếu repository dùng `package.json` |
+### 1.1. Phạm vi dự án
+Tài liệu hướng dẫn thiết lập môi trường phát triển, khởi tạo và cấu trúc dự án ứng dụng web với framework **Laravel 13 (PHP 8.4)**, kết nối hệ quản trị cơ sở dữ liệu **MySQL**, nhận diện vai trò các thành phần trong kiến trúc MVC và phát triển hoàn chỉnh chức năng CRUD (Create - Read - Update - Delete) cho hệ thống **Quản lý đầu sách (Book Management)**.
 
-### Đường dẫn mẫu
+Đối với nhóm đông người (8 thành viên), hệ thống mở rộng thêm cơ chế phân quyền (Administrator & User), tách chuẩn hóa dữ liệu Thể loại (`categories`), Tác giả (`authors`), Nhà xuất bản (`publishers`), dịch vụ lọc nâng cao (`BookFilterService`) và nghiệp vụ kiểm soát tồn kho (`stock_quantity`).
 
-Máy của người khởi tạo dự án có:
+### 1.2. Kết quả đầu ra yêu cầu
+- Khởi chạy thành công ứng dụng trên môi trường cục bộ (`localhost`).
+- Nhận diện và giải thích rõ vai trò của Route, Controller, Model, View, Form Request và Migration.
+- Thực hiện đầy đủ các thao tác xem danh sách, xem chi tiết, thêm mới, chỉnh sửa, xóa mềm (Soft Delete) và kiểm tra tính hợp lệ của dữ liệu đầu vào (Validation).
+- Toàn bộ mã nguồn được quản lý phiên bản trên GitHub, có tài liệu hướng dẫn và dữ liệu mẫu thực tế (58 cuốn sách kèm ảnh bìa).
+
+### 1.3. Luồng xử lý chuẩn theo mô hình MVC
 
 ```text
-C:\xampp\php\php.exe          PHP 8.2.12 (PHP mặc định trước đó)
-C:\xampp\php_new\php.exe     PHP 8.4.26 (dùng chạy Laravel)
-C:\xampp\htdocs\book-management
+  [ Trình duyệt (Browser / Client) ]
+                 │
+                 │ 1. Gửi HTTP Request (VD: GET /books)
+                 ▼
+     [ Route (routes/web.php) ]
+                 │
+                 │ 2. Khớp URI và gọi Action tương ứng
+                 ▼
+  [ Controller (app/Http/Controllers) ]
+                 │
+                 │ 3. Gọi Model truy vấn dữ liệu
+                 ▼
+    [ Model Eloquent (app/Models) ]
+                 │
+                 │ 4. Thực thi câu lệnh SQL (ORM)
+                 ▼
+     [ Cơ sở dữ liệu (MySQL) ]
+                 │
+                 │ 5. Trả dữ liệu bản ghi về Model
+                 ▼
+  [ Controller (app/Http/Controllers) ]
+                 │
+                 │ 6. Xử lý logic và truyền dữ liệu sang View
+                 ▼
+    [ View Blade (resources/views) ]
+                 │
+                 │ 7. Render mã HTML hoàn chỉnh
+                 ▼
+  [ Trình duyệt (Browser / Client) ]
 ```
-
-**Quan trọng:** Tạo thư mục `php_new` không tự thay PHP trong PATH. Khi nhập `php -v`, Windows có thể vẫn gọi PHP 8.2. Trong tài liệu này, lệnh dùng PHP 8.4 bằng đường dẫn đầy đủ để tránh nhầm phiên bản.
 
 ---
 
-## 2. Cài đặt XAMPP
+## 2. Hướng dẫn thiết lập và khởi chạy dự án cho thành viên nhóm
 
-1. Tải XAMPP từ <https://www.apachefriends.org/>.
-2. Cài đặt, ví dụ tại `C:\xampp`.
-3. Mở XAMPP Control Panel.
-4. Khởi động **MySQL** khi cần dùng database.
-5. Mở <http://localhost/phpmyadmin/> để xác nhận phpMyAdmin hoạt động.
+Mục này dành riêng cho các thành viên trong nhóm sau khi clone mã nguồn từ GitHub về máy cá nhân để thiết lập môi trường chạy được ngay trong vài phút.
 
-Laravel trong hướng dẫn này chạy bằng:
+### 2.1. Quy trình thiết lập nhanh
 
-```bat
-C:\xampp\php_new\php.exe artisan serve
+Mở Terminal (**Git Bash**, **PowerShell** hoặc **CMD**) tại thư mục dự án vừa clone và thực hiện tuần tự các bước sau:
+
+#### Bước 1. Cài đặt các thư viện phụ thuộc (Vendor)
+```bash
+composer install
+```
+*(Lưu ý: Luôn dùng `composer install` để cài đặt theo đúng phiên bản trong `composer.lock`, không dùng `composer update`).*
+
+#### Bước 2. Tạo file cấu hình môi trường `.env`
+```bash
+copy .env.example .env
 ```
 
-Vì vậy, không nhất thiết phải khởi động Apache để chạy ứng dụng trong môi trường phát triển. Chỉ khởi động Apache nếu nhóm cần cấu hình hoặc dùng dịch vụ đó.
+#### Bước 3. Sinh khóa ứng dụng (App Key)
+```bash
+php artisan key:generate
+```
+
+#### Bước 4. Tạo cơ sở dữ liệu trong MySQL
+1. Khởi động **MySQL** từ bảng điều khiển XAMPP Control Panel.
+2. Truy cập phpMyAdmin tại: `http://localhost/phpmyadmin/`.
+3. Tạo mới database có tên: `book_store_db` (chọn bảng mã `utf8mb4_unicode_ci`).
+4. Kiểm tra file `.env` đảm bảo thông số kết nối khớp:
+   ```dotenv
+   DB_CONNECTION=mysql
+   DB_HOST=127.0.0.1
+   DB_PORT=3306
+   DB_DATABASE=book_store_db
+   DB_USERNAME=root
+   DB_PASSWORD=
+   ```
+
+#### Bước 5. Tạo liên kết Symbolic Link cho thư mục ảnh bìa
+```bash
+php artisan storage:link
+```
+*(Lệnh này tạo liên kết từ `public/storage` sang `storage/app/public` để trình duyệt web hiển thị được 58 ảnh bìa sách).*
+
+#### Bước 6. Tạo bảng và nạp dữ liệu mẫu
+```bash
+php artisan migrate --seed
+```
+Lệnh này sẽ tự động khởi tạo toàn bộ cấu trúc bảng và nạp sẵn **6 thể loại**, **58 tác giả**, **20 nhà xuất bản**, **58 đầu sách thực tế** và **2 tài khoản kiểm thử**.
+
+#### Bước 7. Khởi chạy máy chủ nội bộ
+```bash
+php artisan serve
+```
+Mở trình duyệt truy cập: `http://127.0.0.1:8000` hoặc `http://localhost:8000`.
+
+> **Ghi chú về đường dẫn PHP:** Nếu trên máy bạn có nhiều phiên bản PHP và lệnh `php` chưa trỏ về PHP 8.4, hãy thay thế `php` bằng đường dẫn thực tế, ví dụ: `C:\xampp\php_new\php.exe artisan ...`
+
+### 2.2. Tài khoản kiểm thử hệ thống
+
+Sau khi chạy lệnh seed, hệ thống cung cấp sẵn 2 tài khoản phân quyền để kiểm thử:
+
+| Vai trò | Địa chỉ Email | Mật khẩu | Quyền hạn |
+|---|---|---|---|
+| **Quản trị viên (Admin)** | `admin@example.com` | `password` | Toàn quyền thêm, sửa, xóa, nhập kho, quản trị danh mục |
+| **Nhân viên / Bạn đọc (User)** | `user@example.com` | `password` | Xem danh sách, tìm kiếm, lọc, xem chi tiết sách |
 
 ---
 
-## 3. Cài đặt PHP 8.4
+## 3. Chuẩn bị môi trường và kiểm tra cài đặt
 
-### 3.1. Tải PHP
+### 3.1. Bảng yêu cầu môi trường
 
-1. Mở <https://windows.php.net/download/>.
-2. Chọn bản PHP 8.4 phù hợp Windows và kiến trúc máy (thường là x64).
-3. Với mục đích chạy CLI, tải gói PHP phù hợp theo hướng dẫn chính thức của PHP.
-4. Giải nén vào một thư mục cố định, ví dụ `C:\xampp\php_new`.
+| Thành phần | Phiên bản yêu cầu | Mục đích sử dụng | Ghi chú |
+|---|---|---|---|
+| **Hệ điều hành** | Windows 10 / 11 | Môi trường phát triển cục bộ | Máy cá nhân của thành viên |
+| **PHP** | 8.4.x (tối thiểu >= 8.3) | Thông dịch và thực thi mã nguồn Laravel | Bật đủ các extension cần thiết |
+| **Composer** | 2.x | Quản lý các gói thư viện mã nguồn PHP | Chạy đồng bộ cùng phiên bản PHP |
+| **Hệ quản trị CSDL** | MySQL / MariaDB (XAMPP) | Lưu trữ cơ sở dữ liệu `book_store_db` | Khởi động dịch vụ qua XAMPP Control Panel |
+| **Git for Windows** | Phiên bản mới nhất | Quản lý mã nguồn, tạo nhánh và commit | Kết nối với GitHub repository |
+| **IDE** | Visual Studio Code | Trình soạn thảo viết mã nguồn | Khuyến nghị cài Extension Laravel |
 
-Không thay thế thư mục `C:\xampp\php` đang được XAMPP sử dụng nếu chưa biết cách cấu hình PHP cho Apache. Việc thay sai phiên bản có thể làm Apache lỗi DLL.
+### 3.2. Kiểm tra phiên bản công cụ
 
-### 3.2. Tạo và cấu hình `php.ini`
+Mở cửa sổ dòng lệnh và thực hiện kiểm tra:
 
-Trong `C:\xampp\php_new`, nếu chỉ có `php.ini-development` và `php.ini-production`:
+```bash
+php -v
+composer --version
+git --version
+```
+**Kết quả mong đợi:** Các lệnh hiển thị thông tin phiên bản rõ ràng, không xuất hiện thông báo *"not recognized"*.
 
-1. Sao chép `php.ini-development`.
-2. Đổi tên bản sao thành `php.ini`.
-3. Mở `C:\xampp\php_new\php.ini`.
-4. Kiểm tra các cấu hình extension cần thiết. Tùy bản PHP, bỏ dấu `;` ở đầu dòng nếu extension đã có sẵn:
+### 3.3. Cấu hình extension PHP 8.4
+
+Mở file cấu hình `php.ini` đang sử dụng và kiểm tra đảm bảo các extension sau đã được kích hoạt (bỏ dấu `;` ở đầu dòng):
 
 ```ini
-extension_dir = "ext"
 extension=curl
 extension=fileinfo
 extension=mbstring
-extension=mysqli
 extension=openssl
 extension=pdo_mysql
 extension=zip
 ```
 
-Tên extension là `zip`, không phải `unzip`. Chỉ bật extension khi file DLL tương ứng tồn tại trong thư mục `ext`.
+---
 
-### 3.3. Kiểm tra PHP
+## 4. Nhận diện cấu trúc thư mục của dự án
 
-Mở CMD mới và chạy:
+Bảng phân tích vai trò các thư mục và tập tin cốt lõi trong dự án theo chuẩn kiến trúc Laravel:
 
-```bat
-C:\xampp\php_new\php.exe -v
-C:\xampp\php_new\php.exe --ini
-C:\xampp\php_new\php.exe -m
-```
-
-Kết quả cần xác nhận:
-
-- Phiên bản là PHP 8.4.x.
-- File cấu hình được tải là `C:\xampp\php_new\php.ini`.
-- Danh sách module có các extension Laravel yêu cầu, đặc biệt `openssl`, `mbstring`, `pdo_mysql` và `zip`.
-
-Để kiểm tra nhanh một số extension:
-
-```bat
-C:\xampp\php_new\php.exe -m | findstr /I "zip openssl mbstring pdo_mysql"
-```
-
-### 3.4. PHP PATH (tùy chọn)
-
-Nếu muốn lệnh `php` gọi PHP 8.4 mặc định:
-
-1. Mở **Environment Variables** của Windows.
-2. Chỉnh biến `Path`.
-3. Đưa `C:\xampp\php_new` lên trước `C:\xampp\php`.
-4. Đóng CMD/PowerShell cũ và mở cửa sổ mới.
-5. Kiểm tra:
-
-```bat
-where php
-php -v
-```
-
-Cách này chỉ thay PHP CLI được gọi qua PATH; không nhất thiết thay PHP mà Apache của XAMPP sử dụng. Thành viên không bắt buộc chỉnh PATH nếu luôn dùng đường dẫn đầy đủ.
+| Thư mục / Tập tin | Vai trò trong hệ thống | Thành phần MVC |
+|---|---|:---:|
+| `app/Models/` | Chứa các lớp thực thể dữ liệu Eloquent ORM (`Book`, `Category`, `Author`, `Publisher`, `User`), định nghĩa quan hệ và quy tắc truy vấn | **Model** |
+| `app/Http/Controllers/` | Chứa các lớp điều khiển tiếp nhận yêu cầu từ Route, tương tác với Model và trả về kết quả sang View | **Controller** |
+| `app/Http/Requests/` | Chứa các lớp Form Request phục vụ xác thực dữ liệu đầu vào (Validation) độc lập | **Request** |
+| `app/Services/` | Chứa các lớp xử lý nghiệp vụ chuyên biệt (ví dụ `BookFilterService` lọc sách) | **Service** |
+| `resources/views/` | Chứa các tệp giao diện sử dụng Blade Template Engine, hiển thị dữ liệu cho người dùng | **View** |
+| `routes/web.php` | Định nghĩa toàn bộ danh sách điểm cuối URL và ánh xạ tới phương thức Controller | **Route** |
+| `database/migrations/` | Chứa các file định nghĩa cấu trúc bảng CSDL theo lịch sử phiên bản | **Migration** |
+| `database/seeders/` | Chứa các file nạp dữ liệu mẫu ban đầu cho CSDL | **Seeder** |
+| `database/data/` | Lưu trữ file dữ liệu mẫu chuẩn hóa (`books.json`) để Git theo dõi đồng bộ | **Data Asset** |
+| `storage/app/public/books/` | Lưu trữ các tập tin ảnh bìa sách tải lên hệ thống | **Storage** |
+| `public/` | Thư mục công khai của web server, chứa `index.php` và symlink `storage` | **Public** |
+| `.env` | Tập tin cấu hình môi trường cục bộ (không đưa lên GitHub) | **Config** |
 
 ---
 
-## 4. Cài đặt Composer
+## 5. Thiết kế cơ sở dữ liệu và cấu hình kết nối
 
-### 4.1. Tải và cài
-
-1. Mở <https://getcomposer.org/download/>.
-2. Tải `Composer-Setup.exe` cho Windows.
-3. Chạy trình cài đặt.
-4. Khi được hỏi đường dẫn PHP executable, chọn:
+### 5.1. Sơ đồ quan hệ thực thể (ERD Chuẩn 3NF)
 
 ```text
-C:\xampp\php_new\php.exe
+    ┌──────────────┐                 ┌────────────────────┐
+    │  categories  │1               N│       books        │
+    │──────────────│─────────────────│────────────────────│
+    │ id (PK)      │                 │ id (PK)            │
+    │ name         │                 │ category_id (FK)   │
+    │ slug         │                 │ author_id (FK)     │
+    └──────────────┘                 │ publisher_id (FK)  │
+                                     │ book_code (Unique) │
+    ┌──────────────┐1               N│ isbn               │
+    │   authors    │─────────────────│ title              │
+    │──────────────│                 │ price              │
+    │ id (PK)      │                 │ stock_quantity     │
+    │ name         │                 │ cover_image        │
+    │ slug         │                 │ deleted_at (Soft)  │
+    └──────────────┘                 └────────────────────┘
+                                               │N
+    ┌──────────────┐1                          │
+    │  publishers  │───────────────────────────┘
+    │──────────────│
+    │ id (PK)      │
+    │ name         │
+    │ slug         │
+    └──────────────┘
 ```
 
-5. Hoàn tất cài đặt.
-6. Đóng và mở lại terminal.
+### 5.2. Đặc tả chi tiết các bảng dữ liệu
 
-### 4.2. Kiểm tra Composer
+#### Bảng `categories` (Thể loại sách)
+| Tên cột | Kiểu dữ liệu | Ràng buộc | Ý nghĩa |
+|---|---|---|---|
+| `id` | BIGINT UNSIGNED | Primary Key, Auto Increment | Khóa chính thể loại |
+| `name` | VARCHAR(150) | Unique, Not Null | Tên thể loại sách |
+| `slug` | VARCHAR(150) | Unique, Not Null | Đường dẫn thân thiện SEO |
+| `description` | TEXT | Nullable | Mô tả tóm tắt thể loại |
+| `timestamps` | TIMESTAMP | Nullable | Thời gian tạo và cập nhật |
 
-```bat
-composer --version
-where composer
+#### Bảng `authors` (Tác giả)
+| Tên cột | Kiểu dữ liệu | Ràng buộc | Ý nghĩa |
+|---|---|---|---|
+| `id` | BIGINT UNSIGNED | Primary Key, Auto Increment | Khóa chính tác giả |
+| `name` | VARCHAR(150) | Not Null | Họ tên tác giả |
+| `slug` | VARCHAR(150) | Unique, Not Null | Đường dẫn định danh tác giả |
+| `bio` | TEXT | Nullable | Tiểu sử tác giả |
+| `avatar` | VARCHAR(255) | Nullable | Đường dẫn ảnh đại diện |
+| `timestamps` | TIMESTAMP | Nullable | Thời gian tạo và cập nhật |
+
+#### Bảng `publishers` (Nhà xuất bản)
+| Tên cột | Kiểu dữ liệu | Ràng buộc | Ý nghĩa |
+|---|---|---|---|
+| `id` | BIGINT UNSIGNED | Primary Key, Auto Increment | Khóa chính nhà xuất bản |
+| `name` | VARCHAR(150) | Unique, Not Null | Tên nhà xuất bản |
+| `slug` | VARCHAR(150) | Unique, Not Null | Đường dẫn định danh NXB |
+| `email` | VARCHAR(100) | Nullable | Email liên hệ NXB |
+| `phone` | VARCHAR(30) | Nullable | Số điện thoại liên hệ |
+| `address` | VARCHAR(255) | Nullable | Địa chỉ trụ sở NXB |
+| `description` | TEXT | Nullable | Giới thiệu nhà xuất bản |
+| `timestamps` | TIMESTAMP | Nullable | Thời gian tạo và cập nhật |
+
+#### Bảng `books` (Bảng trọng tâm)
+| Tên cột | Kiểu dữ liệu | Ràng buộc | Ý nghĩa |
+|---|---|---|---|
+| `id` | BIGINT UNSIGNED | Primary Key, Auto Increment | Khóa chính đầu sách |
+| `category_id` | BIGINT UNSIGNED | Foreign Key $\rightarrow$ `categories(id)` | Tham chiếu thể loại sách |
+| `author_id` | BIGINT UNSIGNED | Foreign Key $\rightarrow$ `authors(id)` | Tham chiếu tác giả |
+| `publisher_id`| BIGINT UNSIGNED | Foreign Key $\rightarrow$ `publishers(id)`| Tham chiếu nhà xuất bản |
+| `book_code` | VARCHAR(50) | Unique, Not Null | Mã quản lý nội bộ (`BK-{ISBN}`) |
+| `isbn` | VARCHAR(20) | Index, Nullable | Mã tiêu chuẩn quốc tế ISBN |
+| `title` | VARCHAR(255) | Not Null | Nhan đề tác phẩm |
+| `translator` | VARCHAR(255) | Nullable | Người dịch |
+| `supplier` | VARCHAR(255) | Nullable | Nhà phát hành / Nhà cung cấp |
+| `publish_year`| INT | Nullable | Năm xuất bản |
+| `language` | VARCHAR(50) | Default: 'Tiếng Việt' | Ngôn ngữ phát hành |
+| `weight` | INT | Nullable | Trọng lượng ấn phẩm (gram) |
+| `dimensions` | VARCHAR(100) | Nullable | Kích thước (dài x rộng x dày) |
+| `pages` | INT | Nullable | Số trang sách |
+| `original_price`| DECIMAL(12,2)| Default: 0 | Giá bìa niêm yết (VNĐ) |
+| `price` | DECIMAL(12,2)| Default: 0 | Giá bán thực tế (VNĐ) |
+| `stock_quantity`| INT | Default: 0, Unsigned | Số lượng tồn kho thực tế |
+| `sold_quantity` | INT | Default: 0, Unsigned | Số lượng đã bán |
+| `cover_image` | VARCHAR(255) | Nullable | Tên tệp ảnh bìa lưu trữ |
+| `description` | LONGTEXT | Nullable | Tóm tắt nội dung chi tiết |
+| `is_trending` | BOOLEAN | Default: false | Đánh dấu sách xu hướng |
+| `badge_type` | VARCHAR(50) | Nullable | Huy hiệu hiển thị (`best-seller`) |
+| `timestamps` | TIMESTAMP | Nullable | Thời điểm tạo và sửa đổi |
+| `deleted_at` | TIMESTAMP | Nullable, Index | Dấu thời gian xóa mềm (Soft Delete) |
+
+#### Bảng `users` (Tài khoản & Phân quyền)
+| Tên cột | Kiểu dữ liệu | Ràng buộc | Ý nghĩa |
+|---|---|---|---|
+| `id` | BIGINT UNSIGNED | Primary Key, Auto Increment | Khóa chính người dùng |
+| `name` | VARCHAR(255) | Not Null | Tên hiển thị người dùng |
+| `email` | VARCHAR(255) | Unique, Not Null | Địa chỉ hòm thư đăng nhập |
+| `password` | VARCHAR(255) | Not Null | Mật khẩu đã mã hóa (Bcrypt) |
+| `role` | VARCHAR(30) | Default: 'user' | Vai trò: `admin` hoặc `user` |
+| `remember_token`| VARCHAR(100)| Nullable | Token duy trì đăng nhập |
+| `timestamps` | TIMESTAMP | Nullable | Thời điểm khởi tạo tài khoản |
+
+### 5.3. Tạo cơ sở dữ liệu và cấu hình file `.env`
+
+Tạo database trong phpMyAdmin hoặc qua MySQL Client:
+```sql
+CREATE DATABASE book_store_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 ```
 
-Nếu cài bằng Composer Windows Installer, file PHAR thường nằm tại:
-
-```text
-C:\ProgramData\ComposerSetup\bin\composer.phar
-```
-
-Đây là đường dẫn mẫu, không đảm bảo giống trên mọi máy. Kiểm tra file có tồn tại trước khi dùng.
-
-Kiểm tra Composer bằng PHP 8.4:
-
-```bat
-C:\xampp\php_new\php.exe C:\ProgramData\ComposerSetup\bin\composer.phar --version
-```
-
-Nếu PHAR ở nơi khác, thay bằng đường dẫn thực tế. Nếu Composer đã được cài và cấu hình chắc chắn dùng PHP 8.4, có thể chạy `composer` bình thường; khi gặp lỗi phiên bản PHP, ưu tiên gọi Composer bằng đường dẫn PHP rõ ràng.
-
----
-
-## 5. Kiểm tra môi trường trước khi làm
-
-Chạy các lệnh sau:
-
-```bat
-C:\xampp\php_new\php.exe -v
-C:\xampp\php_new\php.exe --ini
-C:\xampp\php_new\php.exe -m | findstr /I "zip openssl mbstring pdo_mysql"
-composer --version
-where composer
-```
-
-Nếu bất kỳ bước nào sai, xử lý môi trường trước khi tạo dự án hoặc cài thư viện.
-
----
-
-## 6. Tạo dự án Laravel mới
-
-> Chỉ thực hiện mục này khi bạn là người tạo dự án ban đầu. Thành viên clone repository đã có mã nguồn phải làm theo mục 8, không chạy `create-project`.
-
-### 6.1. Tạo thư mục dự án
-
-```bat
-cd /d C:\xampp\htdocs
-mkdir book-management
-cd book-management
-```
-
-Thư mục đích cần trống trước khi tạo dự án.
-
-### 6.2. Tạo Laravel 13
-
-Nếu nhóm đã thống nhất Laravel 13 và PHP 8.4:
-
-```bat
-C:\xampp\php_new\php.exe C:\ProgramData\ComposerSetup\bin\composer.phar create-project laravel/laravel . "^13.0"
-```
-
-Lệnh trên giả định Composer PHAR ở đường dẫn mẫu. Nếu Composer nằm nơi khác, thay bằng đường dẫn chính xác. Nếu Composer được cấu hình đúng với PHP 8.4, có thể dùng:
-
-```bat
-composer create-project laravel/laravel . "^13.0"
-```
-
-Không chạy lệnh này trong một thư mục đã chứa repository hoặc mã nguồn quan trọng.
-
-### 6.3. Kiểm tra dự án
-
-```bat
-C:\xampp\php_new\php.exe artisan --version
-```
-
-Nếu `.env` chưa có khóa ứng dụng, tạo bằng:
-
-```bat
-C:\xampp\php_new\php.exe artisan key:generate
-```
-
-Không cần tạo lại APP_KEY nếu file `.env` đã có khóa hợp lệ, trừ khi bạn chủ động muốn đổi khóa cho môi trường local mới.
-
-### 6.4. Chạy website
-
-```bat
-C:\xampp\php_new\php.exe artisan serve
-```
-
-Mở địa chỉ terminal hiển thị, thường là <http://127.0.0.1:8000/>. Dừng server bằng `Ctrl + C`.
-
----
-
-## 7. Cấu hình database
-
-### 7.1. Tạo database
-
-1. Mở XAMPP Control Panel.
-2. Start **MySQL**.
-3. Mở <http://localhost/phpmyadmin/>.
-4. Tạo database tên `book_store_db`.
-
-### 7.2. Cấu hình `.env`
-
-Mở `.env` tại thư mục gốc dự án và kiểm tra:
-
+Cấu hình các tham số tương ứng trong `.env`:
 ```dotenv
 APP_NAME="Book Management"
 APP_ENV=local
@@ -279,229 +340,43 @@ DB_PORT=3306
 DB_DATABASE=book_store_db
 DB_USERNAME=root
 DB_PASSWORD=
-
-SESSION_DRIVER=database
-SESSION_LIFETIME=120
-
-CACHE_STORE=database
-QUEUE_CONNECTION=database
 ```
-
-Username, password và port phải phù hợp với cấu hình MySQL thực tế. `root` không mật khẩu là cấu hình mặc định thường gặp của XAMPP, không phải quy tắc cho mọi máy.
-
-### 7.3. Chạy migration
-
-```bat
-C:\xampp\php_new\php.exe artisan config:clear
-C:\xampp\php_new\php.exe artisan migrate
-```
-
-Laravel sẽ tạo bảng `categories`, `books` (kèm SoftDeletes) cùng các bảng mặc định của hệ thống (`users`, `sessions`, `cache`, `jobs`).
-
-### 7.4. Tạo liên kết Symbolic Link cho ảnh lưu trữ
-
-Hệ thống lưu trữ ảnh bìa sách trong thư mục `storage/app/public/books`. Để trình duyệt web có thể truy cập được ảnh qua URL `public/storage/books/...`, bắt buộc chạy lệnh:
-
-```bat
-C:\xampp\php_new\php.exe artisan storage:link
-```
-
-### 7.5. Chạy Seeder nạp dữ liệu sách thật
-
-Dự án đã chuẩn bị sẵn bộ dữ liệu **6 thể loại** và **58 đầu sách thực tế** kèm đầy đủ ảnh bìa:
-
-```bat
-C:\xampp\php_new\php.exe artisan db:seed
-```
-
-Lệnh này sẽ tự động chạy:
-- `CategorySeeder`: Nạp 6 danh mục chính (*Tâm Lý - Kĩ Năng Sống*, *Văn Học*, *Kinh Tế*, *Thiếu Nhi*, *Sách Học Ngoại Ngữ*, *Sách Giáo Khoa - Tham Khảo*).
-- `BookSeeder`: Nạp 58 đầu sách từ file JSON chuẩn hóa, map đúng danh mục, đồng bộ ảnh bìa vào `storage/app/public/books`.
-- Tạo sẵn tài khoản Admin dùng thử: `admin@example.com` / `password`.
-
-**Cảnh báo:** `migrate:fresh` xóa toàn bộ bảng rồi tạo lại. Không dùng trên database có dữ liệu cần giữ.
-
-### 7.4. Bảng session, cache và queue
-
-Với cấu hình:
-
-```dotenv
-SESSION_DRIVER=database
-CACHE_STORE=database
-QUEUE_CONNECTION=database
-```
-
-ứng dụng cần các bảng database tương ứng cho session, cache và queue. Các migration mặc định của Laravel có thể tạo bảng cache và jobs; bảng `sessions` có thể cần migration riêng tùy phiên bản và trạng thái dự án.
-
-Nếu lỗi nói bảng nào không tồn tại:
-
-1. Kiểm tra database và tên bảng trong phpMyAdmin.
-2. Kiểm tra migration trong `database/migrations`.
-3. Chạy `artisan migrate:status`.
-4. Chỉ tạo migration còn thiếu sau khi đã kiểm tra, tránh migration trùng.
-
-Nếu dự án chưa cần session/cache trong database, nhóm có thể cân nhắc dùng cấu hình file/sync ở môi trường local, nhưng cần thống nhất trước khi đổi cấu hình dùng chung.
 
 ---
 
-## 8. Thành viên clone repository
+## 6. Xây dựng chức năng CRUD theo mô hình MVC
 
-### 8.1. Chuẩn bị
+### 6.1. Định tuyến (Routes)
+Hệ thống sử dụng các Route chuẩn Resource trong `routes/web.php`:
+```php
+use App\Http\Controllers\BookController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\AuthorController;
+use App\Http\Controllers\PublisherController;
 
-Trước khi clone, cần:
+Route::get('/', fn() => redirect()->route('books.index'));
 
-- Git for Windows.
-- PHP 8.4.x và extension cần thiết.
-- Composer 2.x.
-- Quyền truy cập repository.
-- XAMPP/MySQL nếu dự án dùng MySQL.
-- Node.js/npm nếu dự án dùng Vite/frontend build.
+// Quản lý sách
+Route::resource('books', BookController::class);
 
-### 8.2. Clone repository
-
-```bat
-cd /d C:\xampp\htdocs
-git clone <URL_REPOSITORY> book-management
-cd book-management
+// Quản lý các danh mục dữ liệu tham chiếu
+Route::resource('categories', CategoryController::class);
+Route::resource('authors', AuthorController::class);
+Route::resource('publishers', PublisherController::class);
 ```
 
-Thay `<URL_REPOSITORY>` bằng URL thật của repository. Không nhập nguyên dấu `< >`.
+### 6.2. Bộ điều khiển (Controllers)
+Bộ điều khiển triển khai đầy đủ 7 phương thức chuẩn RESTful:
+- `index()`: Lấy danh sách kèm phân trang và nạp sẵn các quan hệ (`with(['category', 'author', 'publisher'])`).
+- `create()`: Cung cấp danh sách thể loại, tác giả, NXB để hiển thị form thêm mới.
+- `store(StoreBookRequest $request)`: Xác thực dữ liệu, xử lý lưu file ảnh bìa vào `storage/app/public/books` và tạo bản ghi mới.
+- `show(Book $book)`: Hiển thị chi tiết ấn phẩm cùng danh sách các sách liên quan cùng thể loại.
+- `edit(Book $book)`: Hiển thị form chỉnh sửa thông tin.
+- `update(UpdateBookRequest $request, Book $book)`: Cập nhật thông tin và thay thế ảnh bìa an toàn (xóa ảnh cũ nếu có ảnh mới).
+- `destroy(Book $book)`: Thực hiện xóa mềm (`$book->delete()`).
 
-Nếu thư mục đã tồn tại, hãy `cd` vào thư mục repository đó; không clone chồng lên một thư mục đang chứa mã nguồn.
-
-### 8.3. Cài dependency
-
-Nếu Composer PHAR nằm ở đường dẫn mẫu:
-
-```bat
-C:\xampp\php_new\php.exe C:\ProgramData\ComposerSetup\bin\composer.phar install
-```
-
-Hoặc dùng `composer install` nếu Composer chắc chắn chạy bằng PHP 8.4.
-
-**Dùng `composer install`, không tự ý dùng `composer update`.** `install` cài phiên bản thư viện theo `composer.lock`, giúp các thành viên có môi trường nhất quán.
-
-### 8.4. Tạo `.env`
-
-Thông thường `.env` không được commit vì chứa cấu hình riêng của máy. Tạo từ file mẫu:
-
-```bat
-copy .env.example .env
-```
-
-Mở `.env` và đặt database tương ứng:
-
-```dotenv
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=book_store_db
-DB_USERNAME=root
-DB_PASSWORD=
-```
-
-Không commit `.env` hoặc thông tin bí mật lên Git.
-
-### 8.5. Tạo khóa ứng dụng
-
-```bat
-C:\xampp\php_new\php.exe artisan key:generate
-```
-
-Lệnh này tạo khóa cho môi trường local của thành viên. Không gửi hoặc commit `.env` của máy cá nhân cho cả nhóm.
-
-### 8.6. Tạo database, liên kết storage và nạp dữ liệu mẫu
-
-1. Mở phpMyAdmin và tạo database `book_store_db`.
-2. Tạo symbolic link cho thư viện ảnh:
-
-```bat
-C:\xampp\php_new\php.exe artisan storage:link
-```
-
-3. Chạy migration tạo cấu trúc bảng:
-
-```bat
-C:\xampp\php_new\php.exe artisan config:clear
-C:\xampp\php_new\php.exe artisan migrate
-```
-
-4. Nạp 58 cuốn sách mẫu và tài khoản quản trị:
-
-```bat
-C:\xampp\php_new\php.exe artisan db:seed
-```
-
-Tài khoản Admin mặc định:
-- **Email:** `admin@example.com`
-- **Mật khẩu:** `password`
-
-Không tự ý chạy `migrate:fresh` nếu chưa chắc chắn có thể xóa sạch CSDL.
-
-### 8.7. Frontend (nếu có)
-
-Nếu repository có `package.json` và dùng Vite:
-
-1. Cài Node.js từ <https://nodejs.org/>.
-2. Tại thư mục dự án, chạy:
-
-```bat
-npm install
-npm run dev
-```
-
-Giữ terminal Vite mở khi phát triển. Nếu cần build tài nguyên tĩnh:
-
-```bat
-npm run build
-```
-
-Không cần cài Node.js nếu dự án không sử dụng frontend build.
-
-### 8.8. Khởi chạy
-
-```bat
-C:\xampp\php_new\php.exe artisan serve
-```
-
-Mở URL được in trong terminal.
-
----
-
-## 9. Phân công nhiệm vụ nhóm 8 thành viên (Cấu trúc phân rã chuẩn)
-
-Dự án được phân rã thành các module chức năng độc lập theo chuẩn MVC và Service Pattern, mỗi thành viên chịu trách nhiệm các file riêng biệt nhằm tránh xung đột mã nguồn:
-
-| TT | Thành viên & Module | Nhiệm vụ chính | Các file phụ trách riêng (Không đụng người khác) | Kiến thức Laravel áp dụng |
-|:---:|---|---|---|---|
-| **TV1: NB** | **Cơ sở dữ liệu & Model** | - Thiết kế migration cho `books`, `categories`, `authors`, `publishers`<br>- Bổ sung `stock_quantity` vào sách và `role` vào users<br>- Thiết lập khóa ngoại, quan hệ Eloquent và dữ liệu mẫu Seeders | - `database/migrations/...`<br>- `database/seeders/...`<br>- `app/Models/Book.php`, `Category.php`<br>- `app/Models/Author.php`, `Publisher.php`, `User.php` | Migration, Foreign Key, Eloquent Relationships (`hasMany`, `belongsTo`), Database Seeding |
-| **TV2: PC** | **Quản lý Thể loại** | - Xem danh sách thể loại<br>- CRUD Thể loại (Thêm, sửa, xóa)<br>- Kiểm tra ràng buộc thể loại đang có sách trước khi xóa (`$category->books()->exists()`) | - `app/Http/Controllers/CategoryController.php`<br>- `app/Http/Requests/StoreCategoryRequest.php`<br>- `resources/views/categories/` | CRUD Controller, Form Request, Eloquent Relationship Check |
-| **TV3: YK** | **Quản lý Tác giả & NXB** | - CRUD Tác giả (`authors`)<br>- CRUD Nhà xuất bản (`publishers`)<br>- Kiểm tra ràng buộc dữ liệu trước khi xóa bản ghi đang có sách tham chiếu<br>- Cung cấp danh sách cho form sách | - `app/Http/Controllers/AuthorController.php`<br>- `app/Http/Controllers/PublisherController.php`<br>- `resources/views/authors/`<br>- `resources/views/publishers/` | Dual CRUD Controllers, Resource Views, Delete Constraints |
-| **TV4: QT** | **Backend CRUD Sách** | - Xử lý danh sách, chi tiết, thêm, sửa, xóa sách ở tầng backend<br>- Viết Validation cho dữ liệu sách<br>- Xử lý upload và lưu trữ ảnh bìa trong storage<br>- Đảm bảo liên kết đúng các khóa ngoại | - `app/Http/Controllers/BookController.php`<br>- `app/Http/Requests/StoreBookRequest.php`<br>- `app/Http/Requests/UpdateBookRequest.php` | Controller Resource, Form Request, Storage File Upload, Transaction |
-| **TV5: NT** | **Giao diện Quản lý Sách** | - Thiết kế giao diện danh sách, chi tiết, thêm mới và cập nhật sách<br>- Hiển thị ảnh bìa, giá, thể loại, tác giả, NXB và số lượng tồn<br>- Hiển thị thông báo, lỗi validation và trạng thái hết hàng | - `resources/views/books/index.blade.php`<br>- `resources/views/books/show.blade.php`<br>- `resources/views/books/create.blade.php`<br>- `resources/views/books/edit.blade.php`<br>- `resources/views/books/partials/` | Blade Templates, Bootstrap 5 UI, Component Reusability |
-| **TV6: HD** | **Tìm kiếm, Lọc & Phân trang** | - Tìm kiếm theo tên sách<br>- Lọc theo thể loại, tác giả, nhà xuất bản, khoảng giá<br>- Sắp xếp theo giá / thời gian tạo, phân trang giữ query string<br>*(Bàn giao service & partial cho TV4, TV5 tích hợp)* | - `app/Services/BookFilterService.php`<br>- `resources/views/books/partials/filter-bar.blade.php` | Service Pattern, Eloquent Query Scope, `when()`, Pagination `withQueryString()` |
-| **TV7: TD** | **Đăng nhập & Phân quyền** | - Xử lý đăng nhập, đăng xuất<br>- Thiết lập Middleware / Policy chặn User truy cập trái phép các thao tác sửa đổi<br>- Ẩn/hiện nút chức năng theo quyền (`role === 'admin'`) | - `app/Http/Controllers/AuthController.php`<br>- `app/Http/Middleware/AdminMiddleware.php`<br>- `app/Policies/BookPolicy.php`<br>- `resources/views/auth/` | Authentication, Middleware, Authorization (Gates & Policies), Blade `@can` |
-| **TV8: TH** | **Quản lý Tồn kho** | - Xem số lượng tồn của từng đầu sách<br>- Form / Modal nhập thêm số lượng kho (cộng dồn an toàn `increment('stock_quantity', $qty)`)<br>- Cảnh báo: Sắp hết (< 5), Hết hàng (= 0)<br>- Phân quyền chỉ Admin được nhập kho | - `app/Http/Controllers/BookStockController.php`<br>- `app/Http/Requests/UpdateBookStockRequest.php`<br>- `resources/views/stock/`<br>- `resources/views/books/partials/stock-status.blade.php` | Eloquent `increment()`, Business Logic tồn kho, Badge động, Security Check |
-
----
-
-## 10. Cấu trúc CSDL, Model quan hệ & Quy ước lập trình
-
-### 10.1. Thiết kế các bảng CSDL (Chuẩn hóa 3NF)
-
-1. **`categories`**: `id`, `name`, `slug`, `description`, `timestamps`.
-2. **`authors`**: `id`, `name`, `slug`, `bio`, `avatar`, `timestamps`.
-3. **`publishers`**: `id`, `name`, `slug`, `email`, `phone`, `address`, `description`, `timestamps`.
-4. **`books`**:
-   - Khóa ngoại: `category_id` ($\rightarrow$ `categories`), `author_id` ($\rightarrow$ `authors`), `publisher_id` ($\rightarrow$ `publishers`).
-   - Thông tin: `book_code` (unique), `isbn`, `title`, `translator`, `supplier`, `publish_year`, `language`, `weight`, `dimensions`, `pages`.
-   - Giá & Kho: `original_price`, `price`, `stock_quantity`, `sold_quantity`.
-   - Media & Khác: `cover_image`, `description`, `is_trending`, `badge_type`.
-   - Dấu thời gian & Xóa mềm: `created_at`, `updated_at`, `deleted_at` (`softDeletes`).
-5. **`users`**: `id`, `name`, `email`, `password`, `role` (`admin` hoặc `user`), `timestamps`.
-
-### 10.2. Quan hệ Eloquent Models
-
+### 6.3. Mô hình dữ liệu (Models & Eloquent Relationships)
+Các quan hệ dữ liệu được thiết lập chặt chẽ bằng Eloquent ORM:
 - **`Category`**: `hasMany(Book::class)`
 - **`Author`**: `hasMany(Book::class)`
 - **`Publisher`**: `hasMany(Book::class)`
@@ -509,457 +384,92 @@ Dự án được phân rã thành các module chức năng độc lập theo ch
   - `belongsTo(Category::class)`
   - `belongsTo(Author::class)`
   - `belongsTo(Publisher::class)`
-  - Hỗ trợ SoftDeletes: `use SoftDeletes;`
-- **`User`**: Có phương thức kiểm tra quyền nhanh: `$user->isAdmin()`.
+  - Kích hoạt Trait: `use SoftDeletes;`
+- **`User`**: Có hàm hỗ trợ kiểm tra vai trò:
+  ```php
+  public function isAdmin(): bool {
+      return $this->role === 'admin';
+  }
+  ```
 
-### 10.3. Quy ước dùng Model & Lấy ảnh bìa cho cả nhóm
+### 6.4. Giao diện người dùng (Blade Views & Bootstrap 5)
+- Thư mục giao diện dùng chung: `resources/views/layouts/app.blade.php`.
+- Thư mục giao diện sách: `resources/views/books/` (`index.blade.php`, `show.blade.php`, `create.blade.php`, `edit.blade.php`).
+- Khối thành phần tái sử dụng (Partials): `resources/views/books/partials/` (`filter-bar.blade.php`, `stock-status.blade.php`).
 
-1. **Hiển thị tên Tác giả, NXB, Thể loại:**
-   - Dùng quan hệ: `$book->author->name`, `$book->publisher->name`, `$book->category->name`.
-   - Hoặc dùng Accessor tiện lợi: `$book->author_name`, `$book->publisher_name`, `$book->category_name`.
-2. **Hiển thị ảnh bìa:**
-   - Render qua asset:
-     ```blade
-     <img src="{{ asset('storage/books/' . $book->cover_image) }}" alt="{{ $book->title }}">
-     ```
-   - Hoặc dùng helper: `<img src="{{ $book->cover_image_url }}" alt="{{ $book->title }}">`.
-3. **Số lượng tồn kho:**
-   - Cột CSDL là `stock_quantity`.
-   - Model `Book` đã có Accessor đồng bộ alias: `$book->stock` và `$book->quantity` trỏ thẳng về `$book->stock_quantity`.
-4. **Mã sách (`book_code`):**
-   - Định dạng `BK-{ISBN}`. Khi tạo mới phải validate `unique:books,book_code`; khi sửa phải để `readonly`.
-
----
-
-## 11. Chạy dự án hằng ngày
-
-Khi đã cài đặt xong, thông thường bạn chỉ cần:
-
-1. Mở XAMPP và Start MySQL.
-2. Mở terminal tại dự án.
-3. Chạy server Laravel.
-
-```bat
-cd /d C:\xampp\htdocs\book-management
-C:\xampp\php_new\php.exe artisan serve
-```
-
-Nếu làm việc với nhánh Git, trước khi bắt đầu có thể cập nhật mã nguồn:
-
-```bat
-git status
-git pull
-```
-
-Nếu `composer.lock` thay đổi sau khi pull:
-
-```bat
-C:\xampp\php_new\php.exe C:\ProgramData\ComposerSetup\bin\composer.phar install
-```
-
-Nếu có migration mới:
-
-```bat
-C:\xampp\php_new\php.exe artisan migrate
-```
-
-Nếu Composer PHAR không nằm ở đường dẫn ví dụ, hãy thay bằng đường dẫn Composer thực tế.
+### 6.5. Quy ước xử lý ảnh bìa và số lượng kho
+1. **Lấy ảnh bìa:** Sử dụng helper URL có sẵn trong Model `Book`:
+   ```blade
+   <img src="{{ $book->cover_image_url }}" alt="{{ $book->title }}">
+   ```
+2. **Số lượng tồn kho:** Cột trong CSDL là `stock_quantity`. Model đã hỗ trợ alias đồng bộ: `$book->stock` hoặc `$book->quantity` đều trỏ thẳng về `stock_quantity`.
 
 ---
 
-## 12. Lỗi thường gặp và cách xử lý
+## 7. Phân công nhiệm vụ nhóm 8 thành viên
 
-### Lỗi 1 — `php -v` vẫn ra PHP 8.2
+Mô hình phân rã module độc lập giúp 8 thành viên phát triển song song không gây xung đột trên Git:
 
-**Nguyên nhân:** PATH đang trỏ tới `C:\xampp\php`.
-
-**Cách xử lý:**
-
-```bat
-C:\xampp\php_new\php.exe -v
-```
-
-Luôn dùng đường dẫn PHP 8.4 đầy đủ hoặc điều chỉnh PATH rồi mở terminal mới. Kiểm tra thứ tự bằng `where php`.
-
-### Lỗi 2 — Laravel yêu cầu PHP >= 8.3
-
-**Nguyên nhân:** Composer đang chạy bằng PHP 8.2.
-
-**Cách xử lý:** gọi Composer bằng PHP 8.4:
-
-```bat
-C:\xampp\php_new\php.exe C:\ProgramData\ComposerSetup\bin\composer.phar --version
-```
-
-Sau đó dùng đúng executable đó để chạy lệnh Composer.
-
-### Lỗi 3 — `The zip extension is missing`
-
-**Kiểm tra:**
-
-```bat
-C:\xampp\php_new\php.exe --ini
-C:\xampp\php_new\php.exe -m | findstr /I "zip"
-```
-
-**Xử lý:**
-
-- Sửa đúng `php.ini` được in ra từ `--ini`.
-- Bật `extension=zip`, không phải `extension=unzip`.
-- Kiểm tra `extension_dir` và file DLL ZIP trong thư mục `ext`.
-- Mở terminal mới và kiểm tra lại.
-
-### Lỗi 4 — `could not find driver` / PDO MySQL
-
-**Nguyên nhân:** PHP chưa bật `pdo_mysql` hoặc `.env` chưa đúng.
-
-```bat
-C:\xampp\php_new\php.exe -m | findstr /I "pdo_mysql mysqli"
-```
-
-Nếu thiếu, bật `extension=pdo_mysql` trong đúng `php.ini`. Kiểm tra database, username, password và port trong `.env`.
-
-### Lỗi 5 — `Target directory is not empty`
-
-`create-project ... .` yêu cầu thư mục đích phù hợp và thường phải trống.
-
-- Nếu đang tạo dự án mới, dùng một thư mục trống.
-- Nếu đã clone repository, **không chạy `create-project`**; chạy `composer install`.
-
-### Lỗi 6 — `composer` không được nhận diện
-
-- Mở terminal mới.
-- Chạy `where composer`.
-- Kiểm tra Composer đã được cài và PATH đã cập nhật.
-- Nếu gọi `composer.phar`, xác minh đường dẫn file tồn tại.
-
-### Lỗi 7 — `No application encryption key has been specified`
-
-Kiểm tra `.env` có tồn tại. Nếu thiếu APP_KEY:
-
-```bat
-C:\xampp\php_new\php.exe artisan key:generate
-```
-
-### Lỗi 8 — `Unknown database 'book_store_db'`
-
-Tạo database trong phpMyAdmin hoặc sửa `DB_DATABASE` cho khớp tên database hiện có.
-
-### Lỗi 9 — Không kết nối được MySQL / `Connection refused`
-
-- Start MySQL trong XAMPP.
-- Kiểm tra `DB_HOST=127.0.0.1`.
-- Kiểm tra `DB_PORT=3306` có đúng với máy không.
-- Kiểm tra username/password và cổng không bị thay đổi.
-
-### Lỗi 10 — `Table ... doesn't exist`
-
-Ví dụ:
-
-```text
-SQLSTATE[42S02]: Base table or view not found
-Table 'book_store_db.sessions' doesn't exist
-```
-
-Thực hiện lần lượt:
-
-1. Xác nhận tên database trong `.env`.
-2. Mở phpMyAdmin, chọn đúng database và kiểm tra bảng.
-3. Kiểm tra cấu hình Laravel:
-
-```bat
-C:\xampp\php_new\php.exe artisan config:clear
-C:\xampp\php_new\php.exe artisan config:show session
-C:\xampp\php_new\php.exe artisan config:show database
-C:\xampp\php_new\php.exe artisan migrate:status
-```
-
-4. Kiểm tra migration trong `database/migrations`.
-5. Nếu migration tương ứng chưa có, mới tạo migration thích hợp và chạy `migrate`.
-
-Không tạo migration trùng và không chạy `migrate:fresh` chỉ để thử sửa lỗi.
-
-### Lỗi 11 — `Migration already exists`
-
-Artisan báo migration đã tồn tại. Đừng chạy lệnh tạo lặp lại liên tục.
-
-```bat
-dir database\migrations
-C:\xampp\php_new\php.exe artisan migrate:status
-```
-
-Tìm file migration liên quan, xem nội dung và kiểm tra bảng `migrations` trước khi quyết định bước tiếp theo. Nếu kết quả không nhất quán, thu thập thông báo lỗi đầy đủ thay vì xóa file theo phỏng đoán.
-
-### Lỗi 12 — `Nothing to migrate`
-
-Điều đó có nghĩa Laravel không thấy migration mới cần chạy theo trạng thái hiện tại. Nó **không chứng minh tất cả bảng trong database đều tồn tại**.
-
-Kiểm tra:
-
-```bat
-C:\xampp\php_new\php.exe artisan migrate:status
-```
-
-So sánh danh sách migration với bảng trong phpMyAdmin.
-
-### Lỗi 13 — `Vite manifest not found`
-
-Nếu dự án dùng Vite, cài Node.js và chạy:
-
-```bat
-npm install
-npm run build
-```
-
-Hoặc trong chế độ phát triển:
-
-```bat
-npm run dev
-```
-
-### Lỗi 14 — Apache lỗi sau khi thay PHP
-
-Không thay toàn bộ `C:\xampp\php` bằng bản PHP tải riêng một cách tùy tiện. PHP CLI và PHP tích hợp Apache có thể được cấu hình khác nhau. Dùng `C:\xampp\php_new\php.exe artisan serve` nếu mục tiêu là chạy Laravel qua CLI.
-
-### Lỗi 15 — Website vẫn lỗi 500 nhưng chưa rõ nguyên nhân
-
-1. Đọc lỗi đầy đủ trên trình duyệt hoặc terminal.
-2. Kiểm tra phần cuối `storage/logs/laravel.log`.
-3. Kiểm tra `.env`, kết nối database và migration liên quan.
-4. Sau khi sửa cấu hình, có thể chạy:
-
-```bat
-C:\xampp\php_new\php.exe artisan optimize:clear
-```
-
-Không chia sẻ file `.env` công khai vì có thể chứa thông tin nhạy cảm.
+| TT | Thành viên & Module | Nhiệm vụ chính | Các file phụ trách riêng (Không đụng người khác) | Kiến thức Laravel áp dụng |
+|:---:|---|---|---|---|
+| **TV1** | **Cơ sở dữ liệu & Model** | - Thiết kế migration cho `books`, `categories`, `authors`, `publishers`<br>- Bổ sung `stock_quantity` vào sách và `role` vào users<br>- Thiết lập khóa ngoại, quan hệ Eloquent và dữ liệu mẫu Seeders | - `database/migrations/...`<br>- `database/seeders/...`<br>- `database/data/books.json`<br>- `app/Models/Book.php`, `Category.php`<br>- `app/Models/Author.php`, `Publisher.php`, `User.php` | Migration, Foreign Key, Eloquent Relationships (`hasMany`, `belongsTo`), Database Seeding |
+| **TV2** | **Quản lý Thể loại** | - Xem danh sách thể loại<br>- CRUD Thể loại (Thêm, sửa, xóa)<br>- Kiểm tra ràng buộc thể loại đang có sách trước khi xóa (`$category->books()->exists()`) | - `app/Http/Controllers/CategoryController.php`<br>- `app/Http/Requests/StoreCategoryRequest.php`<br>- `resources/views/categories/` | CRUD Controller, Form Request, Eloquent Relationship Check |
+| **TV3** | **Quản lý Tác giả & NXB** | - CRUD Tác giả (`authors`)<br>- CRUD Nhà xuất bản (`publishers`)<br>- Kiểm tra ràng buộc dữ liệu trước khi xóa bản ghi đang có sách tham chiếu<br>- Cung cấp danh sách cho form sách | - `app/Http/Controllers/AuthorController.php`<br>- `app/Http/Controllers/PublisherController.php`<br>- `resources/views/authors/`<br>- `resources/views/publishers/` | Dual CRUD Controllers, Resource Views, Delete Constraints |
+| **TV4** | **Backend CRUD Sách** | - Xử lý danh sách, chi tiết, thêm, sửa, xóa sách ở tầng backend<br>- Viết Validation cho dữ liệu sách<br>- Xử lý upload và lưu trữ ảnh bìa trong storage<br>- Đảm bảo liên kết đúng các khóa ngoại | - `app/Http/Controllers/BookController.php`<br>- `app/Http/Requests/StoreBookRequest.php`<br>- `app/Http/Requests/UpdateBookRequest.php` | Controller Resource, Form Request, Storage File Upload, Transaction |
+| **TV5** | **Giao diện Quản lý Sách** | - Thiết kế giao diện danh sách, chi tiết, thêm mới và cập nhật sách<br>- Hiển thị ảnh bìa, giá, thể loại, tác giả, NXB và số lượng tồn<br>- Hiển thị thông báo, lỗi validation và trạng thái hết hàng | - `resources/views/books/index.blade.php`<br>- `resources/views/books/show.blade.php`<br>- `resources/views/books/create.blade.php`<br>- `resources/views/books/edit.blade.php`<br>- `resources/views/books/partials/` | Blade Templates, Bootstrap 5 UI, Component Reusability |
+| **TV6** | **Tìm kiếm, Lọc & Phân trang** | - Tìm kiếm theo tên sách<br>- Lọc theo thể loại, tác giả, nhà xuất bản, khoảng giá<br>- Sắp xếp theo giá / thời gian tạo, phân trang giữ query string<br>*(Bàn giao service & partial cho TV4, TV5 tích hợp)* | - `app/Services/BookFilterService.php`<br>- `resources/views/books/partials/filter-bar.blade.php` | Service Pattern, Eloquent Query Scope, `when()`, Pagination `withQueryString()` |
+| **TV7** | **Đăng nhập & Phân quyền** | - Xử lý đăng nhập, đăng xuất<br>- Thiết lập Middleware / Policy chặn User truy cập trái phép các thao tác sửa đổi<br>- Ẩn/hiện nút chức năng theo quyền (`role === 'admin'`) | - `app/Http/Controllers/AuthController.php`<br>- `app/Http/Middleware/AdminMiddleware.php`<br>- `app/Policies/BookPolicy.php`<br>- `resources/views/auth/` | Authentication, Middleware, Authorization (Gates & Policies), Blade `@can` |
+| **TV8** | **Quản lý Tồn kho** | - Xem số lượng tồn của từng đầu sách<br>- Form / Modal nhập thêm số lượng kho (cộng dồn an toàn `increment('stock_quantity', $qty)`)<br>- Cảnh báo: Sắp hết (< 5), Hết hàng (= 0)<br>- Phân quyền chỉ Admin được nhập kho | - `app/Http/Controllers/BookStockController.php`<br>- `app/Http/Requests/UpdateBookStockRequest.php`<br>- `resources/views/stock/`<br>- `resources/views/books/partials/stock-status.blade.php` | Eloquent `increment()`, Business Logic tồn kho, Badge động, Security Check |
 
 ---
 
-## 13. Nhật ký xử lý lỗi bảng `sessions`
+## 8. Quy ước làm việc với Git của nhóm
 
-Phần này ghi lại lỗi thực tế gặp trong quá trình thiết lập dự án.
-
-### 11.1. Lỗi ban đầu
-
-Laravel báo:
-
-```text
-SQLSTATE[42S02]: Base table or view not found: 1146
-Table 'book_store_db.sessions' doesn't exist
-```
-
-`.env` có:
-
-```dotenv
-DB_CONNECTION=mysql
-DB_DATABASE=book_store_db
-SESSION_DRIVER=database
-```
-
-### 11.2. Các lệnh đã chạy
-
-Kiểm tra file migration:
-
-```bat
-dir database\migrations
-```
-
-Danh sách ban đầu có ba migration mặc định:
-
-```text
-0001_01_01_000000_create_users_table.php
-0001_01_01_000001_create_cache_table.php
-0001_01_01_000002_create_jobs_table.php
-```
-
-Thử tạo migration session:
-
-```bat
-C:\xampp\php_new\php.exe artisan make:session-table
-```
-
-Kết quả:
-
-```text
-ERROR  Migration already exists.
-```
-
-Chạy migration:
-
-```bat
-C:\xampp\php_new\php.exe artisan migrate
-```
-
-Kết quả:
-
-```text
-INFO  Nothing to migrate.
-```
-
-Kiểm tra trạng thái:
-
-```bat
-C:\xampp\php_new\php.exe artisan migrate:status
-```
-
-Ba migration mặc định được ghi nhận ở trạng thái `Ran`.
-
-### 11.3. Kiểm tra cấu hình
-
-Đã chạy:
-
-```bat
-C:\xampp\php_new\php.exe artisan config:clear
-C:\xampp\php_new\php.exe artisan config:show session
-C:\xampp\php_new\php.exe artisan config:show database
-```
-
-Kết quả liên quan:
-
-```text
-session driver: database
-session table: sessions
-database default: mysql
-database: book_store_db
-host: 127.0.0.1
-port: 3306
-username: root
-```
-
-### 11.4. Kiểm tra trong phpMyAdmin và Tinker
-
-Trong phpMyAdmin, bảng `sessions` tồn tại và có các cột:
-
-```text
-id
-user_id
-ip_address
-user_agent
-payload
-last_activity
-```
-
-Mở Tinker:
-
-```bat
-C:\xampp\php_new\php.exe artisan tinker
-```
-
-Chạy:
-
-```php
-DB::connection()->getDatabaseName();
-```
-
-Kết quả:
-
-```text
-"book_store_db"
-```
-
-Chạy:
-
-```php
-DB::select('SHOW TABLES LIKE "sessions"');
-```
-
-Kết quả trả về bảng `sessions`.
-
-Chạy:
-
-```php
-DB::table('sessions')->count();
-```
-
-Kết quả:
-
-```text
-0
-```
-
-Số `0` không phải lỗi; bảng chưa có bản ghi session. Các lệnh này xác nhận Laravel có thể nhìn thấy và truy vấn bảng `sessions` trong kết nối Tinker hiện tại.
-
-Thoát Tinker:
-
-```php
-exit
-```
-
-Đã được hướng dẫn dọn cache:
-
-```bat
-C:\xampp\php_new\php.exe artisan optimize:clear
-```
-
-Khởi động server:
-
-```bat
-C:\xampp\php_new\php.exe artisan serve
-```
-
-Người dùng xác nhận website đã chạy được.
-
-> **Kết luận chính xác:** Website đã chạy lại sau quá trình kiểm tra và dọn cache/khởi động lại. Dữ kiện thu thập được xác nhận database, bảng `sessions` và cấu hình Tinker truy cập được; không đủ bằng chứng để khẳng định một thao tác đơn lẻ là nguyên nhân trực tiếp sửa lỗi ban đầu.
+1. **Nguyên tắc phân nhánh:**
+   - Nhánh `main`: Chỉ chứa mã nguồn ổn định nhất đã được kiểm thử.
+   - Mỗi thành viên tạo một nhánh chức năng riêng mang tên nhiệm vụ của mình:
+     - `feature/categories` (TV2)
+     - `feature/authors-publishers` (TV3)
+     - `feature/books-backend` (TV4)
+     - `feature/books-ui` (TV5)
+     - `feature/books-filter` (TV6)
+     - `feature/auth-permission` (TV7)
+     - `feature/stock-management` (TV8)
+2. **Quy tắc thêm/sửa cơ sở dữ liệu:**
+   - Tuyệt đối không chỉnh sửa cấu trúc CSDL bằng tay trong phpMyAdmin.
+   - Tuyệt đối không sửa trực tiếp vào các file migration cũ đã chạy.
+   - Nếu cần thay đổi hoặc thêm cột/bảng mới, bắt buộc tạo migration mới và thông báo cho Trưởng nhóm (TV1).
+3. **Quy trình đẩy mã nguồn:**
+   - Trước khi bắt đầu làm việc: `git pull origin main`.
+   - Sau khi hoàn thành chức năng trên nhánh riêng, tạo Pull Request (PR) để Trưởng nhóm review và merge vào `main`.
 
 ---
 
-## 14. Quy ước Git của nhóm
+## 9. Bảng tổng hợp các lỗi thực tế và cách xử lý
 
-### Khi pull code mới
+Bảng ghi nhận các lỗi kỹ thuật thực tế nhóm đã gặp phải trong quá trình thiết lập và giải pháp xử lý triệt để:
 
-```bat
-git status
-git pull
-```
-
-Nếu `composer.lock` thay đổi:
-
-```bat
-C:\xampp\php_new\php.exe C:\ProgramData\ComposerSetup\bin\composer.phar install
-```
-
-Nếu có migration mới:
-
-```bat
-C:\xampp\php_new\php.exe artisan migrate
-```
-
-Không tự ý chạy `composer update` hoặc `migrate:fresh` khi chưa có lý do rõ ràng.
+| STT | Hiện tượng lỗi | Nguyên nhân gốc rễ | Hướng giải quyết triệt để |
+|:---:|---|---|---|
+| **1** | Chạy `artisan db:seed` báo lỗi: *Không tìm thấy file books.json* trên máy thành viên mới | File `.gitignore` mặc định trong `storage/app/public/` chứa quy tắc `*` chặn toàn bộ file trong thư mục, khiến `books.json` và ảnh không được đẩy lên GitHub | 1. Di chuyển file dữ liệu về thư mục chuẩn `database/data/books.json` (thư mục được Git theo dõi 100%).<br>2. Cập nhật `storage/app/public/.gitignore` thêm ngoại lệ `!books.json` và `!books/**`. |
+| **2** | Lỗi vi phạm khóa duy nhất khi seed: *Duplicate entry for key books_isbn_unique* | Trong file dữ liệu mẫu có 2 cuốn sách khác nhau (*Kẻ Cướp Bến Bỏi* và *Perman Tập 4*) bị gán trùng mã ISBN | Chuẩn hóa lại file dữ liệu, cấp mã ISBN độc lập duy nhất cho từng cuốn sách trước khi nạp vào CSDL. |
+| **3** | Lệnh `php -v` hoặc `composer` nhận nhầm PHP 8.2 của XAMPP thay vì PHP 8.4 | Biến môi trường hệ thống (`PATH`) đang ưu tiên trỏ về thư mục `C:\xampp\php` cũ của XAMPP | Cập nhật lại thứ tự biến `PATH` đưa đường dẫn PHP 8.4 lên đầu, hoặc gọi trực tiếp bằng đường dẫn tuyệt đối `C:\xampp\php_new\php.exe`. |
+| **4** | Lỗi *could not find driver* hoặc *PDOException: connection refused* khi chạy migration | PHP chưa bật extension `pdo_mysql` hoặc dịch vụ MySQL trong XAMPP chưa được khởi động | Bật dòng `extension=pdo_mysql` trong file `php.ini` và mở XAMPP Control Panel bấm **Start MySQL**. |
+| **5** | Lỗi *Table 'book_store_db.sessions' doesn't exist* khi duyệt website | Cấu hình trong `.env` đặt `SESSION_DRIVER=database` nhưng CSDL chưa có bảng lưu trữ session | Chạy `php artisan migrate` để tạo đầy đủ các bảng hệ thống của Laravel. |
+| **6** | Ảnh bìa sách không hiển thị trên giao diện web (báo lỗi 404) | Thư mục `public/storage` chưa được liên kết với `storage/app/public` | Chạy lệnh `php artisan storage:link`. Nếu Windows báo lỗi phân quyền, mở CMD dưới quyền **Administrator** để tạo symlink. |
 
 ---
 
-## 15. Checklist thành viên mới
+## 10. Kết luận và hướng phát triển
 
-- [ ] Cài Git for Windows.
-- [ ] Cài XAMPP và xác nhận MySQL chạy được.
-- [ ] Cài PHP 8.4.x.
-- [ ] Kiểm tra `php.ini` và extension cần thiết.
-- [ ] Cài Composer 2.x.
-- [ ] Xác nhận Composer chạy bằng PHP 8.4.
-- [ ] Clone đúng repository và branch.
-- [ ] Chạy `composer install`.
-- [ ] Tạo `.env` từ `.env.example`.
-- [ ] Tạo database `book_store_db` trong phpMyAdmin.
-- [ ] Chạy `php artisan key:generate`.
-- [ ] Chạy `php artisan storage:link` (Tạo liên kết thư mục ảnh bìa).
-- [ ] Chạy `php artisan migrate` (Tạo bảng categories và books).
-- [ ] Chạy `php artisan db:seed` (Nạp 58 đầu sách thật và tài khoản Admin).
-- [ ] Cài Node.js và chạy npm nếu dự án dùng Vite.
-- [ ] Chạy `php artisan serve`.
-- [ ] Mở website tại URL hiển thị trong terminal, kiểm tra hiển thị 58 đầu sách kèm ảnh bìa.
-- [ ] Không commit `.env`, `vendor/` hoặc `node_modules/`.
+### 10.1. Kết quả đạt được
+- Xây dựng thành công ứng dụng quản lý đầu sách hoàn chỉnh theo chuẩn kiến trúc MVC trên nền tảng **Laravel 13** và **PHP 8.4**.
+- Chuẩn hóa cơ sở dữ liệu đạt chuẩn 3NF với 5 bảng liên kết khóa ngoại chặt chẽ, hỗ trợ xóa mềm (Soft Delete).
+- Nạp sẵn bộ dữ liệu mẫu thực tế gồm **58 cuốn sách tiếng Việt**, đầy đủ thông tin metadata, giá bìa, tồn kho và ảnh bìa chất lượng cao.
+- Phân chia nhiệm vụ độc lập, minh bạch và cân bằng cho nhóm 8 thành viên.
 
----
-
-## 16. Liên kết chính thức
-
-- Laravel: <https://laravel.com/docs>
-- Laravel installation: <https://laravel.com/docs/installation>
-- Laravel configuration: <https://laravel.com/docs/configuration>
-- Laravel migrations: <https://laravel.com/docs/migrations>
-- Composer download: <https://getcomposer.org/download/>
-- PHP for Windows: <https://windows.php.net/download/>
-- XAMPP: <https://www.apachefriends.org/>
-- Git for Windows: <https://git-scm.com/download/win>
-- Node.js: <https://nodejs.org/>
+### 10.2. Hướng mở rộng tiếp theo
+- Xây dựng giao diện giỏ hàng và đặt sách trực tuyến cho độc giả.
+- Tích hợp cổng thanh toán trực tuyến (VNPAY / MoMo).
+- Xây dựng hệ thống RESTful API phục vụ kết nối với ứng dụng di động (Mobile App).
+- Tích hợp tính năng xuất/nhập danh mục sách bằng file Excel sử dụng `maatwebsite/excel`.
