@@ -13,12 +13,12 @@ class Book extends Model
 
     protected $fillable = [
         'category_id',
+        'author_id',
+        'publisher_id',
         'book_code',
         'isbn',
         'title',
-        'author',
         'translator',
-        'publisher',
         'supplier',
         'publish_year',
         'language',
@@ -27,7 +27,7 @@ class Book extends Model
         'pages',
         'original_price',
         'price',
-        'stock',
+        'stock_quantity',
         'sold_quantity',
         'cover_image',
         'description',
@@ -41,7 +41,7 @@ class Book extends Model
         'pages' => 'integer',
         'original_price' => 'decimal:2',
         'price' => 'decimal:2',
-        'stock' => 'integer',
+        'stock_quantity' => 'integer',
         'sold_quantity' => 'integer',
         'is_trending' => 'boolean',
     ];
@@ -55,16 +55,63 @@ class Book extends Model
     }
 
     /**
-     * Accessor: Alias 'quantity' to 'stock' for backward/cross-member compatibility.
+     * Relationship: Book belongs to Author.
+     */
+    public function author(): BelongsTo
+    {
+        return $this->belongsTo(Author::class);
+    }
+
+    /**
+     * Relationship: Book belongs to Publisher.
+     */
+    public function publisher(): BelongsTo
+    {
+        return $this->belongsTo(Publisher::class);
+    }
+
+    /**
+     * Accessor: Alias 'stock' to 'stock_quantity'.
+     */
+    public function getStockAttribute(): int
+    {
+        return (int) $this->stock_quantity;
+    }
+
+    public function setStockAttribute($value): void
+    {
+        $this->attributes['stock_quantity'] = (int) $value;
+    }
+
+    /**
+     * Accessor: Alias 'quantity' to 'stock_quantity'.
      */
     public function getQuantityAttribute(): int
     {
-        return (int) $this->stock;
+        return (int) $this->stock_quantity;
     }
 
     public function setQuantityAttribute($value): void
     {
-        $this->attributes['stock'] = (int) $value;
+        $this->attributes['stock_quantity'] = (int) $value;
+    }
+
+    /**
+     * Convenient name accessors for views.
+     */
+    public function getAuthorNameAttribute(): string
+    {
+        return $this->author?->name ?? 'Không rõ';
+    }
+
+    public function getPublisherNameAttribute(): string
+    {
+        return $this->publisher?->name ?? 'Không rõ';
+    }
+
+    public function getCategoryNameAttribute(): string
+    {
+        return $this->category?->name ?? 'Không rõ';
     }
 
     /**

@@ -17,14 +17,28 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             CategorySeeder::class,
+            AuthorSeeder::class,
+            PublisherSeeder::class,
             BookSeeder::class,
         ]);
 
-        User::firstOrCreate(
+        // Tài khoản Quản trị viên (Admin)
+        User::updateOrCreate(
             ['email' => 'admin@example.com'],
             [
                 'name' => 'Quản trị viên',
                 'password' => bcrypt('password'),
+                'role' => 'admin',
+            ]
+        );
+
+        // Tài khoản Người dùng thường (Staff / User)
+        User::updateOrCreate(
+            ['email' => 'user@example.com'],
+            [
+                'name' => 'Nhân viên',
+                'password' => bcrypt('password'),
+                'role' => 'user',
             ]
         );
     }
