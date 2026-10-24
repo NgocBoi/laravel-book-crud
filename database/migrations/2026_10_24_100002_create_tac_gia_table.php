@@ -1,0 +1,22 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('tac_gia', function (Blueprint $table) {
+            $table->id('ma_tac_gia');
+            $table->string('ten_tac_gia', 150);
+            $table->text('tieu_su')->nullable();
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('tac_gia');
+    }
+};
