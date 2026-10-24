@@ -4,7 +4,6 @@
 > **Học phần:** Phát triển ứng dụng web với mã nguồn mở  
 > **Đơn vị:** Khoa Công nghệ thông tin — Trường Kỹ thuật và Công nghệ — Đại học Trà Vinh  
 > **Lớp:** DA23TTD — **Nhóm thực hiện:** Nhóm 3  
-> **Trưởng nhóm:** Huỳnh Thị Ngọc Bội (MSSV: 110123071)  
 > **Nền tảng kỹ thuật:** Laravel 13, PHP 8.4.x, Composer 2.x, MySQL (XAMPP), Bootstrap 5
 
 ---
