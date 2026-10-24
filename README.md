@@ -468,44 +468,66 @@ Mở URL được in trong terminal.
 
 ---
 
-## 9. Phân công nhiệm vụ nhóm 8 thành viên
+## 9. Phân công nhiệm vụ nhóm 8 thành viên (Cấu trúc phân rã chuẩn)
 
-Dự án được phân rã thành các tính năng độc lập, mỗi thành viên chịu trách nhiệm các file riêng biệt nhằm tránh xung đột mã nguồn (dựa trên kế hoạch chi tiết tại [KeHoachTrienKhaiDuAn.xlsx](public/KeHoachTrienKhaiDuAn.xlsx)):
+Dự án được phân rã thành các module chức năng độc lập theo chuẩn MVC và Service Pattern, mỗi thành viên chịu trách nhiệm các file riêng biệt nhằm tránh xung đột mã nguồn:
 
-| TT | Vai trò / Tính năng | Nhiệm vụ chính | Các file phụ trách riêng (Không đụng người khác) | Kiến thức Laravel áp dụng |
+| TT | Thành viên & Module | Nhiệm vụ chính | Các file phụ trách riêng (Không đụng người khác) | Kiến thức Laravel áp dụng |
 |:---:|---|---|---|---|
-| **TV1** | **Kiến trúc dữ liệu & Khởi tạo** | - Khởi tạo Repo Git, file `.env.example`<br>- Viết Migration bảng `categories` và `books`<br>- Viết `CategorySeeder` & `BookSeeder` nạp 58 cuốn sách thật kèm ảnh vào CSDL | - `database/migrations/...`<br>- `database/seeders/CategorySeeder.php`<br>- `database/seeders/BookSeeder.php`<br>- `app/Models/Category.php`<br>- `app/Models/Book.php` | Migration, Foreign Key, Model Relationship (`hasMany`, `belongsTo`), Database Seeding |
-| **TV2** | **Hiển thị danh sách & Bộ lọc** | - Xây dựng giao diện danh sách sách (`index`)<br>- Tìm kiếm từ khóa theo nhan đề, tác giả, NXB<br>- Lọc theo thể loại, khoảng giá tiền<br>- Sắp xếp theo giá tăng/giảm, mới nhất | - `app/Http/Controllers/BookController.php` (hàm `index`)<br>- `resources/views/books/index.blade.php`<br>- `resources/views/books/partials/filter-bar.blade.php` | Eloquent Query Scope, `when()`, Pagination Bootstrap 5, `withQueryString()` |
-| **TV3** | **Thêm mới & Upload ảnh** | - Form thêm mới đầu sách có validate kỹ càng<br>- Xử lý upload ảnh vào `storage/app/public/books`<br>- Viết JS xem trước ảnh (Preview) ngay khi chọn file<br>- Validate mã sách không trùng, giá > 0 | - `app/Http/Requests/StoreBookRequest.php`<br>- `resources/views/books/create.blade.php`<br>- `BookController.php` (hàm `create`, `store`) | Form Request Validation, File Upload, File System (`Storage::disk`), JavaScript DOM |
-| **TV4** | **Chi tiết & Gợi ý** | - Thiết kế trang xem chi tiết 1 đầu sách như Tiki/Fahasa<br>- Hiển thị thông số sách, tóm tắt nội dung<br>- Truy vấn danh sách "Sách cùng thể loại gợi ý" ở phía dưới<br>- Làm popup xem nhanh (Quick View Modal) | - `resources/views/books/show.blade.php`<br>- `resources/views/books/partials/quick-view-modal.blade.php`<br>- `BookController.php` (hàm `show`) | Route Model Binding, Sub-query Eloquent, Bootstrap Modal |
-| **TV5** | **Cập nhật & Vòng đời ảnh** | - Form cập nhật thông tin sách<br>- Khóa không cho sửa `book_code` (chỉ đọc readonly)<br>- Xử lý logic ảnh: Nếu người dùng upload ảnh mới $\rightarrow$ tự động xóa file ảnh cũ trong storage tránh rác ổ cứng | - `app/Http/Requests/UpdateBookRequest.php`<br>- `resources/views/books/edit.blade.php`<br>- `BookController.php` (hàm `edit`, `update`) | `Storage::disk('public')->delete()`, Form Validation ngoại trừ ID hiện tại |
-| **TV6** | **Xóa an toàn & Thùng rác** | - Không xóa cứng mà dùng Soft Delete của Laravel<br>- Làm trang Thùng rác (`books/trash`) xem các sách đã xóa<br>- Nút Khôi phục (Restore) sách<br>- Nút Xóa vĩnh viễn (Force Delete) | - Migration bổ sung `softDeletes()`<br>- `resources/views/books/trash.blade.php`<br>- `app/Http/Controllers/BookTrashController.php` | SoftDeletes Trait, `withTrashed()`, `restore()`, `forceDelete()` |
-| **TV7** | **Nghiệp vụ Nhập kho & Tồn kho** | - Đặc tả yêu cầu: "Cập nhật thêm số lượng cho đầu sách đã có"<br>- Làm Modal "Nhập thêm hàng"<br>- Cộng dồn số lượng `increment('stock', $qty)`<br>- Đổi màu cảnh báo nếu số lượng = 0 (Hết hàng) hoặc < 5 (Sắp hết) | - `resources/views/books/partials/stock-modal.blade.php`<br>- `app/Http/Controllers/BookStockController.php`<br>- Thêm route `POST /books/{id}/stock-in` | Eloquent `increment()`, Business Logic tồn kho, Badge động |
-| **TV8** | **Xuất báo cáo & Phân quyền bảo mật** | - Tính năng nút Xuất danh sách ra file Excel / CSV (dùng thư viện `maatwebsite/excel`)<br>- Phân quyền: Tạo `BookPolicy`<br>+ Admin: thấy nút Thêm, Sửa, Xóa, Nhập kho.<br>+ Khách/User: chỉ thấy nút Xem chi tiết | - `app/Http/Controllers/BookExportController.php`<br>- `app/Policies/BookPolicy.php`<br>- `resources/views/books/partials/action-buttons.blade.php` | Laravel Packages, Laravel Authorization (Gates/Policies), Blade Directive `@can` |
+| **TV1** | **Cơ sở dữ liệu & Model** | - Thiết kế migration cho `books`, `categories`, `authors`, `publishers`<br>- Bổ sung `stock_quantity` vào sách và `role` vào users<br>- Thiết lập khóa ngoại, quan hệ Eloquent và dữ liệu mẫu Seeders | - `database/migrations/...`<br>- `database/seeders/...`<br>- `app/Models/Book.php`, `Category.php`<br>- `app/Models/Author.php`, `Publisher.php`, `User.php` | Migration, Foreign Key, Eloquent Relationships (`hasMany`, `belongsTo`), Database Seeding |
+| **TV2** | **Quản lý Thể loại** | - Xem danh sách thể loại<br>- CRUD Thể loại (Thêm, sửa, xóa)<br>- Kiểm tra ràng buộc thể loại đang có sách trước khi xóa (`$category->books()->exists()`) | - `app/Http/Controllers/CategoryController.php`<br>- `app/Http/Requests/StoreCategoryRequest.php`<br>- `resources/views/categories/` | CRUD Controller, Form Request, Eloquent Relationship Check |
+| **TV3** | **Quản lý Tác giả & NXB** | - CRUD Tác giả (`authors`)<br>- CRUD Nhà xuất bản (`publishers`)<br>- Kiểm tra ràng buộc dữ liệu trước khi xóa bản ghi đang có sách tham chiếu<br>- Cung cấp danh sách cho form sách | - `app/Http/Controllers/AuthorController.php`<br>- `app/Http/Controllers/PublisherController.php`<br>- `resources/views/authors/`<br>- `resources/views/publishers/` | Dual CRUD Controllers, Resource Views, Delete Constraints |
+| **TV4** | **Backend CRUD Sách** | - Xử lý danh sách, chi tiết, thêm, sửa, xóa sách ở tầng backend<br>- Viết Validation cho dữ liệu sách<br>- Xử lý upload và lưu trữ ảnh bìa trong storage<br>- Đảm bảo liên kết đúng các khóa ngoại | - `app/Http/Controllers/BookController.php`<br>- `app/Http/Requests/StoreBookRequest.php`<br>- `app/Http/Requests/UpdateBookRequest.php` | Controller Resource, Form Request, Storage File Upload, Transaction |
+| **TV5** | **Giao diện Quản lý Sách** | - Thiết kế giao diện danh sách, chi tiết, thêm mới và cập nhật sách<br>- Hiển thị ảnh bìa, giá, thể loại, tác giả, NXB và số lượng tồn<br>- Hiển thị thông báo, lỗi validation và trạng thái hết hàng | - `resources/views/books/index.blade.php`<br>- `resources/views/books/show.blade.php`<br>- `resources/views/books/create.blade.php`<br>- `resources/views/books/edit.blade.php`<br>- `resources/views/books/partials/` | Blade Templates, Bootstrap 5 UI, Component Reusability |
+| **TV6** | **Tìm kiếm, Lọc & Phân trang** | - Tìm kiếm theo tên sách<br>- Lọc theo thể loại, tác giả, nhà xuất bản, khoảng giá<br>- Sắp xếp theo giá / thời gian tạo, phân trang giữ query string<br>*(Bàn giao service & partial cho TV4, TV5 tích hợp)* | - `app/Services/BookFilterService.php`<br>- `resources/views/books/partials/filter-bar.blade.php` | Service Pattern, Eloquent Query Scope, `when()`, Pagination `withQueryString()` |
+| **TV7** | **Đăng nhập & Phân quyền** | - Xử lý đăng nhập, đăng xuất<br>- Thiết lập Middleware / Policy chặn User truy cập trái phép các thao tác sửa đổi<br>- Ẩn/hiện nút chức năng theo quyền (`role === 'admin'`) | - `app/Http/Controllers/AuthController.php`<br>- `app/Http/Middleware/AdminMiddleware.php`<br>- `app/Policies/BookPolicy.php`<br>- `resources/views/auth/` | Authentication, Middleware, Authorization (Gates & Policies), Blade `@can` |
+| **TV8** | **Quản lý Tồn kho** | - Xem số lượng tồn của từng đầu sách<br>- Form / Modal nhập thêm số lượng kho (cộng dồn an toàn `increment('stock_quantity', $qty)`)<br>- Cảnh báo: Sắp hết (< 5), Hết hàng (= 0)<br>- Phân quyền chỉ Admin được nhập kho | - `app/Http/Controllers/BookStockController.php`<br>- `app/Http/Requests/UpdateBookStockRequest.php`<br>- `resources/views/stock/`<br>- `resources/views/books/partials/stock-status.blade.php` | Eloquent `increment()`, Business Logic tồn kho, Badge động, Security Check |
 
 ---
 
 ## 10. Cấu trúc CSDL, Model quan hệ & Quy ước lập trình
 
-### 10.1. Thiết kế bảng CSDL
+### 10.1. Thiết kế các bảng CSDL (Chuẩn hóa 3NF)
 
-- **`categories`**: `id`, `name`, `slug`, `description`, `timestamps`.
-- **`books`**: `id`, `category_id` (foreign key $\rightarrow$ `categories.id`), `book_code` (unique), `isbn`, `title`, `author`, `translator`, `publisher`, `supplier`, `publish_year`, `language`, `weight`, `dimensions`, `pages`, `original_price`, `price`, `stock`, `sold_quantity`, `cover_image`, `description`, `is_trending`, `badge_type`, `timestamps`, `deleted_at` (`softDeletes`).
+1. **`categories`**: `id`, `name`, `slug`, `description`, `timestamps`.
+2. **`authors`**: `id`, `name`, `slug`, `bio`, `avatar`, `timestamps`.
+3. **`publishers`**: `id`, `name`, `slug`, `email`, `phone`, `address`, `description`, `timestamps`.
+4. **`books`**:
+   - Khóa ngoại: `category_id` ($\rightarrow$ `categories`), `author_id` ($\rightarrow$ `authors`), `publisher_id` ($\rightarrow$ `publishers`).
+   - Thông tin: `book_code` (unique), `isbn`, `title`, `translator`, `supplier`, `publish_year`, `language`, `weight`, `dimensions`, `pages`.
+   - Giá & Kho: `original_price`, `price`, `stock_quantity`, `sold_quantity`.
+   - Media & Khác: `cover_image`, `description`, `is_trending`, `badge_type`.
+   - Dấu thời gian & Xóa mềm: `created_at`, `updated_at`, `deleted_at` (`softDeletes`).
+5. **`users`**: `id`, `name`, `email`, `password`, `role` (`admin` hoặc `user`), `timestamps`.
 
-### 10.2. Quy ước dùng Model & Lấy ảnh bìa
+### 10.2. Quan hệ Eloquent Models
 
-1. **Hiển thị ảnh bìa:** Toàn bộ ảnh được lưu trữ trong `storage/app/public/books/`. Khi render trong Blade View:
-   ```blade
-   <img src="{{ asset('storage/books/' . $book->cover_image) }}" alt="{{ $book->title }}">
-   ```
-   Hoặc gọi qua accessor định nghĩa sẵn trong Model:
-   ```blade
-   <img src="{{ $book->cover_image_url }}" alt="{{ $book->title }}">
-   ```
-2. **Số lượng tồn kho (`stock` và `quantity`):**
-   Trong CSDL cột tên là `stock`. Model `Book` đã có Accessor đồng bộ alias: `$book->quantity` $\longleftrightarrow$ `$book->stock`. Thành viên TV7 có thể dùng linh hoạt cả 2 cách gọi.
-3. **Mã sách (`book_code`):**
-   Định dạng `BK-{ISBN}` (ví dụ `BK-8935325032561`). Mã này là duy nhất; khi sửa sách (TV5) phải để trường này ở chế độ `readonly`.
+- **`Category`**: `hasMany(Book::class)`
+- **`Author`**: `hasMany(Book::class)`
+- **`Publisher`**: `hasMany(Book::class)`
+- **`Book`**:
+  - `belongsTo(Category::class)`
+  - `belongsTo(Author::class)`
+  - `belongsTo(Publisher::class)`
+  - Hỗ trợ SoftDeletes: `use SoftDeletes;`
+- **`User`**: Có phương thức kiểm tra quyền nhanh: `$user->isAdmin()`.
+
+### 10.3. Quy ước dùng Model & Lấy ảnh bìa cho cả nhóm
+
+1. **Hiển thị tên Tác giả, NXB, Thể loại:**
+   - Dùng quan hệ: `$book->author->name`, `$book->publisher->name`, `$book->category->name`.
+   - Hoặc dùng Accessor tiện lợi: `$book->author_name`, `$book->publisher_name`, `$book->category_name`.
+2. **Hiển thị ảnh bìa:**
+   - Render qua asset:
+     ```blade
+     <img src="{{ asset('storage/books/' . $book->cover_image) }}" alt="{{ $book->title }}">
+     ```
+   - Hoặc dùng helper: `<img src="{{ $book->cover_image_url }}" alt="{{ $book->title }}">`.
+3. **Số lượng tồn kho:**
+   - Cột CSDL là `stock_quantity`.
+   - Model `Book` đã có Accessor đồng bộ alias: `$book->stock` và `$book->quantity` trỏ thẳng về `$book->stock_quantity`.
+4. **Mã sách (`book_code`):**
+   - Định dạng `BK-{ISBN}`. Khi tạo mới phải validate `unique:books,book_code`; khi sửa phải để `readonly`.
 
 ---
 

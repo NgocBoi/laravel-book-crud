@@ -14,12 +14,12 @@ return new class extends Migration
         Schema::create('books', function (Blueprint $table) {
             $table->id();
             $table->foreignId('category_id')->constrained('categories')->cascadeOnDelete();
+            $table->foreignId('author_id')->constrained('authors')->cascadeOnDelete();
+            $table->foreignId('publisher_id')->constrained('publishers')->cascadeOnDelete();
             $table->string('book_code', 50)->unique();
             $table->string('isbn', 20)->nullable()->index();
             $table->string('title');
-            $table->string('author');
             $table->string('translator')->nullable();
-            $table->string('publisher')->nullable();
             $table->string('supplier')->nullable();
             $table->integer('publish_year')->nullable();
             $table->string('language', 50)->default('Tiếng Việt');
@@ -28,7 +28,7 @@ return new class extends Migration
             $table->integer('pages')->nullable();
             $table->decimal('original_price', 12, 2)->default(0);
             $table->decimal('price', 12, 2)->default(0);
-            $table->integer('stock')->default(0);
+            $table->integer('stock_quantity')->default(0);
             $table->integer('sold_quantity')->default(0);
             $table->string('cover_image')->nullable();
             $table->longText('description')->nullable();

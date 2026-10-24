@@ -2,8 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Models\Author;
 use App\Models\Book;
 use App\Models\Category;
+use App\Models\Publisher;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\File;
 
@@ -37,13 +39,24 @@ class BookSeeder extends Seeder
             File::makeDirectory($storageBooksDir, 0755, true);
         }
 
-        // Lấy danh sách Categories để map nhanh
-        $categories = Category::all()->pluck('id', 'name')->toArray();
+        // Lấy danh sách map nhanh
+        $categories = Category::pluck('id', 'name')->toArray();
+        $authors = Author::pluck('id', 'name')->toArray();
+        $publishers = Publisher::pluck('id', 'name')->toArray();
+
+        $defaultCategoryId = Category::first()->id ?? 1;
+        $defaultAuthorId = Author::first()->id ?? 1;
+        $defaultPublisherId = Publisher::first()->id ?? 1;
 
         $seededCount = 0;
         foreach ($booksData as $item) {
-            $categoryName = $item['category_name'] ?? 'Văn Học';
-            $categoryId = $categories[$categoryName] ?? (Category::first()->id ?? 1);
+            $categoryName = trim($item['category_name'] ?? '');
+            $authorName = trim($item['author'] ?? '');
+            $publisherName = trim($item['publisher'] ?? '');
+
+            $categoryId = $categories[$categoryName] ?? $defaultCategoryId;
+            $authorId = $authors[$authorName] ?? $defaultAuthorId;
+            $publisherId = $publishers[$publisherName] ?? $defaultPublisherId;
 
             // Đồng bộ file ảnh từ public/books sang storage/app/public/books nếu chưa có
             $imageName = $item['cover_image'] ?? null;
@@ -60,11 +73,11 @@ class BookSeeder extends Seeder
                 ['book_code' => $item['book_code']],
                 [
                     'category_id' => $categoryId,
+                    'author_id' => $authorId,
+                    'publisher_id' => $publisherId,
                     'isbn' => $item['isbn'] ?? null,
                     'title' => $item['title'],
-                    'author' => $item['author'],
                     'translator' => $item['translator'] ?? null,
-                    'publisher' => $item['publisher'] ?? null,
                     'supplier' => $item['supplier'] ?? null,
                     'publish_year' => $item['publish_year'] ?? null,
                     'language' => $item['language'] ?? 'Tiếng Việt',
@@ -73,7 +86,7 @@ class BookSeeder extends Seeder
                     'pages' => $item['pages'] ?? 200,
                     'original_price' => $item['original_price'] ?? 0,
                     'price' => $item['price'] ?? 0,
-                    'stock' => $item['stock'] ?? 0,
+                    'stock_quantity' => $item['stock'] ?? 0,
                     'sold_quantity' => $item['sold_quantity'] ?? 0,
                     'cover_image' => $imageName,
                     'description' => $item['description'] ?? null,
@@ -85,6 +98,6 @@ class BookSeeder extends Seeder
             $seededCount++;
         }
 
-        $this->command->info("Đã seed thành công {$seededCount} đầu sách vào database!");
+        $this->command->info("Đã seed thành công {$seededCount} đầu sách với đầy đủ quan hệ Danh mục, Tác giả và NXB!");
     }
 }
