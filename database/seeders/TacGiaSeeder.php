@@ -1,0 +1,83 @@
+<?php
+
+namespace Database\Seeders;
+
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+
+class TacGiaSeeder extends Seeder
+{
+    public function run(): void
+    {
+        DB::table('tac_gia')->insert([
+            ['ma_tac_gia' => 1, 'ten_tac_gia' => 'Ca Tây', 'tieu_su' => 'Tác giả Ca Tây với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['ma_tac_gia' => 2, 'ten_tac_gia' => 'Jayita Bhattacharjee', 'tieu_su' => 'Tác giả Jayita Bhattacharjee với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['ma_tac_gia' => 3, 'ten_tac_gia' => 'David McRaney', 'tieu_su' => 'Tác giả David McRaney với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['ma_tac_gia' => 4, 'ten_tac_gia' => 'Sasha Fenton', 'tieu_su' => 'Tác giả Sasha Fenton với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['ma_tac_gia' => 5, 'ten_tac_gia' => 'Đường Bảo Nhi', 'tieu_su' => 'Tác giả Đường Bảo Nhi với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['ma_tac_gia' => 6, 'ten_tac_gia' => 'Leader Thanh', 'tieu_su' => 'Tác giả Leader Thanh với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['ma_tac_gia' => 7, 'ten_tac_gia' => 'Nguyễn Duy Linh', 'tieu_su' => 'Tác giả Nguyễn Duy Linh với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['ma_tac_gia' => 8, 'ten_tac_gia' => 'Trần Quang Sang', 'tieu_su' => 'Tác giả Trần Quang Sang với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['ma_tac_gia' => 9, 'ten_tac_gia' => 'Russ Laraway', 'tieu_su' => 'Tác giả Russ Laraway với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['ma_tac_gia' => 10, 'ten_tac_gia' => 'Peter F. Drucker', 'tieu_su' => 'Tác giả Peter F. Drucker với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['ma_tac_gia' => 11, 'ten_tac_gia' => 'Tần Hạo', 'tieu_su' => 'Tác giả Tần Hạo với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['ma_tac_gia' => 12, 'ten_tac_gia' => 'Jeong JiA', 'tieu_su' => 'Tác giả Jeong JiA với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['ma_tac_gia' => 13, 'ten_tac_gia' => 'Lavende', 'tieu_su' => 'Tác giả Lavende với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['ma_tac_gia' => 14, 'ten_tac_gia' => 'Chỉ Văn', 'tieu_su' => 'Tác giả Chỉ Văn với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['ma_tac_gia' => 15, 'ten_tac_gia' => 'Kawabata Yasunari', 'tieu_su' => 'Tác giả Kawabata Yasunari với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['ma_tac_gia' => 16, 'ten_tac_gia' => 'Trần Cao Ngọc Bội', 'tieu_su' => 'Tác giả Trần Cao Ngọc Bội với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['ma_tac_gia' => 17, 'ten_tac_gia' => 'Vũ Vạn Xuân', 'tieu_su' => 'Tác giả Vũ Vạn Xuân với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['ma_tac_gia' => 18, 'ten_tac_gia' => 'Trần Nguyễn Thụy Thoại Lan', 'tieu_su' => 'Tác giả Trần Nguyễn Thụy Thoại Lan với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['ma_tac_gia' => 19, 'ten_tac_gia' => 'Khánh Hà', 'tieu_su' => 'Tác giả Khánh Hà với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['ma_tac_gia' => 20, 'ten_tac_gia' => 'Tô Hà Thanh Phương', 'tieu_su' => 'Tác giả Tô Hà Thanh Phương với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['ma_tac_gia' => 21, 'ten_tac_gia' => 'Trang Anh', 'tieu_su' => 'Tác giả Trang Anh với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['ma_tac_gia' => 22, 'ten_tac_gia' => 'Dung Vũ', 'tieu_su' => 'Tác giả Dung Vũ với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['ma_tac_gia' => 23, 'ten_tac_gia' => 'Hà Thùy Linh', 'tieu_su' => 'Tác giả Hà Thùy Linh với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['ma_tac_gia' => 24, 'ten_tac_gia' => 'Cao Hằng', 'tieu_su' => 'Tác giả Cao Hằng với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['ma_tac_gia' => 25, 'ten_tac_gia' => 'Hạt Mầm Khéo Tay', 'tieu_su' => 'Tác giả Hạt Mầm Khéo Tay với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['ma_tac_gia' => 26, 'ten_tac_gia' => 'Shizi Culture', 'tieu_su' => 'Tác giả Shizi Culture với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['ma_tac_gia' => 27, 'ten_tac_gia' => 'Bún', 'tieu_su' => 'Tác giả Bún với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['ma_tac_gia' => 28, 'ten_tac_gia' => 'Dagmar Geisler', 'tieu_su' => 'Tác giả Dagmar Geisler với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['ma_tac_gia' => 29, 'ten_tac_gia' => 'Chính An', 'tieu_su' => 'Tác giả Chính An với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['ma_tac_gia' => 30, 'ten_tac_gia' => 'The School of Life', 'tieu_su' => 'Tác giả The School of Life với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['ma_tac_gia' => 31, 'ten_tac_gia' => 'Jun Phạm', 'tieu_su' => 'Tác giả Jun Phạm với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['ma_tac_gia' => 32, 'ten_tac_gia' => 'Mai Thanh Hạ', 'tieu_su' => 'Tác giả Mai Thanh Hạ với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['ma_tac_gia' => 33, 'ten_tac_gia' => 'Nguyên Trần', 'tieu_su' => 'Tác giả Nguyên Trần với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['ma_tac_gia' => 34, 'ten_tac_gia' => 'Tô Hoài', 'tieu_su' => 'Tác giả Tô Hoài với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['ma_tac_gia' => 35, 'ten_tac_gia' => 'Malcom Mann', 'tieu_su' => 'Tác giả Malcom Mann với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['ma_tac_gia' => 36, 'ten_tac_gia' => 'Steve Taylore-Knowles', 'tieu_su' => 'Tác giả Steve Taylore-Knowles với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['ma_tac_gia' => 37, 'ten_tac_gia' => 'Lighthouse Writers', 'tieu_su' => 'Tác giả Lighthouse Writers với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['ma_tac_gia' => 38, 'ten_tac_gia' => 'Khương Lệ Bình', 'tieu_su' => 'Tác giả Khương Lệ Bình với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['ma_tac_gia' => 39, 'ten_tac_gia' => 'Vương Phương', 'tieu_su' => 'Tác giả Vương Phương với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['ma_tac_gia' => 40, 'ten_tac_gia' => 'Vương Phong', 'tieu_su' => 'Tác giả Vương Phong với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['ma_tac_gia' => 41, 'ten_tac_gia' => 'Lưu Lệ Bình', 'tieu_su' => 'Tác giả Lưu Lệ Bình với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['ma_tac_gia' => 42, 'ten_tac_gia' => 'Mã Tiễn Phi', 'tieu_su' => 'Tác giả Mã Tiễn Phi với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['ma_tac_gia' => 43, 'ten_tac_gia' => 'Nhiều Tác Giả', 'tieu_su' => 'Tác giả Nhiều Tác Giả với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['ma_tac_gia' => 44, 'ten_tac_gia' => 'Min Jin Young', 'tieu_su' => 'Tác giả Min Jin Young với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['ma_tac_gia' => 45, 'ten_tac_gia' => 'Ahn Jean Myung', 'tieu_su' => 'Tác giả Ahn Jean Myung với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['ma_tac_gia' => 46, 'ten_tac_gia' => 'Thiếu Tướng Hoàng Đan', 'tieu_su' => 'Tác giả Thiếu Tướng Hoàng Đan với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['ma_tac_gia' => 47, 'ten_tac_gia' => 'Nguyễn Văn Tàu', 'tieu_su' => 'Tác giả Nguyễn Văn Tàu với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['ma_tac_gia' => 48, 'ten_tac_gia' => 'Dũng Phan', 'tieu_su' => 'Tác giả Dũng Phan với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['ma_tac_gia' => 49, 'ten_tac_gia' => 'Hà Minh', 'tieu_su' => 'Tác giả Hà Minh với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['ma_tac_gia' => 50, 'ten_tac_gia' => 'Gilles Diederichs', 'tieu_su' => 'Tác giả Gilles Diederichs với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['ma_tac_gia' => 51, 'ten_tac_gia' => 'Vương Trung Hiếu', 'tieu_su' => 'Tác giả Vương Trung Hiếu với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['ma_tac_gia' => 52, 'ten_tac_gia' => 'Trần Thị Huyên Thảo', 'tieu_su' => 'Tác giả Trần Thị Huyên Thảo với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['ma_tac_gia' => 53, 'ten_tac_gia' => 'Trạch Quế Vinh', 'tieu_su' => 'Tác giả Trạch Quế Vinh với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['ma_tac_gia' => 54, 'ten_tac_gia' => 'Lý Thuyết Minh', 'tieu_su' => 'Tác giả Lý Thuyết Minh với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['ma_tac_gia' => 55, 'ten_tac_gia' => 'Thu Hằng', 'tieu_su' => 'Tác giả Thu Hằng với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['ma_tac_gia' => 56, 'ten_tac_gia' => 'Gosho Aoyama', 'tieu_su' => 'Tác giả Gosho Aoyama với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['ma_tac_gia' => 57, 'ten_tac_gia' => 'Fujiko F Fujio', 'tieu_su' => 'Tác giả Fujiko F Fujio với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['ma_tac_gia' => 58, 'ten_tac_gia' => 'Aida Iro', 'tieu_su' => 'Tác giả Aida Iro với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['ma_tac_gia' => 59, 'ten_tac_gia' => 'Akane Tamura', 'tieu_su' => 'Tác giả Akane Tamura với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['ma_tac_gia' => 60, 'ten_tac_gia' => 'Koyoharu Gotouge', 'tieu_su' => 'Tác giả Koyoharu Gotouge với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['ma_tac_gia' => 61, 'ten_tac_gia' => 'Chu Lai', 'tieu_su' => 'Tác giả Chu Lai với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['ma_tac_gia' => 62, 'ten_tac_gia' => 'Tuế Kiến', 'tieu_su' => 'Tác giả Tuế Kiến với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['ma_tac_gia' => 63, 'ten_tac_gia' => 'Paulo Coelho', 'tieu_su' => 'Tác giả Paulo Coelho với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['ma_tac_gia' => 64, 'ten_tac_gia' => 'Thương Thái Vi', 'tieu_su' => 'Tác giả Thương Thái Vi với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['ma_tac_gia' => 65, 'ten_tac_gia' => 'Phạm Lữ Ân', 'tieu_su' => 'Tác giả Phạm Lữ Ân với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['ma_tac_gia' => 66, 'ten_tac_gia' => 'Hoàng Nam Tiến', 'tieu_su' => 'Tác giả Hoàng Nam Tiến với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['ma_tac_gia' => 67, 'ten_tac_gia' => 'Sơn Tùng', 'tieu_su' => 'Tác giả Sơn Tùng với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['ma_tac_gia' => 68, 'ten_tac_gia' => 'Phùng Quán', 'tieu_su' => 'Tác giả Phùng Quán với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+        ]);
+    }
+}
