@@ -2,64 +2,34 @@
 
 namespace Database\Seeders;
 
-use App\Models\Publisher;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 
 class PublisherSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        $jsonPath = database_path('data/books.json');
-        if (!File::exists($jsonPath)) {
-            $jsonPath = storage_path('app/public/books.json');
-        }
-        if (!File::exists($jsonPath)) {
-            $jsonPath = public_path('books.json');
-        }
-
-        if (!File::exists($jsonPath)) {
-            $this->command->error("Không tìm thấy file books.json tại bất kỳ đường dẫn nào.");
-            return;
-        }
-
-        $booksData = json_decode(File::get($jsonPath), true);
-        $publishers = [];
-
-        foreach ($booksData as $b) {
-            $pubName = trim($b['publisher'] ?? '');
-            if ($pubName && !in_array($pubName, $publishers)) {
-                $publishers[] = $pubName;
-            }
-        }
-
-        foreach ($publishers as $name) {
-            $existing = Publisher::where('name', $name)->first();
-            if ($existing) {
-                continue;
-            }
-
-            $baseSlug = Str::slug($name);
-            $slug = $baseSlug ?: 'nxb-' . Str::random(5);
-            $count = 1;
-            while (Publisher::where('slug', $slug)->exists()) {
-                $slug = $baseSlug . '-' . $count++;
-            }
-
-            Publisher::create([
-                'name' => $name,
-                'slug' => $slug,
-                'email' => 'contact@' . ($baseSlug ?: 'nxb') . '.vn',
-                'phone' => '024 3825 ' . rand(1000, 9999),
-                'address' => 'Hà Nội / TP. Hồ Chí Minh, Việt Nam',
-                'description' => "Nhà xuất bản {$name} chuyên xuất bản và phát hành các ấn phẩm uy tín, chất lượng hàng đầu Việt Nam.",
-            ]);
-        }
-
-        $this->command->info('Đã seed thành công ' . count($publishers) . ' nhà xuất bản vào database!');
+        DB::table('publishers')->insert([
+            ['id' => 1, 'name' => 'Thế Giới', 'address' => 'Hà Nội / TP. Hồ Chí Minh, Việt Nam'],
+            ['id' => 2, 'name' => 'Phụ Nữ Việt Nam', 'address' => 'Hà Nội / TP. Hồ Chí Minh, Việt Nam'],
+            ['id' => 3, 'name' => 'Dân Trí', 'address' => 'Hà Nội / TP. Hồ Chí Minh, Việt Nam'],
+            ['id' => 4, 'name' => 'Lao Động', 'address' => 'Hà Nội / TP. Hồ Chí Minh, Việt Nam'],
+            ['id' => 5, 'name' => 'Công Thương', 'address' => 'Hà Nội / TP. Hồ Chí Minh, Việt Nam'],
+            ['id' => 6, 'name' => 'Văn học', 'address' => 'Hà Nội / TP. Hồ Chí Minh, Việt Nam'],
+            ['id' => 7, 'name' => 'Hà Nội', 'address' => 'Hà Nội / TP. Hồ Chí Minh, Việt Nam'],
+            ['id' => 8, 'name' => 'NXB Giáo Dục', 'address' => 'Hà Nội / TP. Hồ Chí Minh, Việt Nam'],
+            ['id' => 9, 'name' => 'NXB Đại học Quốc gia Hà Nội', 'address' => 'Hà Nội / TP. Hồ Chí Minh, Việt Nam'],
+            ['id' => 10, 'name' => 'Hồng Đức', 'address' => 'Hà Nội / TP. Hồ Chí Minh, Việt Nam'],
+            ['id' => 11, 'name' => 'Thanh Niên', 'address' => 'Hà Nội / TP. Hồ Chí Minh, Việt Nam'],
+            ['id' => 12, 'name' => 'NXB Kim Đồng', 'address' => 'Hà Nội / TP. Hồ Chí Minh, Việt Nam'],
+            ['id' => 13, 'name' => 'NXB Tổng Hợp TPHCM', 'address' => 'Hà Nội / TP. Hồ Chí Minh, Việt Nam'],
+            ['id' => 14, 'name' => 'Đại học Quốc Gia Hà Nội', 'address' => 'Hà Nội / TP. Hồ Chí Minh, Việt Nam'],
+            ['id' => 15, 'name' => 'NXB Thông Tấn', 'address' => 'Hà Nội / TP. Hồ Chí Minh, Việt Nam'],
+            ['id' => 16, 'name' => 'NXB Hội Nhà Văn', 'address' => 'Hà Nội / TP. Hồ Chí Minh, Việt Nam'],
+            ['id' => 17, 'name' => 'NXB Trẻ', 'address' => 'Hà Nội / TP. Hồ Chí Minh, Việt Nam'],
+            ['id' => 18, 'name' => 'NXB Văn Hoá Thông Tin', 'address' => 'Hà Nội / TP. Hồ Chí Minh, Việt Nam'],
+            ['id' => 19, 'name' => 'Quân Đội Nhân Dân', 'address' => 'Hà Nội / TP. Hồ Chí Minh, Việt Nam'],
+            ['id' => 20, 'name' => 'Kim Đồng', 'address' => 'Hà Nội / TP. Hồ Chí Minh, Việt Nam'],
+        ]);
     }
 }

@@ -22,12 +22,12 @@ class DatabaseSeeder extends Seeder
 
         // Thứ tự quan trọng: bảng cha trước, bảng con sau
         $this->call([
-            TheLoaiSeeder::class,
-            TacGiaSeeder::class,
-            NhaXuatBanSeeder::class,
-            SachSeeder::class,
+            CategorySeeder::class,
+            AuthorSeeder::class,
+            PublisherSeeder::class,
+            BookSeeder::class,
         ]);
 
-        // Bảng kho và ton_kho để trống, nhập dữ liệu sau
+        // Bảng warehouses và book_warehouse để trống, nhập dữ liệu sau
     }
 }

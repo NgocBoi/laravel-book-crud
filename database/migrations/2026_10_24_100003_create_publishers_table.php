@@ -8,15 +8,15 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('tac_gia', function (Blueprint $table) {
-            $table->id('ma_tac_gia');
-            $table->string('ten_tac_gia', 150);
-            $table->text('tieu_su')->nullable();
+        Schema::create('publishers', function (Blueprint $table) {
+            $table->id();
+            $table->string('name', 150)->unique();
+            $table->string('address', 255)->nullable();
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('tac_gia');
+        Schema::dropIfExists('publishers');
     }
 };
