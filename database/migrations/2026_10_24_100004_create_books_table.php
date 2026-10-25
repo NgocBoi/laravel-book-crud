@@ -14,6 +14,7 @@ return new class extends Migration
             $table->string('title', 255);
             $table->year('published_year')->nullable();
             $table->decimal('price', 12, 2)->default(0);
+            $table->unsignedInteger('stock_quantity')->default(0);
             $table->unsignedInteger('page_count')->nullable();
             $table->string('dimensions', 50)->nullable();
             $table->string('cover_image_url', 255)->nullable();
