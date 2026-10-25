@@ -69,31 +69,11 @@
     </div>
 
     <div class="col-md-4">
-        <label for="author_ids" class="form-label">Tác giả</label>
-        <select id="author_ids" name="author_ids[]" multiple size="5"
-                class="form-select @if ($errors->has('author_ids') || $errors->has('author_ids.*')) is-invalid @endif">
-            @foreach ($authors as $author)
-                <option value="{{ $author->id }}" @selected(in_array($author->id, $selectedAuthors))>{{ $author->name }}</option>
-            @endforeach
-        </select>
-        <div class="form-text">Giữ Ctrl để chọn nhiều.</div>
-        @if ($errors->has('author_ids') || $errors->has('author_ids.*'))
-            <div class="invalid-feedback">{{ $errors->first('author_ids') ?: $errors->first('author_ids.*') }}</div>
-        @endif
+        @include('books.partials.select-count-field', ['field' => 'author_ids', 'label' => 'Tác giả', 'options' => $authors, 'selected' => $selectedAuthors])
     </div>
 
     <div class="col-md-4">
-        <label for="category_ids" class="form-label">Thể loại</label>
-        <select id="category_ids" name="category_ids[]" multiple size="5"
-                class="form-select @if ($errors->has('category_ids') || $errors->has('category_ids.*')) is-invalid @endif">
-            @foreach ($categories as $category)
-                <option value="{{ $category->id }}" @selected(in_array($category->id, $selectedCategories))>{{ $category->name }}</option>
-            @endforeach
-        </select>
-        <div class="form-text">Giữ Ctrl để chọn nhiều.</div>
-        @if ($errors->has('category_ids') || $errors->has('category_ids.*'))
-            <div class="invalid-feedback">{{ $errors->first('category_ids') ?: $errors->first('category_ids.*') }}</div>
-        @endif
+        @include('books.partials.select-count-field', ['field' => 'category_ids', 'label' => 'Thể loại', 'options' => $categories, 'selected' => $selectedCategories])
     </div>
 
     <div class="col-12">
