@@ -2,129 +2,49 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Book extends Model
 {
-    use HasFactory, SoftDeletes;
+    public $timestamps = false;
 
     protected $fillable = [
-        'category_id',
-        'author_id',
-        'publisher_id',
-        'book_code',
         'isbn',
         'title',
-        'translator',
-        'supplier',
-        'publish_year',
-        'language',
-        'weight',
-        'dimensions',
-        'pages',
-        'original_price',
+        'published_year',
         'price',
-        'stock_quantity',
-        'sold_quantity',
-        'cover_image',
+        'page_count',
+        'dimensions',
+        'cover_image_url',
         'description',
-        'is_trending',
-        'badge_type',
+        'publisher_id',
     ];
 
     protected $casts = [
-        'publish_year' => 'integer',
-        'weight' => 'integer',
-        'pages' => 'integer',
-        'original_price' => 'decimal:2',
+        'published_year' => 'integer',
         'price' => 'decimal:2',
-        'stock_quantity' => 'integer',
-        'sold_quantity' => 'integer',
-        'is_trending' => 'boolean',
+        'page_count' => 'integer',
     ];
 
-    /**
-     * Relationship: Book belongs to Category.
-     */
-    public function category(): BelongsTo
-    {
-        return $this->belongsTo(Category::class);
-    }
-
-    /**
-     * Relationship: Book belongs to Author.
-     */
-    public function author(): BelongsTo
-    {
-        return $this->belongsTo(Author::class);
-    }
-
-    /**
-     * Relationship: Book belongs to Publisher.
-     */
     public function publisher(): BelongsTo
     {
         return $this->belongsTo(Publisher::class);
     }
 
-    /**
-     * Accessor: Alias 'stock' to 'stock_quantity'.
-     */
-    public function getStockAttribute(): int
+    public function authors(): BelongsToMany
     {
-        return (int) $this->stock_quantity;
+        return $this->belongsToMany(Author::class, 'author_book');
     }
 
-    public function setStockAttribute($value): void
+    public function categories(): BelongsToMany
     {
-        $this->attributes['stock_quantity'] = (int) $value;
+        return $this->belongsToMany(Category::class, 'book_category');
     }
 
-    /**
-     * Accessor: Alias 'quantity' to 'stock_quantity'.
-     */
-    public function getQuantityAttribute(): int
+    public function warehouses(): BelongsToMany
     {
-        return (int) $this->stock_quantity;
-    }
-
-    public function setQuantityAttribute($value): void
-    {
-        $this->attributes['stock_quantity'] = (int) $value;
-    }
-
-    /**
-     * Convenient name accessors for views.
-     */
-    public function getAuthorNameAttribute(): string
-    {
-        return $this->author?->name ?? 'Không rõ';
-    }
-
-    public function getPublisherNameAttribute(): string
-    {
-        return $this->publisher?->name ?? 'Không rõ';
-    }
-
-    public function getCategoryNameAttribute(): string
-    {
-        return $this->category?->name ?? 'Không rõ';
-    }
-
-    /**
-     * Helper to get cover image URL.
-     */
-    public function getCoverImageUrlAttribute(): string
-    {
-        if ($this->cover_image && file_exists(public_path('storage/books/' . $this->cover_image))) {
-            return asset('storage/books/' . $this->cover_image);
-        }
-        if ($this->cover_image && file_exists(public_path('books/' . $this->cover_image))) {
-            return asset('books/' . $this->cover_image);
-        }
-        return 'https://via.placeholder.com/300x420?text=No+Cover';
+        return $this->belongsToMany(Warehouse::class, 'book_warehouse')->withPivot('quantity');
     }
 }
