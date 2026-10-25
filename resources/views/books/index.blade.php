@@ -9,7 +9,6 @@
     </div>
 
     @include('books.partials.flash-messages')
-    @include('books.partials.filter-bar')
     @include('books.partials.action-buttons')
 
     <div class="card border-0 shadow-sm">
@@ -22,7 +21,7 @@
                         <th>Tác giả</th>
                         <th>Thể loại</th>
                         <th>NXB</th>
-                        <th class="text-end">Giá</th>
+                        <th class="text-end text-nowrap">Giá</th>
                         <th class="text-center">Tồn kho</th>
                         <th class="text-end">Thao tác</th>
                     </tr>
@@ -42,7 +41,7 @@
                                 @endforeach
                             </td>
                             <td>{{ $book->publisher?->name ?? '—' }}</td>
-                            <td class="text-end">{{ number_format($book->price, 0, ',', '.') }} đ</td>
+                            <td class="text-end text-nowrap">{{ number_format($book->price, 0, ',', '.') }} đ</td>
                             <td class="text-center">@include('books.partials.stock-badge', ['book' => $book])</td>
                             <td class="text-end text-nowrap">
                                 <a href="{{ route('books.show', $book) }}" class="btn btn-sm btn-outline-primary" title="Chi tiết"><i class="bi bi-eye"></i></a>
