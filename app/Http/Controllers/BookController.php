@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Author;
+use App\Models\Book;
+use App\Models\Category;
+use App\Models\Publisher;
 use Illuminate\Http\Request;
 
 class BookController extends Controller
@@ -11,7 +15,11 @@ class BookController extends Controller
      */
     public function index()
     {
-        //
+        $books = Book::with(['publisher', 'authors', 'categories', 'warehouses'])
+            ->latest('id')
+            ->paginate(10);
+
+        return view('books.index', compact('books'));
     }
 
     /**
@@ -19,7 +27,11 @@ class BookController extends Controller
      */
     public function create()
     {
-        //
+        return view('books.create', [
+            'categories' => Category::orderBy('name')->get(),
+            'authors' => Author::orderBy('name')->get(),
+            'publishers' => Publisher::orderBy('name')->get(),
+        ]);
     }
 
     /**
@@ -33,17 +45,26 @@ class BookController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Book $book)
     {
-        //
+        $book->load(['publisher', 'authors', 'categories', 'warehouses']);
+
+        return view('books.show', compact('book'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Book $book)
     {
-        //
+        $book->load(['authors', 'categories', 'warehouses']);
+
+        return view('books.edit', [
+            'book' => $book,
+            'categories' => Category::orderBy('name')->get(),
+            'authors' => Author::orderBy('name')->get(),
+            'publishers' => Publisher::orderBy('name')->get(),
+        ]);
     }
 
     /**
