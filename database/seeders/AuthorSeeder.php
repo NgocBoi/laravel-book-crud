@@ -2,62 +2,82 @@
 
 namespace Database\Seeders;
 
-use App\Models\Author;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 
 class AuthorSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        $jsonPath = database_path('data/books.json');
-        if (!File::exists($jsonPath)) {
-            $jsonPath = storage_path('app/public/books.json');
-        }
-        if (!File::exists($jsonPath)) {
-            $jsonPath = public_path('books.json');
-        }
-
-        if (!File::exists($jsonPath)) {
-            $this->command->error("Không tìm thấy file books.json tại bất kỳ đường dẫn nào.");
-            return;
-        }
-
-        $booksData = json_decode(File::get($jsonPath), true);
-        $authors = [];
-
-        foreach ($booksData as $b) {
-            $authorName = trim($b['author'] ?? '');
-            if ($authorName && !in_array($authorName, $authors)) {
-                $authors[] = $authorName;
-            }
-        }
-
-        foreach ($authors as $name) {
-            $existing = Author::where('name', $name)->first();
-            if ($existing) {
-                continue;
-            }
-
-            $baseSlug = Str::slug($name);
-            $slug = $baseSlug ?: 'tac-gia-' . Str::random(5);
-            $count = 1;
-            while (Author::where('slug', $slug)->exists()) {
-                $slug = $baseSlug . '-' . $count++;
-            }
-
-            Author::create([
-                'name' => $name,
-                'slug' => $slug,
-                'bio' => "Tác giả {$name} với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.",
-                'avatar' => null,
-            ]);
-        }
-
-        $this->command->info('Đã seed thành công ' . count($authors) . ' tác giả vào database!');
+        DB::table('authors')->insert([
+            ['id' => 1, 'name' => 'Ca Tây', 'biography' => 'Tác giả Ca Tây với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['id' => 2, 'name' => 'Jayita Bhattacharjee', 'biography' => 'Tác giả Jayita Bhattacharjee với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['id' => 3, 'name' => 'David McRaney', 'biography' => 'Tác giả David McRaney với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['id' => 4, 'name' => 'Sasha Fenton', 'biography' => 'Tác giả Sasha Fenton với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['id' => 5, 'name' => 'Đường Bảo Nhi', 'biography' => 'Tác giả Đường Bảo Nhi với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['id' => 6, 'name' => 'Leader Thanh', 'biography' => 'Tác giả Leader Thanh với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['id' => 7, 'name' => 'Nguyễn Duy Linh', 'biography' => 'Tác giả Nguyễn Duy Linh với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['id' => 8, 'name' => 'Trần Quang Sang', 'biography' => 'Tác giả Trần Quang Sang với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['id' => 9, 'name' => 'Russ Laraway', 'biography' => 'Tác giả Russ Laraway với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['id' => 10, 'name' => 'Peter F. Drucker', 'biography' => 'Tác giả Peter F. Drucker với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['id' => 11, 'name' => 'Tần Hạo', 'biography' => 'Tác giả Tần Hạo với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['id' => 12, 'name' => 'Jeong JiA', 'biography' => 'Tác giả Jeong JiA với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['id' => 13, 'name' => 'Lavende', 'biography' => 'Tác giả Lavende với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['id' => 14, 'name' => 'Chỉ Văn', 'biography' => 'Tác giả Chỉ Văn với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['id' => 15, 'name' => 'Kawabata Yasunari', 'biography' => 'Tác giả Kawabata Yasunari với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['id' => 16, 'name' => 'Trần Cao Ngọc Bội', 'biography' => 'Tác giả Trần Cao Ngọc Bội với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['id' => 17, 'name' => 'Vũ Vạn Xuân', 'biography' => 'Tác giả Vũ Vạn Xuân với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['id' => 18, 'name' => 'Trần Nguyễn Thụy Thoại Lan', 'biography' => 'Tác giả Trần Nguyễn Thụy Thoại Lan với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['id' => 19, 'name' => 'Khánh Hà', 'biography' => 'Tác giả Khánh Hà với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['id' => 20, 'name' => 'Tô Hà Thanh Phương', 'biography' => 'Tác giả Tô Hà Thanh Phương với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['id' => 21, 'name' => 'Trang Anh', 'biography' => 'Tác giả Trang Anh với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['id' => 22, 'name' => 'Dung Vũ', 'biography' => 'Tác giả Dung Vũ với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['id' => 23, 'name' => 'Hà Thùy Linh', 'biography' => 'Tác giả Hà Thùy Linh với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['id' => 24, 'name' => 'Cao Hằng', 'biography' => 'Tác giả Cao Hằng với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['id' => 25, 'name' => 'Hạt Mầm Khéo Tay', 'biography' => 'Tác giả Hạt Mầm Khéo Tay với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['id' => 26, 'name' => 'Shizi Culture', 'biography' => 'Tác giả Shizi Culture với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['id' => 27, 'name' => 'Bún', 'biography' => 'Tác giả Bún với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['id' => 28, 'name' => 'Dagmar Geisler', 'biography' => 'Tác giả Dagmar Geisler với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['id' => 29, 'name' => 'Chính An', 'biography' => 'Tác giả Chính An với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['id' => 30, 'name' => 'The School of Life', 'biography' => 'Tác giả The School of Life với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['id' => 31, 'name' => 'Jun Phạm', 'biography' => 'Tác giả Jun Phạm với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['id' => 32, 'name' => 'Mai Thanh Hạ', 'biography' => 'Tác giả Mai Thanh Hạ với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['id' => 33, 'name' => 'Nguyên Trần', 'biography' => 'Tác giả Nguyên Trần với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['id' => 34, 'name' => 'Tô Hoài', 'biography' => 'Tác giả Tô Hoài với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['id' => 35, 'name' => 'Malcom Mann', 'biography' => 'Tác giả Malcom Mann với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['id' => 36, 'name' => 'Steve Taylore-Knowles', 'biography' => 'Tác giả Steve Taylore-Knowles với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['id' => 37, 'name' => 'Lighthouse Writers', 'biography' => 'Tác giả Lighthouse Writers với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['id' => 38, 'name' => 'Khương Lệ Bình', 'biography' => 'Tác giả Khương Lệ Bình với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['id' => 39, 'name' => 'Vương Phương', 'biography' => 'Tác giả Vương Phương với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['id' => 40, 'name' => 'Vương Phong', 'biography' => 'Tác giả Vương Phong với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['id' => 41, 'name' => 'Lưu Lệ Bình', 'biography' => 'Tác giả Lưu Lệ Bình với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['id' => 42, 'name' => 'Mã Tiễn Phi', 'biography' => 'Tác giả Mã Tiễn Phi với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['id' => 43, 'name' => 'Nhiều Tác Giả', 'biography' => 'Tác giả Nhiều Tác Giả với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['id' => 44, 'name' => 'Min Jin Young', 'biography' => 'Tác giả Min Jin Young với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['id' => 45, 'name' => 'Ahn Jean Myung', 'biography' => 'Tác giả Ahn Jean Myung với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['id' => 46, 'name' => 'Thiếu Tướng Hoàng Đan', 'biography' => 'Tác giả Thiếu Tướng Hoàng Đan với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['id' => 47, 'name' => 'Nguyễn Văn Tàu', 'biography' => 'Tác giả Nguyễn Văn Tàu với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['id' => 48, 'name' => 'Dũng Phan', 'biography' => 'Tác giả Dũng Phan với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['id' => 49, 'name' => 'Hà Minh', 'biography' => 'Tác giả Hà Minh với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['id' => 50, 'name' => 'Gilles Diederichs', 'biography' => 'Tác giả Gilles Diederichs với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['id' => 51, 'name' => 'Vương Trung Hiếu', 'biography' => 'Tác giả Vương Trung Hiếu với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['id' => 52, 'name' => 'Trần Thị Huyên Thảo', 'biography' => 'Tác giả Trần Thị Huyên Thảo với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['id' => 53, 'name' => 'Trạch Quế Vinh', 'biography' => 'Tác giả Trạch Quế Vinh với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['id' => 54, 'name' => 'Lý Thuyết Minh', 'biography' => 'Tác giả Lý Thuyết Minh với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['id' => 55, 'name' => 'Thu Hằng', 'biography' => 'Tác giả Thu Hằng với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['id' => 56, 'name' => 'Gosho Aoyama', 'biography' => 'Tác giả Gosho Aoyama với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['id' => 57, 'name' => 'Fujiko F Fujio', 'biography' => 'Tác giả Fujiko F Fujio với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['id' => 58, 'name' => 'Aida Iro', 'biography' => 'Tác giả Aida Iro với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['id' => 59, 'name' => 'Akane Tamura', 'biography' => 'Tác giả Akane Tamura với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['id' => 60, 'name' => 'Koyoharu Gotouge', 'biography' => 'Tác giả Koyoharu Gotouge với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['id' => 61, 'name' => 'Chu Lai', 'biography' => 'Tác giả Chu Lai với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['id' => 62, 'name' => 'Tuế Kiến', 'biography' => 'Tác giả Tuế Kiến với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['id' => 63, 'name' => 'Paulo Coelho', 'biography' => 'Tác giả Paulo Coelho với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['id' => 64, 'name' => 'Thương Thái Vi', 'biography' => 'Tác giả Thương Thái Vi với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['id' => 65, 'name' => 'Phạm Lữ Ân', 'biography' => 'Tác giả Phạm Lữ Ân với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['id' => 66, 'name' => 'Hoàng Nam Tiến', 'biography' => 'Tác giả Hoàng Nam Tiến với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['id' => 67, 'name' => 'Sơn Tùng', 'biography' => 'Tác giả Sơn Tùng với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+            ['id' => 68, 'name' => 'Phùng Quán', 'biography' => 'Tác giả Phùng Quán với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận.'],
+        ]);
     }
 }
