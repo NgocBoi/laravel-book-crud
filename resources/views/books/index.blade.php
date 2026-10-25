@@ -1,4 +1,4 @@
-﻿{{-- 
+{{-- 
 =============================================================================
 PHÂN CÔNG: THÀNH VIÊN 2
 NHIỆM VỤ: Hiển thị bảng danh sách sách, phân trang, kết nối các modal
@@ -20,7 +20,6 @@ NHIỆM VỤ: Hiển thị bảng danh sách sách, phân trang, kết nối cá
     {{-- Bảng dữ liệu chính ở đây --}}
 </div>
 
-{{-- Nhúng các Modal do TV4 và TV7 phụ trách --}}
+{{-- Nhúng các Modal --}}
 @include('books.partials.quick-view-modal')
-@include('books.partials.stock-modal')
 @endsection
