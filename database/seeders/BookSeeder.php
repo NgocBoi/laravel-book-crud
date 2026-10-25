@@ -70,6 +70,11 @@ class BookSeeder extends Seeder
             ['id' => 58, 'isbn' => '8935244827972', 'title' => 'Tuổi Thơ Dữ Dội - Tập 1 (Tái Bản 2019)', 'published_year' => 2019, 'price' => 64000.0, 'publisher_id' => 20],
         ]);
 
+        // Số lượng tồn mẫu (cố định theo id): có cả còn hàng, sắp hết và hết hàng để dễ kiểm thử giao diện
+        foreach (range(1, 58) as $id) {
+            DB::table('books')->where('id', $id)->update(['stock_quantity' => max(0, ($id * 37) % 61 - 4)]);
+        }
+
         // Liên kết sách - thể loại (nhiều - nhiều)
         DB::table('book_category')->insert([
             ['book_id' => 1, 'category_id' => 1],
