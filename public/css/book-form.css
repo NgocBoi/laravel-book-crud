@@ -1,0 +1,205 @@
+/* Create and edit forms, based on Figma D03 / D04 / D06. */
+@font-face {
+    font-family: 'Book Form Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url('../fonts/inter-400.ttf') format('truetype');
+}
+@font-face {
+    font-family: 'Book Form Inter';
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    src: url('../fonts/inter-500.ttf') format('truetype');
+}
+@font-face {
+    font-family: 'Book Form Inter';
+    font-style: normal;
+    font-weight: 600;
+    font-display: swap;
+    src: url('../fonts/inter-600.ttf') format('truetype');
+}
+@font-face {
+    font-family: 'Book Form Inter';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url('../fonts/inter-700.ttf') format('truetype');
+}
+body.book-form-page {
+    font-family: 'Book Form Inter', Inter, system-ui, sans-serif;
+}
+.book-form-page {
+    --ui-body: #f5f6f8;
+    --ui-ink: #202936;
+    --ui-muted: #7a8696;
+    --ui-border: #e2e7ee;
+}
+.book-form-page main.admin-shell { padding: 32px !important; }
+.book-form-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 22px;
+}
+.book-form-heading .page-title {
+    color: var(--ui-ink);
+    font-size: 27px;
+    font-weight: 700;
+    letter-spacing: normal;
+    line-height: 1.25;
+}
+.book-form-heading .admin-breadcrumb {
+    gap: 9px;
+    margin: 6px 0 0;
+    color: var(--ui-muted);
+    font-size: 13px;
+    line-height: 1.5;
+}
+.book-form-page .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 38px;
+    padding: 9px 15px;
+    border-radius: 8px;
+    font-size: 13px;
+    line-height: 18px;
+    font-weight: 600;
+}
+.book-form-page .btn-outline-secondary {
+    --bs-btn-color: var(--ui-ink);
+    --bs-btn-bg: var(--ui-surface);
+    --bs-btn-border-color: var(--ui-border);
+}
+.book-form-card { padding: 25px; border-radius: 11px; overflow: visible; }
+.book-form-card .section-title {
+    color: var(--ui-ink);
+    font-size: 17px;
+    font-weight: 600;
+    line-height: 20px;
+}
+.book-form-note { margin: 20px 0; font-size: 12px; line-height: 15px; }
+.book-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+    gap: 20px 24px;
+    max-width: 1165px;
+}
+.book-field { display: flex; flex-direction: column; gap: 7px; min-width: 0; }
+.book-field-wide { grid-column: 1 / -1; }
+.book-field .form-label {
+    margin: 0;
+    color: var(--ui-ink);
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 16px;
+}
+.book-field .form-control,
+.book-field .form-select,
+.book-choice > summary {
+    min-height: 44px;
+    padding: 11px 13px;
+    border: 1px solid var(--ui-border);
+    border-radius: 8px;
+    background-color: var(--ui-surface);
+    color: var(--ui-ink);
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 20px;
+}
+.book-field .form-select { padding-right: 36px; }
+.book-field .form-control::placeholder { color: var(--ui-muted); opacity: 1; }
+.book-field textarea.form-control { height: 44px; resize: vertical; }
+.book-field .is-invalid,
+.book-choice.is-invalid > summary { border-color: var(--ui-danger); }
+.book-field .invalid-feedback {
+    display: block;
+    margin: 0;
+    color: var(--ui-danger);
+    font-size: 12px;
+    line-height: 1.5;
+}
+.book-choice { position: relative; }
+.book-choice > summary {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    list-style: none;
+}
+.book-choice > summary::-webkit-details-marker { display: none; }
+.book-choice > summary::after {
+    content: '';
+    flex: 0 0 6px;
+    height: 6px;
+    margin-left: auto;
+    border-right: 1.5px solid currentColor;
+    border-bottom: 1.5px solid currentColor;
+    transform: rotate(45deg) translateY(-2px);
+}
+.book-choice[open] > summary::after { transform: rotate(225deg) translate(-2px, -1px); }
+.book-choice > summary > span { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.book-choice > summary:focus-visible,
+.book-choice-option:focus-within { outline: 2px solid var(--ui-primary); outline-offset: 2px; }
+.book-choice[open] { z-index: 5; }
+.book-choice-options {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    right: 0;
+    max-height: 250px;
+    padding: 8px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    background: var(--ui-surface);
+    border: 1px solid var(--ui-border);
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgb(24 37 56 / 12%);
+}
+.book-choice-hint { margin: 4px 8px 8px; color: var(--ui-muted); font-size: 12px; }
+.book-choice-option {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 8px;
+    border-radius: 5px;
+    font-size: 13px;
+    cursor: pointer;
+}
+.book-choice-option:hover { background: var(--ui-primary-light); }
+.book-choice-option .form-check-input { flex-shrink: 0; margin-top: 3px; }
+.book-stock-feedback { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+.book-stock-feedback .inline-state { padding: 4px 9px; font-size: 11px; }
+.book-stock-feedback .form-hint { margin: 0; font-size: 11px; }
+.book-form-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+.book-form-page .admin-alert {
+    margin-bottom: 22px !important;
+    padding: 14px 18px;
+    border-color: transparent;
+    border-radius: 9px;
+}
+.book-form-page .admin-alert.alert-danger { color: var(--ui-danger); background: var(--ui-danger-soft); }
+.book-form-alert:focus { outline: none; }
+.book-form-page .admin-alert .alert-heading {
+    margin: 0 0 5px;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.5;
+}
+.book-form-page .admin-alert .alert-detail { margin: 0; font-size: 12px; line-height: 1.5; }
+@media (max-width: 767.98px) {
+    .book-form-page main.admin-shell { padding: 24px 16px !important; }
+    .book-form-heading { align-items: flex-start; gap: 12px; }
+    .book-form-heading .page-title { font-size: 23px; }
+    .book-form-heading > .btn { flex-shrink: 0; }
+    .book-form-card { padding: 20px; }
+    .book-form-grid { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 359.98px) {
+    .book-form-heading { flex-wrap: wrap; }
+}

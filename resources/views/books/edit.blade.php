@@ -1,24 +1,20 @@
 @extends('layouts.app')
-@section('title', 'Cập nhật Đầu sách')
+@section('title', 'Chỉnh sửa sách')
+@section('body-class', 'book-form-page')
 
 @section('content')
-<div class="container py-4">
-    <div class="card shadow-sm border-0">
-        <div class="card-header bg-warning text-dark"><h5 class="mb-0">CẬP NHẬT ĐẦU SÁCH</h5></div>
-        <div class="card-body">
-            @include('books.partials.flash-messages')
-
-            <form action="{{ route('books.update', $book) }}" method="POST" enctype="multipart/form-data">
-                @csrf
-                @method('PUT')
-                @include('books.partials.book-form', ['book' => $book])
-
-                <div class="mt-4 d-flex gap-2">
-                    <button type="submit" class="btn btn-warning"><i class="bi bi-save"></i> Cập nhật</button>
-                    <a href="{{ route('books.index') }}" class="btn btn-outline-secondary">Hủy</a>
-                </div>
-            </form>
-        </div>
+<header class="book-form-heading">
+    <div>
+        <h1 class="page-title">Chỉnh sửa sách</h1>
+        <nav aria-label="Đường dẫn">
+            <ol class="admin-breadcrumb">
+                <li><a href="{{ route('books.index') }}">Sách</a></li>
+                <li aria-hidden="true">/</li>
+                <li aria-current="page">Chỉnh sửa</li>
+            </ol>
+        </nav>
     </div>
-</div>
+    <a href="{{ route('books.index') }}" class="btn btn-outline-secondary"><span aria-hidden="true">←</span> Quay lại</a>
+</header>
+@include('books.partials.form', ['mode' => 'edit'])
 @endsection

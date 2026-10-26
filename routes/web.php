@@ -6,6 +6,7 @@ use App\Http\Controllers\BookTrashController;
 use App\Http\Controllers\BookStockController;
 use App\Http\Controllers\BookExportController;
 use App\Http\Controllers\AuthController;
+
 Route::get('/', function () {
     return redirect()->route('books.index');
 });
@@ -48,3 +49,5 @@ Route::get('/books/export/excel', [BookExportController::class, 'exportExcel'])-
 // Chỉ Admin được Thêm / Sửa / Xóa 
 Route::resource('books', BookController::class)
     ->middlewareFor(['create', 'store', 'edit', 'update', 'destroy'], ['auth', 'admin']);
+// Sách: CRUD đầy đủ
+Route::resource('books', BookController::class);

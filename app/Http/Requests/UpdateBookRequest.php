@@ -2,19 +2,20 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Contracts\Validation\ValidationRule;
-use Illuminate\Support\Arr;
+use Illuminate\Validation\Rule;
 
 class UpdateBookRequest extends StoreBookRequest
 {
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, ValidationRule|array<mixed>|string>
+     * @return array<string, array<mixed>>
      */
     public function rules(): array
     {
-        // ISBN là mã định danh, không cho sửa sau khi tạo (form cũng để readonly)
-        return Arr::except(parent::rules(), 'isbn');
+        $rules = parent::rules();
+        $rules['isbn'] = ['nullable', 'string', 'max:20', Rule::unique('books', 'isbn')->ignore($this->route('book'))];
+
+        return $rules;
     }
 }
