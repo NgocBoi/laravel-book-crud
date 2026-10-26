@@ -17,6 +17,31 @@ class StoreBookRequest extends FormRequest
     }
 
     /**
+     * Chuẩn hóa dữ liệu trước khi kiểm tra: bỏ dấu gạch / khoảng trắng trong ISBN
+     * và bỏ các lựa chọn tác giả / thể loại để trống.
+     */
+    protected function prepareForValidation(): void
+    {
+        $normalized = [];
+
+        if (is_string($this->input('isbn'))) {
+            $isbn = preg_replace('/[\s-]+/', '', $this->input('isbn'));
+            $normalized['isbn'] = $isbn === '' ? null : $isbn;
+        }
+
+        foreach (['author_ids', 'category_ids'] as $field) {
+            if (is_array($this->input($field))) {
+                $normalized[$field] = array_values(array_filter(
+                    $this->input($field),
+                    fn (mixed $id): bool => $id !== null && $id !== '',
+                ));
+            }
+        }
+
+        $this->merge($normalized);
+    }
+
+    /**
      * Get the validation rules that apply to the request.
      *
      * @return array<string, ValidationRule|array<mixed>|string>
