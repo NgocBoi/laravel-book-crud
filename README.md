@@ -411,14 +411,14 @@ Mô hình phân rã module độc lập giúp 8 thành viên phát triển song 
 
 | TT | Thành viên & Module | Nhiệm vụ chính | Các file phụ trách riêng (Không đụng người khác) | Kiến thức Laravel áp dụng |
 |:---:|---|---|---|---|
-| **TV1** | **Cơ sở dữ liệu & Model** | - Thiết kế migration cho `books`, `categories`, `authors`, `publishers`<br>- Bổ sung `stock_quantity` vào sách và `role` vào users<br>- Thiết lập khóa ngoại, quan hệ Eloquent và dữ liệu mẫu Seeders | - `database/migrations/...`<br>- `database/seeders/...`<br>- `database/data/books.json`<br>- `app/Models/Book.php`, `Category.php`<br>- `app/Models/Author.php`, `Publisher.php`, `User.php` | Migration, Foreign Key, Eloquent Relationships (`hasMany`, `belongsTo`), Database Seeding |
-| **TV2** | **Quản lý Thể loại** | - Xem danh sách thể loại<br>- CRUD Thể loại (Thêm, sửa, xóa)<br>- Kiểm tra ràng buộc thể loại đang có sách trước khi xóa (`$category->books()->exists()`) | - `app/Http/Controllers/CategoryController.php`<br>- `app/Http/Requests/StoreCategoryRequest.php`<br>- `resources/views/categories/` | CRUD Controller, Form Request, Eloquent Relationship Check |
-| **TV3** | **Quản lý Tác giả & NXB** | - CRUD Tác giả (`authors`)<br>- CRUD Nhà xuất bản (`publishers`)<br>- Kiểm tra ràng buộc dữ liệu trước khi xóa bản ghi đang có sách tham chiếu<br>- Cung cấp danh sách cho form sách | - `app/Http/Controllers/AuthorController.php`<br>- `app/Http/Controllers/PublisherController.php`<br>- `resources/views/authors/`<br>- `resources/views/publishers/` | Dual CRUD Controllers, Resource Views, Delete Constraints |
-| **TV4** | **Backend CRUD Sách** | - Xử lý danh sách, chi tiết, thêm, sửa, xóa sách ở tầng backend<br>- Viết Validation cho dữ liệu sách<br>- Xử lý upload và lưu trữ ảnh bìa trong storage<br>- Đảm bảo liên kết đúng các khóa ngoại | - `app/Http/Controllers/BookController.php`<br>- `app/Http/Requests/StoreBookRequest.php`<br>- `app/Http/Requests/UpdateBookRequest.php` | Controller Resource, Form Request, Storage File Upload, Transaction |
-| **TV5** | **Giao diện Quản lý Sách** | - Thiết kế giao diện danh sách, chi tiết, thêm mới và cập nhật sách<br>- Hiển thị ảnh bìa, giá, thể loại, tác giả, NXB và số lượng tồn<br>- Hiển thị thông báo, lỗi validation và trạng thái hết hàng | - `resources/views/books/index.blade.php`<br>- `resources/views/books/show.blade.php`<br>- `resources/views/books/create.blade.php`<br>- `resources/views/books/edit.blade.php`<br>- `resources/views/books/partials/` | Blade Templates, Bootstrap 5 UI, Component Reusability |
-| **TV6** | **Tìm kiếm, Lọc & Phân trang** | - Tìm kiếm theo tên sách<br>- Lọc theo thể loại, tác giả, nhà xuất bản, khoảng giá<br>- Sắp xếp theo giá / thời gian tạo, phân trang giữ query string<br>*(Bàn giao service & partial cho TV4, TV5 tích hợp)* | - `app/Services/BookFilterService.php`<br>- `resources/views/books/partials/filter-bar.blade.php` | Service Pattern, Eloquent Query Scope, `when()`, Pagination `withQueryString()` |
-| **TV7** | **Đăng nhập & Phân quyền** | - Xử lý đăng nhập, đăng xuất<br>- Thiết lập Middleware / Policy chặn User truy cập trái phép các thao tác sửa đổi<br>- Ẩn/hiện nút chức năng theo quyền (`role === 'admin'`) | - `app/Http/Controllers/AuthController.php`<br>- `app/Http/Middleware/AdminMiddleware.php`<br>- `app/Policies/BookPolicy.php`<br>- `resources/views/auth/` | Authentication, Middleware, Authorization (Gates & Policies), Blade `@can` |
-| **TV8** | **Quản lý Tồn kho** | - Xem số lượng tồn của từng đầu sách<br>- Form / Modal nhập thêm số lượng kho (cộng dồn an toàn `increment('stock_quantity', $qty)`)<br>- Cảnh báo: Sắp hết (< 5), Hết hàng (= 0)<br>- Phân quyền chỉ Admin được nhập kho | - `app/Http/Controllers/BookStockController.php`<br>- `app/Http/Requests/UpdateBookStockRequest.php`<br>- `resources/views/stock/`<br>- `resources/views/books/partials/stock-status.blade.php` | Eloquent `increment()`, Business Logic tồn kho, Badge động, Security Check |
+| **TV1** | **Cơ sở dữ liệu & Model** | - Thiết kế migration cho `books`, `authors`, `publishers`<br>- Bổ sung `stock_quantity` vào sách và `role` vào users<br>- Thiết lập khóa ngoại, quan hệ Eloquent và dữ liệu mẫu Seeders | - `database/migrations/...`<br>- `database/seeders/...`<br>- `database/data/books.json`<br>- `app/Models/Book.php`, `Category.php`<br>- `app/Models/Author.php`, `Publisher.php`, `User.php` | Migration, Foreign Key, Eloquent Relationships (`hasMany`, `belongsTo`), Database Seeding |
+| **TV4: Thương** | **Backend CRUD Sách** | - Xử lý danh sách, chi tiết, thêm, sửa, xóa sách ở tầng backend<br>- Đảm bảo liên kết đúng các khóa ngoại | - `app/Http/Controllers/BookController.php` | Controller Resource, Transaction |
+| **TV6: Dinh** | **Backend CRUD Sách** | - Viết Validation cho dữ liệu sách<br>- Xử lý upload và lưu trữ ảnh bìa trong storage | - `app/Http/Requests/StoreBookRequest.php`<br>- `app/Http/Requests/UpdateBookRequest.php` | Form Request, Storage File Upload |
+| **TV5: Thắng** | **Giao diện Quản lý Sách** | - Thiết kế giao diện danh sách, chi tiết sách<br>- Hiển thị ảnh bìa, giá, thể loại, tác giả, NXB và số lượng tồn | - `resources/views/books/index.blade.php`<br>- `resources/views/books/show.blade.php`<br>- `resources/views/books/partials/` | Blade Templates, Component Reusability |
+| **TV8: Hưng** | **Giao diện Quản lý Sách** | - Hiển thị trạng thái hết hàng<br>- Thiết kế giao diện thêm mới và cập nhật sách<br>- Hiển thị thông báo, lỗi validation | - `resources/views/books/create.blade.php`<br>- `resources/views/books/edit.blade.php` | Blade Templates, Bootstrap 5 UI |
+| **TV2: cang** | **Lọc & Phân trang** | - Lọc theo thể loại, tác giả, nhà xuất bản, khoảng giá<br>- Sắp xếp theo giá / thời gian tạo, phân trang giữ query string | - `app/Services/BookFilterService.php`<br>- `resources/views/books/partials/filter-bar.blade.php` | Service Pattern, Eloquent Query Scope, `when()`, Pagination `withQueryString()` |
+| **TV7: thúy duy** | **Đăng nhập & Phân quyền** | - Xử lý đăng nhập, đăng xuất<br>- Thiết lập Middleware / Policy chặn User truy cập trái phép các thao tác sửa đổi | - `app/Http/Controllers/AuthController.php`<br>- `resources/views/auth/`<br>- `app/Http/Middleware/AdminMiddleware.php` | Authentication, Middleware |
+| **TV3: khoa** | **Đăng nhập & Phân quyền** | - Ẩn/hiện nút chức năng theo quyền (`role === 'admin'`) | - `app/Policies/BookPolicy.php` | Middleware, Authorization (Gates & Policies), Blade `@can` |
 
 ---
 
@@ -427,13 +427,13 @@ Mô hình phân rã module độc lập giúp 8 thành viên phát triển song 
 1. **Nguyên tắc phân nhánh:**
    - Nhánh `main`: Chỉ chứa mã nguồn ổn định nhất đã được kiểm thử.
    - Mỗi thành viên tạo một nhánh chức năng riêng mang tên nhiệm vụ của mình:
-     - `feature/categories` (TV2)
-     - `feature/authors-publishers` (TV3)
      - `feature/books-backend` (TV4)
+     - `feature/books-validation` (TV6)
      - `feature/books-ui` (TV5)
-     - `feature/books-filter` (TV6)
-     - `feature/auth-permission` (TV7)
-     - `feature/stock-management` (TV8)
+     - `feature/books-form-ui` (TV8)
+     - `feature/books-filter` (TV2)
+     - `feature/auth-login` (TV7)
+     - `feature/auth-permission` (TV3)
 2. **Quy tắc thêm/sửa cơ sở dữ liệu:**
    - Tuyệt đối không chỉnh sửa cấu trúc CSDL bằng tay trong phpMyAdmin.
    - Tuyệt đối không sửa trực tiếp vào các file migration cũ đã chạy.

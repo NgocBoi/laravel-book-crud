@@ -2,129 +2,88 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class Book extends Model
 {
-    use HasFactory, SoftDeletes;
+    use SoftDeletes;
+
+    public $timestamps = false;
+
+    /** Ngưỡng cảnh báo sắp hết hàng. */
+    public const LOW_STOCK = 5;
+
+    /** Thư mục lưu ảnh bìa trên disk "public". */
+    public const COVER_DIR = 'covers';
 
     protected $fillable = [
-        'category_id',
-        'author_id',
-        'publisher_id',
-        'book_code',
         'isbn',
         'title',
-        'translator',
-        'supplier',
-        'publish_year',
-        'language',
-        'weight',
-        'dimensions',
-        'pages',
-        'original_price',
+        'published_year',
         'price',
         'stock_quantity',
-        'sold_quantity',
-        'cover_image',
+        'page_count',
+        'dimensions',
+        'cover_image_url',
         'description',
-        'is_trending',
-        'badge_type',
+        'publisher_id',
     ];
 
     protected $casts = [
-        'publish_year' => 'integer',
-        'weight' => 'integer',
-        'pages' => 'integer',
-        'original_price' => 'decimal:2',
+        'published_year' => 'integer',
         'price' => 'decimal:2',
         'stock_quantity' => 'integer',
-        'sold_quantity' => 'integer',
-        'is_trending' => 'boolean',
+        'page_count' => 'integer',
     ];
 
-    /**
-     * Relationship: Book belongs to Category.
-     */
-    public function category(): BelongsTo
-    {
-        return $this->belongsTo(Category::class);
-    }
-
-    /**
-     * Relationship: Book belongs to Author.
-     */
-    public function author(): BelongsTo
-    {
-        return $this->belongsTo(Author::class);
-    }
-
-    /**
-     * Relationship: Book belongs to Publisher.
-     */
     public function publisher(): BelongsTo
     {
         return $this->belongsTo(Publisher::class);
     }
 
-    /**
-     * Accessor: Alias 'stock' to 'stock_quantity'.
-     */
-    public function getStockAttribute(): int
+    public function authors(): BelongsToMany
     {
-        return (int) $this->stock_quantity;
+        return $this->belongsToMany(Author::class, 'author_book');
     }
 
-    public function setStockAttribute($value): void
+    public function categories(): BelongsToMany
     {
-        $this->attributes['stock_quantity'] = (int) $value;
+        return $this->belongsToMany(Category::class, 'book_category');
     }
 
     /**
-     * Accessor: Alias 'quantity' to 'stock_quantity'.
+     * URL hiển thị ảnh bìa: link ngoài giữ nguyên, file upload lấy từ storage, không có thì null.
      */
-    public function getQuantityAttribute(): int
+    protected function coverUrl(): Attribute
     {
-        return (int) $this->stock_quantity;
-    }
+        return Attribute::get(function (): ?string {
+            $path = $this->cover_image_url;
 
-    public function setQuantityAttribute($value): void
-    {
-        $this->attributes['stock_quantity'] = (int) $value;
+            if (! $path) {
+                return null;
+            }
+
+            return Str::startsWith($path, ['http://', 'https://'])
+                ? $path
+                : Storage::disk('public')->url($path);
+        });
     }
 
     /**
-     * Convenient name accessors for views.
+     * Xóa file ảnh bìa đã upload (bỏ qua link ngoài).
      */
-    public function getAuthorNameAttribute(): string
+    public function deleteCoverFile(): void
     {
-        return $this->author?->name ?? 'Không rõ';
-    }
+        $path = $this->cover_image_url;
 
-    public function getPublisherNameAttribute(): string
-    {
-        return $this->publisher?->name ?? 'Không rõ';
-    }
-
-    public function getCategoryNameAttribute(): string
-    {
-        return $this->category?->name ?? 'Không rõ';
-    }
-
-    /**
-     * Helper to get cover image URL.
-     */
-    public function getCoverImageUrlAttribute(): string
-    {
-        if ($this->cover_image && file_exists(public_path('storage/books/' . $this->cover_image))) {
-            return asset('storage/books/' . $this->cover_image);
+        if ($path && ! Str::startsWith($path, ['http://', 'https://'])) {
+            Storage::disk('public')->delete($path);
         }
-        if ($this->cover_image && file_exists(public_path('books/' . $this->cover_image))) {
-            return asset('books/' . $this->cover_image);
-        }
-        return 'https://via.placeholder.com/300x420?text=No+Cover';
     }
 }
