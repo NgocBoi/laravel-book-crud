@@ -8,12 +8,12 @@ use App\Models\Author;
 use App\Models\Book;
 use App\Models\Category;
 use App\Models\Publisher;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\View\View;
+use Illuminate\Database\QueryException;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
-use Throwable;
 
 class BookController extends Controller
 {
@@ -27,9 +27,11 @@ class BookController extends Controller
      */
     public function index()
     {
-        $books = Book::with(['publisher', 'authors', 'categories', 'warehouses'])
+        // Khung danh sách: tìm kiếm / lọc do thành viên phụ trách bổ sung tại đây
+        $books = Book::with(['authors', 'categories', 'publisher'])
             ->latest('id')
-            ->paginate(10);
+            ->paginate(10)
+            ->withQueryString();
 
         return view('books.index', compact('books'));
     }
@@ -37,7 +39,7 @@ class BookController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(): View
     {
         return view('books.create', $this->formOptions());
     }
@@ -45,162 +47,109 @@ class BookController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreBookRequest $request)
+    public function store(StoreBookRequest $request): RedirectResponse
     {
-        $data = $this->bookAttributes($request);
-        $newCover = $this->storeCover($request);
-
-        if ($newCover) {
-            $data['cover_image_url'] = $newCover;
-        }
-
         try {
-            $book = DB::transaction(function () use ($request, $data) {
-                $book = Book::create($data);
-                $this->syncRelations($book, $request);
-
-                return $book;
-            });
-        } catch (Throwable $e) {
-            $this->deleteCover($newCover);
-
-            throw $e;
+            $book = $this->persist(new Book, $request->validated());
+        } catch (QueryException $e) {
+            return $this->saveFailed($e);
         }
 
-        return redirect()
-            ->route('books.show', $book)
-            ->with('success', 'Đã thêm sách "'.$book->title.'".');
+        return to_route('books.edit', $book)->with('success', 'Đã thêm sách mới thành công.');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Book $book)
+    public function show(Book $book): View
     {
-        $book->load(['publisher', 'authors', 'categories', 'warehouses']);
+        $book->load(['authors', 'categories', 'publisher']);
 
-        $relatedBooks = Book::with('authors')
+        $related = Book::with('authors')
             ->whereKeyNot($book->id)
-            ->whereHas('categories', fn ($query) => $query->whereIn('categories.id', $book->categories->modelKeys()))
-            ->latest('id')
+            ->whereHas('categories', fn ($q) => $q->whereIn('categories.id', $book->categories->modelKeys()))
             ->limit(4)
             ->get();
 
-        return view('books.show', compact('book', 'relatedBooks'));
+        return view('books.show', compact('book', 'related'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Book $book)
+    public function edit(Book $book): View
     {
-        $book->load(['authors', 'categories', 'warehouses']);
-
-        return view('books.edit', ['book' => $book, ...$this->formOptions()]);
+        return view('books.edit', [
+            ...$this->formOptions(),
+            'book' => $book->load(['authors', 'categories', 'publisher']),
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateBookRequest $request, Book $book)
+    public function update(UpdateBookRequest $request, Book $book): RedirectResponse
     {
-        $data = $this->bookAttributes($request);
-        $oldCover = $book->cover_image_url;
-        $newCover = $this->storeCover($request);
-
-        if ($newCover) {
-            $data['cover_image_url'] = $newCover;
-        }
-
         try {
-            DB::transaction(function () use ($request, $book, $data) {
-                $book->update($data);
-                $this->syncRelations($book, $request);
-            });
-        } catch (Throwable $e) {
-            $this->deleteCover($newCover);
-
-            throw $e;
+            $this->persist($book, $request->validated());
+        } catch (QueryException $e) {
+            return $this->saveFailed($e);
         }
 
-        // Chỉ xóa ảnh cũ sau khi đã lưu thành công ảnh mới vào CSDL
-        if ($newCover) {
-            $this->deleteCover($oldCover);
-        }
-
-        return redirect()
-            ->route('books.show', $book)
-            ->with('success', 'Đã cập nhật sách "'.$book->title.'".');
+        return to_route('books.index')->with('success', 'Đã cập nhật sách thành công.');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Book $book)
+    public function destroy(Book $book): RedirectResponse
     {
-        // Các dòng trong author_book, book_category, book_warehouse tự xóa theo cascadeOnDelete
-        DB::transaction(fn () => $book->delete());
+        // Xóa mềm: chỉ ghi deleted_at, giữ bản ghi, liên kết tác giả/thể loại và ảnh bìa để còn khôi phục
+        $book->delete();
 
-        // Khi Model bật SoftDeletes, giữ lại ảnh bìa để còn khôi phục từ thùng rác
-        if (! in_array(SoftDeletes::class, class_uses_recursive($book))) {
-            $this->deleteCover($book->cover_image_url);
-        }
-
-        return redirect()
-            ->route('books.index')
-            ->with('success', 'Đã xóa sách "'.$book->title.'".');
+        return to_route('books.index')->with('success', "Đã chuyển sách \"{$book->title}\" vào thùng rác.");
     }
 
     /**
-     * Danh sách thể loại, tác giả, NXB cho form thêm / sửa.
+     * Lưu sách (thêm mới hoặc cập nhật) cùng quan hệ tác giả / thể loại trong một transaction:
+     * hoặc lưu đủ tất cả, hoặc không lưu gì.
+     *
+     * @param  array<string, mixed>  $data  dữ liệu đã validate
+     */
+    private function persist(Book $book, array $data): Book
+    {
+        return DB::transaction(function () use ($book, $data): Book {
+            $book->fill(Arr::except($data, ['author_ids', 'category_ids']))->save();
+            $book->authors()->sync($data['author_ids']);
+            $book->categories()->sync($data['category_ids']);
+
+            return $book;
+        });
+    }
+
+    /**
+     * Lỗi CSDL khi lưu (trùng khóa, mất kết nối...): ghi log, giữ nguyên dữ liệu đã nhập và báo người dùng.
+     */
+    private function saveFailed(QueryException $e): RedirectResponse
+    {
+        report($e);
+
+        return back()->withInput()->with('error', 'Không thể lưu sách do lỗi hệ thống. Vui lòng kiểm tra lại dữ liệu và thử lại.');
+    }
+
+    /**
+     * @return array{
+     *     authors: Collection<int, Author>,
+     *     categories: Collection<int, Category>,
+     *     publishers: Collection<int, Publisher>
+     * }
      */
     private function formOptions(): array
     {
         return [
-            'categories' => Category::orderBy('name')->get(),
             'authors' => Author::orderBy('name')->get(),
+            'categories' => Category::orderBy('name')->get(),
             'publishers' => Publisher::orderBy('name')->get(),
         ];
-    }
-
-    /**
-     * Các cột của bảng books lấy từ dữ liệu đã validate (bỏ quan hệ và file ảnh).
-     */
-    private function bookAttributes(FormRequest $request): array
-    {
-        return $request->safe()->except(['author_ids', 'category_ids', 'cover_image']);
-    }
-
-    /**
-     * Đồng bộ bảng trung gian tác giả / thể loại theo lựa chọn trên form.
-     */
-    private function syncRelations(Book $book, FormRequest $request): void
-    {
-        $book->authors()->sync($request->validated('author_ids', []));
-        $book->categories()->sync($request->validated('category_ids', []));
-    }
-
-    /**
-     * Lưu ảnh bìa mới (nếu có) và trả về đường dẫn tương đối trên disk "public".
-     */
-    private function storeCover(FormRequest $request): ?string
-    {
-        if (! $request->hasFile('cover_image')) {
-            return null;
-        }
-
-        return $request->file('cover_image')->store(self::COVER_DIRECTORY, 'public') ?: null;
-    }
-
-    /**
-     * Xóa ảnh bìa trong storage; bỏ qua ảnh là URL ngoài.
-     */
-    private function deleteCover(?string $path): void
-    {
-        if (! $path || Str::startsWith($path, ['http://', 'https://'])) {
-            return;
-        }
-
-        Storage::disk('public')->delete($path);
     }
 }

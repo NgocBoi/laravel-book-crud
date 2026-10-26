@@ -27,7 +27,5 @@ class DatabaseSeeder extends Seeder
             PublisherSeeder::class,
             BookSeeder::class,
         ]);
-
-        // Bảng warehouses và book_warehouse để trống, nhập dữ liệu sau
     }
 }

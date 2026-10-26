@@ -1,23 +1,20 @@
 @extends('layouts.app')
-@section('title', 'Thêm mới Đầu sách')
+@section('title', 'Thêm sách mới')
+@section('body-class', 'book-form-page')
 
 @section('content')
-<div class="container py-4">
-    <div class="card shadow-sm border-0">
-        <div class="card-header bg-success text-white"><h5 class="mb-0">THÊM MỚI ĐẦU SÁCH</h5></div>
-        <div class="card-body">
-            @include('books.partials.flash-messages')
-
-            <form action="{{ route('books.store') }}" method="POST" enctype="multipart/form-data">
-                @csrf
-                @include('books.partials.book-form', ['book' => null])
-
-                <div class="mt-4 d-flex gap-2">
-                    <button type="submit" class="btn btn-success"><i class="bi bi-check-lg"></i> Lưu</button>
-                    <a href="{{ route('books.index') }}" class="btn btn-outline-secondary">Hủy</a>
-                </div>
-            </form>
-        </div>
+<header class="book-form-heading">
+    <div>
+        <h1 class="page-title">Thêm sách mới</h1>
+        <nav aria-label="Đường dẫn">
+            <ol class="admin-breadcrumb">
+                <li><a href="{{ route('books.index') }}">Sách</a></li>
+                <li aria-hidden="true">/</li>
+                <li aria-current="page">Thêm mới</li>
+            </ol>
+        </nav>
     </div>
-</div>
+    <a href="{{ route('books.index') }}" class="btn btn-outline-secondary"><span aria-hidden="true">←</span> Quay lại</a>
+</header>
+@include('books.partials.form', ['mode' => 'create'])
 @endsection
