@@ -44,16 +44,8 @@ class BookController extends Controller
      */
     public function store(StoreBookRequest $request): RedirectResponse
     {
-        $data = $request->validated();
-
         try {
-            $book = DB::transaction(function () use ($data): Book {
-                $book = Book::create(Arr::except($data, ['author_ids', 'category_ids']));
-                $book->authors()->sync($data['author_ids']);
-                $book->categories()->sync($data['category_ids']);
-
-                return $book;
-            });
+            $book = $this->persist(new Book, $request->validated());
         } catch (QueryException $e) {
             return $this->saveFailed($e);
         }
@@ -93,14 +85,8 @@ class BookController extends Controller
      */
     public function update(UpdateBookRequest $request, Book $book): RedirectResponse
     {
-        $data = $request->validated();
-
         try {
-            DB::transaction(function () use ($book, $data): void {
-                $book->update(Arr::except($data, ['author_ids', 'category_ids']));
-                $book->authors()->sync($data['author_ids']);
-                $book->categories()->sync($data['category_ids']);
-            });
+            $this->persist($book, $request->validated());
         } catch (QueryException $e) {
             return $this->saveFailed($e);
         }
@@ -117,6 +103,23 @@ class BookController extends Controller
         $book->delete();
 
         return to_route('books.index')->with('success', "Đã chuyển sách \"{$book->title}\" vào thùng rác.");
+    }
+
+    /**
+     * Lưu sách (thêm mới hoặc cập nhật) cùng quan hệ tác giả / thể loại trong một transaction:
+     * hoặc lưu đủ tất cả, hoặc không lưu gì.
+     *
+     * @param  array<string, mixed>  $data  dữ liệu đã validate
+     */
+    private function persist(Book $book, array $data): Book
+    {
+        return DB::transaction(function () use ($book, $data): Book {
+            $book->fill(Arr::except($data, ['author_ids', 'category_ids']))->save();
+            $book->authors()->sync($data['author_ids']);
+            $book->categories()->sync($data['category_ids']);
+
+            return $book;
+        });
     }
 
     /**
