@@ -1,19 +1,20 @@
-﻿{{-- 
-=============================================================================
-PHÂN CÔNG: THÀNH VIÊN 3
-NHIỆM VỤ: Form nhập liệu thêm mới đầu sách, bắt lỗi Validate @error
-=============================================================================
---}}
 @extends('layouts.app')
-@section('title', 'Thêm mới Đầu sách')
+@section('title', 'Thêm sách mới')
+@section('body-class', 'book-form-page')
 
 @section('content')
-<div class="container py-4">
-    <div class="card shadow-sm border-0">
-        <div class="card-header bg-success text-white"><h5>THÊM MỚI ĐẦU SÁCH</h5></div>
-        <div class="card-body">
-            {{-- TV3 code form thêm mới sách tại đây --}}
-        </div>
+<header class="book-form-heading">
+    <div>
+        <h1 class="page-title">Thêm sách mới</h1>
+        <nav aria-label="Đường dẫn">
+            <ol class="admin-breadcrumb">
+                <li><a href="{{ route('books.index') }}">Sách</a></li>
+                <li aria-hidden="true">/</li>
+                <li aria-current="page">Thêm mới</li>
+            </ol>
+        </nav>
     </div>
-</div>
+    <a href="{{ route('books.index') }}" class="btn btn-outline-secondary"><span aria-hidden="true">←</span> Quay lại</a>
+</header>
+@include('books.partials.form', ['mode' => 'create'])
 @endsection

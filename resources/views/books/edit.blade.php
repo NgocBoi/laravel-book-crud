@@ -1,19 +1,20 @@
-﻿{{-- 
-=============================================================================
-PHÂN CÔNG: THÀNH VIÊN 5
-NHIỆM VỤ: Form cập nhật thông tin sách (Mã sách chỉ đọc, thay ảnh cũ bằng ảnh mới)
-=============================================================================
---}}
 @extends('layouts.app')
-@section('title', 'Cập nhật Đầu sách')
+@section('title', 'Chỉnh sửa sách')
+@section('body-class', 'book-form-page')
 
 @section('content')
-<div class="container py-4">
-    <div class="card shadow-sm border-0">
-        <div class="card-header bg-warning text-dark"><h5>CẬP NHẬT ĐẦU SÁCH</h5></div>
-        <div class="card-body">
-            {{-- TV5 code form chỉnh sửa tại đây --}}
-        </div>
+<header class="book-form-heading">
+    <div>
+        <h1 class="page-title">Chỉnh sửa sách</h1>
+        <nav aria-label="Đường dẫn">
+            <ol class="admin-breadcrumb">
+                <li><a href="{{ route('books.index') }}">Sách</a></li>
+                <li aria-hidden="true">/</li>
+                <li aria-current="page">Chỉnh sửa</li>
+            </ol>
+        </nav>
     </div>
-</div>
+    <a href="{{ route('books.index') }}" class="btn btn-outline-secondary"><span aria-hidden="true">←</span> Quay lại</a>
+</header>
+@include('books.partials.form', ['mode' => 'edit'])
 @endsection
