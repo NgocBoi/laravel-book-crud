@@ -1,66 +1,110 @@
 <?php
 
+// namespace App\Policies;
+
+// use App\Models\Book;
+// use App\Models\User;
+// use Illuminate\Auth\Access\Response;
+
+// class BookPolicy
+// {
+
+//     public function viewAny(User $user): bool
+//     {
+//         return false;
+//     }
+
+//     public function view(User $user, Book $book): bool
+//     {
+//         return false;
+//     }
+
+//     public function create(User $user): bool
+//     {
+//         return false;
+//     }
+
+//     public function update(User $user, Book $book): bool
+//     {
+//         return false;
+//     }
+
+//     public function delete(User $user, Book $book): bool
+//     {
+//         return false;
+//     }
+
+//     public function restore(User $user, Book $book): bool
+//     {
+//         return false;
+//     }
+
+//     public function forceDelete(User $user, Book $book): bool
+//     {
+//         return false;
+//     }
+// }
+
 namespace App\Policies;
 
 use App\Models\Book;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class BookPolicy
 {
     /**
-     * Determine whether the user can view any models.
+     * Ai cũng xem được danh sách sách.
      */
-    public function viewAny(User $user): bool
+    public function viewAny(?User $user): bool
     {
-        return false;
+        return true;
     }
 
     /**
-     * Determine whether the user can view the model.
+     * Ai cũng xem được chi tiết sách.
      */
-    public function view(User $user, Book $book): bool
+    public function view(?User $user, Book $book): bool
     {
-        return false;
+        return true;
     }
 
     /**
-     * Determine whether the user can create models.
+     * Chỉ Admin được thêm sách.
      */
     public function create(User $user): bool
     {
-        return false;
+        return $user->isAdmin();
     }
 
     /**
-     * Determine whether the user can update the model.
+     * Chỉ Admin được sửa sách.
      */
     public function update(User $user, Book $book): bool
     {
-        return false;
+        return $user->isAdmin();
     }
 
     /**
-     * Determine whether the user can delete the model.
+     * Chỉ Admin được xóa (xóa tạm) sách.
      */
     public function delete(User $user, Book $book): bool
     {
-        return false;
+        return $user->isAdmin();
     }
 
     /**
-     * Determine whether the user can restore the model.
+     * Chỉ Admin được khôi phục sách từ thùng rác.
      */
     public function restore(User $user, Book $book): bool
     {
-        return false;
+        return $user->isAdmin();
     }
 
     /**
-     * Determine whether the user can permanently delete the model.
+     * Chỉ Admin được xóa vĩnh viễn.
      */
     public function forceDelete(User $user, Book $book): bool
     {
-        return false;
+        return $user->isAdmin();
     }
 }
