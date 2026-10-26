@@ -105,6 +105,22 @@ class BookRequestValidationTest extends TestCase
             ->assertSessionHasErrors(['page_count' => 'Số trang phải là số nguyên.']);
     }
 
+    public function test_published_year_cannot_be_in_the_future(): void
+    {
+        $currentYear = now()->year;
+
+        $this->post(route('books.store'), $this->validData(['published_year' => $currentYear + 1]))
+            ->assertSessionHasErrors(['published_year' => "Năm xuất bản không được lớn hơn năm hiện tại ({$currentYear})."]);
+
+        $this->post(route('books.store'), $this->validData(['published_year' => 1900]))
+            ->assertSessionHasErrors(['published_year' => 'Năm xuất bản phải từ 1901 trở về sau.']);
+
+        $this->post(route('books.store'), $this->validData(['published_year' => $currentYear]))
+            ->assertSessionHasNoErrors();
+
+        $this->assertSame($currentYear, Book::firstOrFail()->published_year);
+    }
+
     public function test_isbn_is_normalized_and_blank_selections_are_ignored(): void
     {
         $this->post(route('books.store'), $this->validData([

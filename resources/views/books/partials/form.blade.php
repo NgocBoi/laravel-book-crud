@@ -113,7 +113,7 @@
 
             <div class="book-field">
                 <label for="publishedYear" class="form-label">Năm xuất bản</label>
-                <input type="number" name="published_year" id="publishedYear" min="1901" max="2155" step="1"
+                <input type="number" name="published_year" id="publishedYear" min="1901" max="{{ now()->year }}" step="1"
                        class="form-control @error('published_year') is-invalid @enderror"
                        value="{{ old('published_year', $currentBook?->published_year) }}" placeholder="Chọn hoặc nhập thông tin"
                        aria-invalid="{{ $errors->has('published_year') ? 'true' : 'false' }}" @error('published_year') aria-describedby="yearError" @enderror>
