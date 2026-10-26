@@ -48,6 +48,60 @@ class StoreBookRequest extends FormRequest
     }
 
     /**
+     * Tên tiếng Việt của các trường, dùng trong thông báo lỗi.
+     */
+    public function attributes(): array
+    {
+        return [
+            'isbn' => 'mã sách (ISBN)',
+            'title' => 'tên sách',
+            'published_year' => 'năm xuất bản',
+            'price' => 'giá bán',
+            'page_count' => 'số trang',
+            'dimensions' => 'kích thước',
+            'description' => 'mô tả',
+            'publisher_id' => 'nhà xuất bản',
+            'author_ids' => 'tác giả',
+            'author_ids.*' => 'tác giả',
+            'category_ids' => 'thể loại',
+            'category_ids.*' => 'thể loại',
+            'cover_image' => 'ảnh bìa',
+        ];
+    }
+
+    /**
+     * Thông báo lỗi tiếng Việt cho các rule đang dùng
+     * (đặt ngay trong Request nên không phụ thuộc cấu hình ngôn ngữ của cả hệ thống).
+     */
+    public function messages(): array
+    {
+        return [
+            'required' => 'Vui lòng nhập :attribute.',
+            'author_ids.required' => 'Vui lòng chọn ít nhất một tác giả.',
+            'category_ids.required' => 'Vui lòng chọn ít nhất một thể loại.',
+            'string' => ':Attribute phải là chuỗi ký tự.',
+            'integer' => ':Attribute phải là số nguyên.',
+            'numeric' => ':Attribute phải là số.',
+            'array' => ':Attribute không hợp lệ.',
+            'distinct' => ':Attribute bị chọn trùng.',
+            'exists' => ':Attribute đã chọn không tồn tại.',
+            'unique' => ':Attribute này đã tồn tại.',
+            'image' => ':Attribute phải là file ảnh.',
+            'mimes' => ':Attribute phải có định dạng: :values.',
+            'uploaded' => 'Tải lên :attribute thất bại (file có thể quá lớn).',
+            'max' => [
+                'string' => ':Attribute không được dài quá :max ký tự.',
+                'numeric' => ':Attribute không được lớn hơn :max.',
+                'file' => ':Attribute không được lớn hơn :max KB.',
+            ],
+            'min' => [
+                'numeric' => ':Attribute phải lớn hơn hoặc bằng :min.',
+                'array' => 'Vui lòng chọn ít nhất :min :attribute.',
+            ],
+        ];
+    }
+
+    /**
      * ISBN không được trùng với sách đã có.
      */
     protected function uniqueIsbn(): Unique
