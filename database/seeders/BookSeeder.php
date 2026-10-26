@@ -2,105 +2,211 @@
 
 namespace Database\Seeders;
 
-use App\Models\Author;
-use App\Models\Book;
-use App\Models\Category;
-use App\Models\Publisher;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\DB;
 
 class BookSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        // Đường dẫn file JSON: ưu tiên database/data/books.json -> storage/app/public/books.json -> public/books.json
-        $jsonPath = database_path('data/books.json');
-        if (!File::exists($jsonPath)) {
-            $jsonPath = storage_path('app/public/books.json');
-        }
-        if (!File::exists($jsonPath)) {
-            $jsonPath = public_path('books.json');
-        }
+        DB::table('books')->insert([
+            ['id' => 1, 'isbn' => '8935325032561', 'title' => 'Kỷ Luật Không Phải Cuộc Chiến Với Bản Thân', 'published_year' => 2025, 'price' => 116100.0, 'publisher_id' => 1],
+            ['id' => 2, 'isbn' => '8935325032554', 'title' => 'Viết Để Chữa Lành - Ánh Sáng Chữa Lành Từ Ngòi Bút Vỡ Tan', 'published_year' => 2025, 'price' => 121500.0, 'publisher_id' => 2],
+            ['id' => 3, 'isbn' => '8935325032677', 'title' => 'Tâm Trí Chúng Ta Thay Đổi Như Thế Nào', 'published_year' => 2025, 'price' => 143100.0, 'publisher_id' => 1],
+            ['id' => 4, 'isbn' => '8935325032370', 'title' => 'Giải Mã Thần Số Học - Các Kỹ Thuật Ứng Dụng Thần Số Học Vào Khám Phá Bản Thân Và Dự Đoán Vận Mệnh', 'published_year' => 2025, 'price' => 116100.0, 'publisher_id' => 1],
+            ['id' => 5, 'isbn' => '8935325032301', 'title' => 'Đối Thân, Vững Thế - Thấu Suốt Bên Trong, Vững Vàng Giữa Bão Giông', 'published_year' => 2025, 'price' => 107100.0, 'publisher_id' => 3],
+            ['id' => 6, 'isbn' => '9786043455168', 'title' => 'Đặt Tên Thương Hiệu', 'published_year' => 2024, 'price' => 80000.0, 'publisher_id' => 1],
+            ['id' => 7, 'isbn' => '8935278609643', 'title' => 'Lựa Chọn, Thiết Kế Và Nuôi Sống Trải Nghiệm Khách Hàng', 'published_year' => 2025, 'price' => 135200.0, 'publisher_id' => 1],
+            ['id' => 8, 'isbn' => '9786326049350', 'title' => 'Khởi Nghiệp Kinh Doanh Food Apps - Công Thức Bán Hàng Thành Công Trên Các Nền Tảng Giao Đồ Ăn', 'published_year' => 2025, 'price' => 159200.0, 'publisher_id' => 1],
+            ['id' => 9, 'isbn' => '8935325030604', 'title' => 'Giữ Người Bằng Tâm - Dẫn Dắt Bằng Tầm', 'published_year' => 2025, 'price' => 125100.0, 'publisher_id' => 4],
+            ['id' => 10, 'isbn' => '8936230473333', 'title' => 'Quản Lý Nhân Sự Trong Thời Đại Công Nghệ', 'published_year' => 2025, 'price' => 161100.0, 'publisher_id' => 5],
+            ['id' => 11, 'isbn' => '8935325032448', 'title' => 'Ngẩng Đầu Là Nắng - Cúi Đầu Là Hoa', 'published_year' => 2025, 'price' => 125100.0, 'publisher_id' => 2],
+            ['id' => 12, 'isbn' => '8935325032622', 'title' => 'Nhật Ký Của Cha', 'published_year' => 2025, 'price' => 107100.0, 'publisher_id' => 3],
+            ['id' => 13, 'isbn' => '8935325032646', 'title' => 'Mình Chia Tay Rồi, Có Nhớ Không?', 'published_year' => 2025, 'price' => 82800.0, 'publisher_id' => 6],
+            ['id' => 14, 'isbn' => '8935325032608', 'title' => 'Bạch Dạ Truy Hung - Tập 2', 'published_year' => 2025, 'price' => 197100.0, 'publisher_id' => 1],
+            ['id' => 15, 'isbn' => '8935235246119', 'title' => 'Đẹp Và Buồn (Tái Bản 2025)', 'published_year' => 2025, 'price' => 118800.0, 'publisher_id' => 7],
+            ['id' => 16, 'isbn' => '9786040311719', 'title' => 'Tiếng Anh 7 Friends Plus - Workbook', 'published_year' => 2021, 'price' => 67000.0, 'publisher_id' => 8],
+            ['id' => 17, 'isbn' => '8936110989879', 'title' => 'Kỹ Năng Đọc Hiểu Tiếng Anh Lớp 6', 'published_year' => 2022, 'price' => 89000.0, 'publisher_id' => 9],
+            ['id' => 18, 'isbn' => '8935309505326', 'title' => 'IELTS Listening Dictation', 'published_year' => 2025, 'price' => 127000.0, 'publisher_id' => 1],
+            ['id' => 19, 'isbn' => '9786043895537', 'title' => 'Tổng Ôn Ngữ Pháp Tiếng Anh (Tái Bản 2023)', 'published_year' => 2023, 'price' => 179000.0, 'publisher_id' => 10],
+            ['id' => 20, 'isbn' => '9786044067186', 'title' => '100 Đề Minh Họa Tốt Nghiệp THPT 2025 - Môn Ngữ Văn', 'published_year' => 2024, 'price' => 159000.0, 'publisher_id' => 3],
+            ['id' => 21, 'isbn' => '8935325032233', 'title' => 'Thế Giới Giấy Gấp - Origami Cho Bé - Vườn Thú Vui Nhộn', 'published_year' => 2025, 'price' => 40500.0, 'publisher_id' => 2],
+            ['id' => 22, 'isbn' => '9786042260718', 'title' => 'Tớ Tự Tin Vượt Qua Thử Thách - Rèn Khả Năng Quản Lí Cảm Xúc - Những Bài Tự Rèn Luyện Không Thể Thiếu Cho Học Sinh Tiểu Học', 'published_year' => 2025, 'price' => 67500.0, 'publisher_id' => 3],
+            ['id' => 23, 'isbn' => '8935325032714', 'title' => 'Vòng Quanh Thế Giới - Tô Màu Lễ Hội', 'published_year' => 2025, 'price' => 79200.0, 'publisher_id' => 3],
+            ['id' => 24, 'isbn' => '8935325007910', 'title' => 'Con Có Thể Tự Bảo Vệ Mình - Con Không Bao Giờ Đi Cùng Người Lạ', 'published_year' => 2022, 'price' => 67500.0, 'publisher_id' => 1],
+            ['id' => 25, 'isbn' => '8931805100089', 'title' => '10 Vạn Câu Hỏi Vì Sao? - Thiên Nhiên Và Các Hiện Tượng Huyền Bí', 'published_year' => 2022, 'price' => 41600.0, 'publisher_id' => 11],
+            ['id' => 26, 'isbn' => '8935325032509', 'title' => 'Tìm Người Để Yêu - Hiểu Người Để Thương', 'published_year' => 2025, 'price' => 71100.0, 'publisher_id' => 2],
+            ['id' => 27, 'isbn' => '8935325032486', 'title' => 'Thức Dậy Anh Vẫn Là Mơ', 'published_year' => 2025, 'price' => 94500.0, 'publisher_id' => 2],
+            ['id' => 28, 'isbn' => '8935325030420', 'title' => 'Đóa Hoa Tỉnh Thức Nở Giữa Vô Thường', 'published_year' => 2025, 'price' => 98100.0, 'publisher_id' => 1],
+            ['id' => 29, 'isbn' => '8935325031755', 'title' => '365 Ngày Manifest', 'published_year' => 2025, 'price' => 89100.0, 'publisher_id' => 2],
+            ['id' => 30, 'isbn' => '9786042264709', 'title' => 'Kẻ Cướp Bến Bỏi', 'published_year' => 2008, 'price' => 63000.0, 'publisher_id' => 12],
+            ['id' => 31, 'isbn' => '8935246947753', 'title' => 'Destination C1&C2 - Grammar & Vocabulary With Answer Key (Tái Bản 2024)', 'published_year' => 2025, 'price' => 144540.0, 'publisher_id' => 10],
+            ['id' => 32, 'isbn' => '8794069305733', 'title' => 'Giải Thích Ngữ Pháp Tiếng Anh (Ấn Phẩm Mới)', 'published_year' => 2025, 'price' => 152000.0, 'publisher_id' => 1],
+            ['id' => 33, 'isbn' => '9786043775662', 'title' => 'Giáo Trình Chuẩn HSK 1 (Tái Bản 2023)', 'published_year' => 2023, 'price' => 152460.0, 'publisher_id' => 13],
+            ['id' => 34, 'isbn' => '9786045891940', 'title' => 'Luyện Nói Tiếng Trung Quốc Cấp Tốc Cho Người Bắt Đầu - Tập 1', 'published_year' => 2019, 'price' => 129360.0, 'publisher_id' => 13],
+            ['id' => 35, 'isbn' => '8935246937945', 'title' => 'Tiếng Hàn Tổng Hợp Dành Cho Người Việt Nam - Sơ Cấp 1 - Sách Bài Tập (Tái Bản 2023)', 'published_year' => 2023, 'price' => 132000.0, 'publisher_id' => 14],
+            ['id' => 36, 'isbn' => '8935246936917', 'title' => 'Ngữ Pháp Tiếng Hàn Thông Dụng - Trung Cấp (Tái Bản)', 'published_year' => 2022, 'price' => 229500.0, 'publisher_id' => 10],
+            ['id' => 37, 'isbn' => '8935251422320', 'title' => 'Từ Sông Bến Hải Đến Dinh Độc Lập', 'published_year' => 2025, 'price' => 186000.0, 'publisher_id' => 15],
+            ['id' => 38, 'isbn' => '9786043773927', 'title' => 'Tình Báo Kể Chuyện', 'published_year' => 2025, 'price' => 127000.0, 'publisher_id' => 13],
+            ['id' => 39, 'isbn' => '8936117741920', 'title' => 'Sử Việt - 12 Khúc Tráng Ca (Tái Bản 2019)', 'published_year' => 2017, 'price' => 99000.0, 'publisher_id' => 16],
+            ['id' => 40, 'isbn' => '8936067605211', 'title' => 'Phương Pháp Giáo Dục Con Của Người Do Thái - Giúp Trẻ Tự Tin Bước Vào Cuộc Sống', 'published_year' => 2022, 'price' => 55000.0, 'publisher_id' => 2],
+            ['id' => 41, 'isbn' => '8934974178910', 'title' => 'Giúp Con Hạnh Phúc: Giúp Con Điều Hòa Cảm Xúc - 35 Hoạt Động Dành Cho Trẻ Từ 3 Đến 10 Tuổi', 'published_year' => 2022, 'price' => 22500.0, 'publisher_id' => 17],
+            ['id' => 42, 'isbn' => '8935073101878', 'title' => 'Chăm Sóc Dinh Dưỡng Cho Trẻ (Tái Bản 2015)', 'published_year' => 2015, 'price' => 25000.0, 'publisher_id' => 18],
+            ['id' => 43, 'isbn' => '8934974165583', 'title' => 'Bác Sĩ Riêng Của Bé Yêu - Bước Đệm Vững Chắc Vào Đời (Tái Bản 2020)', 'published_year' => 2020, 'price' => 78000.0, 'publisher_id' => 17],
+            ['id' => 44, 'isbn' => '8936067604511', 'title' => 'Thai Giáo Theo Chuyên Gia - 280 Ngày - Mỗi Ngày Đọc Một Trang (Tái Bản 2021)', 'published_year' => 2021, 'price' => 81000.0, 'publisher_id' => 2],
+            ['id' => 45, 'isbn' => '9786043983135', 'title' => 'Chăm Sóc Sản Phụ Và Trẻ Sơ Sinh', 'published_year' => 2023, 'price' => 44000.0, 'publisher_id' => 10],
+            ['id' => 46, 'isbn' => '9786042255875', 'title' => 'Thám Tử Lừng Danh Conan - Tập 106', 'published_year' => 2025, 'price' => 23500.0, 'publisher_id' => 12],
+            ['id' => 47, 'isbn' => '9786042264747', 'title' => 'Perman - Cậu Bé Siêu Nhân - Tập 4', 'published_year' => 2025, 'price' => 23500.0, 'publisher_id' => 12],
+            ['id' => 48, 'isbn' => '9786042253468', 'title' => '"Cậu" Ma Nhà Xí Hanako - Tập 23 - Tặng Kèm Postcard Phong Thư', 'published_year' => 2025, 'price' => 33000.0, 'publisher_id' => 12],
+            ['id' => 49, 'isbn' => '8934974210931', 'title' => 'Tình Yêu Nhân Vật Phụ - Tập 11', 'published_year' => 2025, 'price' => 42500.0, 'publisher_id' => 17],
+            ['id' => 50, 'isbn' => '8935352624913', 'title' => 'Thanh Gươm Diệt Quỷ - Kimetsu No Yaiba - Tập 21 - Kí Ức Xa Xăm (Tái Bản 2025)', 'published_year' => 2025, 'price' => 28500.0, 'publisher_id' => 12],
+            ['id' => 51, 'isbn' => '8935075961890', 'title' => 'Mưa Đỏ', 'published_year' => 2025, 'price' => 184500.0, 'publisher_id' => 19],
+            ['id' => 52, 'isbn' => '8935212370189', 'title' => 'Hồ Điệp Và Kình Ngư', 'published_year' => 2024, 'price' => 111600.0, 'publisher_id' => 1],
+            ['id' => 53, 'isbn' => '8935235226272', 'title' => 'Nhà Giả Kim (Tái Bản 2020)', 'published_year' => 2020, 'price' => 67000.0, 'publisher_id' => 16],
+            ['id' => 54, 'isbn' => '8935212349208', 'title' => 'Bến Xe (Tái Bản 2020)', 'published_year' => 2020, 'price' => 143000.0, 'publisher_id' => 1],
+            ['id' => 55, 'isbn' => '8932000134749', 'title' => 'Nếu Biết Trăm Năm Là Hữu Hạn - Ấn Bản Kỉ Niệm 10 Năm Xuất Bản (Tái Bản 2024)', 'published_year' => 2024, 'price' => 143000.0, 'publisher_id' => 1],
+            ['id' => 56, 'isbn' => '8936219420648', 'title' => 'Ứng Dụng AI Vào Doanh Nghiệp - Những Bài Giảng Của Giáo Tiến Về Nhân Tố Thay Đổi Cuộc Chơi Trong Kỉ Nguyên Mới', 'published_year' => 2025, 'price' => 216000.0, 'publisher_id' => 1],
+            ['id' => 57, 'isbn' => '9786042253741', 'title' => 'Búp Sen Xanh - Bìa Cứng - Tặng Kèm Obi + Postcard Hành Trình Cứu Nước', 'published_year' => 2025, 'price' => 88000.0, 'publisher_id' => 20],
+            ['id' => 58, 'isbn' => '8935244827972', 'title' => 'Tuổi Thơ Dữ Dội - Tập 1 (Tái Bản 2019)', 'published_year' => 2019, 'price' => 64000.0, 'publisher_id' => 20],
+        ]);
 
-        if (!File::exists($jsonPath)) {
-            $this->command->error("Không tìm thấy file books.json tại bất kỳ đường dẫn nào.");
-            return;
-        }
-
-        $booksData = json_decode(File::get($jsonPath), true);
-        if (!$booksData || !is_array($booksData)) {
-            $this->command->error("Dữ liệu trong books.json không hợp lệ.");
-            return;
-        }
-
-        // Đảm bảo thư mục lưu trữ ảnh tồn tại
-        $storageBooksDir = storage_path('app/public/books');
-        if (!File::exists($storageBooksDir)) {
-            File::makeDirectory($storageBooksDir, 0755, true);
-        }
-
-        // Lấy danh sách map nhanh
-        $categories = Category::pluck('id', 'name')->toArray();
-        $authors = Author::pluck('id', 'name')->toArray();
-        $publishers = Publisher::pluck('id', 'name')->toArray();
-
-        $defaultCategoryId = Category::first()->id ?? 1;
-        $defaultAuthorId = Author::first()->id ?? 1;
-        $defaultPublisherId = Publisher::first()->id ?? 1;
-
-        $seededCount = 0;
-        foreach ($booksData as $item) {
-            $categoryName = trim($item['category_name'] ?? '');
-            $authorName = trim($item['author'] ?? '');
-            $publisherName = trim($item['publisher'] ?? '');
-
-            $categoryId = $categories[$categoryName] ?? $defaultCategoryId;
-            $authorId = $authors[$authorName] ?? $defaultAuthorId;
-            $publisherId = $publishers[$publisherName] ?? $defaultPublisherId;
-
-            // Đồng bộ file ảnh từ public/books sang storage/app/public/books nếu chưa có
-            $imageName = $item['cover_image'] ?? null;
-            if ($imageName) {
-                $targetPath = $storageBooksDir . DIRECTORY_SEPARATOR . $imageName;
-                $publicImgPath = public_path('books' . DIRECTORY_SEPARATOR . $imageName);
-
-                if (!File::exists($targetPath) && File::exists($publicImgPath)) {
-                    File::copy($publicImgPath, $targetPath);
-                }
-            }
-
-            Book::updateOrCreate(
-                ['book_code' => $item['book_code']],
-                [
-                    'category_id' => $categoryId,
-                    'author_id' => $authorId,
-                    'publisher_id' => $publisherId,
-                    'isbn' => $item['isbn'] ?? null,
-                    'title' => $item['title'],
-                    'translator' => $item['translator'] ?? null,
-                    'supplier' => $item['supplier'] ?? null,
-                    'publish_year' => $item['publish_year'] ?? null,
-                    'language' => $item['language'] ?? 'Tiếng Việt',
-                    'weight' => $item['weight'] ?? 250,
-                    'dimensions' => $item['dimensions'] ?? null,
-                    'pages' => $item['pages'] ?? 200,
-                    'original_price' => $item['original_price'] ?? 0,
-                    'price' => $item['price'] ?? 0,
-                    'stock_quantity' => $item['stock'] ?? 0,
-                    'sold_quantity' => $item['sold_quantity'] ?? 0,
-                    'cover_image' => $imageName,
-                    'description' => $item['description'] ?? null,
-                    'is_trending' => (bool) ($item['is_trending'] ?? false),
-                    'badge_type' => $item['badge_type'] ?? null,
-                ]
-            );
-
-            $seededCount++;
+        // Số lượng tồn mẫu (cố định theo id): có cả còn hàng, sắp hết và hết hàng để dễ kiểm thử giao diện
+        foreach (range(1, 58) as $id) {
+            DB::table('books')->where('id', $id)->update(['stock_quantity' => max(0, ($id * 37) % 61 - 4)]);
         }
 
-        $this->command->info("Đã seed thành công {$seededCount} đầu sách với đầy đủ quan hệ Danh mục, Tác giả và NXB!");
+        // Liên kết sách - thể loại (nhiều - nhiều)
+        DB::table('book_category')->insert([
+            ['book_id' => 1, 'category_id' => 1],
+            ['book_id' => 2, 'category_id' => 1],
+            ['book_id' => 3, 'category_id' => 1],
+            ['book_id' => 4, 'category_id' => 1],
+            ['book_id' => 5, 'category_id' => 1],
+            ['book_id' => 6, 'category_id' => 3],
+            ['book_id' => 7, 'category_id' => 3],
+            ['book_id' => 8, 'category_id' => 3],
+            ['book_id' => 9, 'category_id' => 3],
+            ['book_id' => 10, 'category_id' => 3],
+            ['book_id' => 11, 'category_id' => 2],
+            ['book_id' => 12, 'category_id' => 2],
+            ['book_id' => 13, 'category_id' => 2],
+            ['book_id' => 14, 'category_id' => 2],
+            ['book_id' => 15, 'category_id' => 2],
+            ['book_id' => 16, 'category_id' => 6],
+            ['book_id' => 17, 'category_id' => 6],
+            ['book_id' => 18, 'category_id' => 6],
+            ['book_id' => 19, 'category_id' => 6],
+            ['book_id' => 20, 'category_id' => 6],
+            ['book_id' => 21, 'category_id' => 4],
+            ['book_id' => 22, 'category_id' => 4],
+            ['book_id' => 23, 'category_id' => 4],
+            ['book_id' => 24, 'category_id' => 4],
+            ['book_id' => 25, 'category_id' => 4],
+            ['book_id' => 26, 'category_id' => 2],
+            ['book_id' => 27, 'category_id' => 2],
+            ['book_id' => 28, 'category_id' => 2],
+            ['book_id' => 29, 'category_id' => 2],
+            ['book_id' => 30, 'category_id' => 2],
+            ['book_id' => 31, 'category_id' => 5],
+            ['book_id' => 32, 'category_id' => 5],
+            ['book_id' => 33, 'category_id' => 5],
+            ['book_id' => 34, 'category_id' => 5],
+            ['book_id' => 35, 'category_id' => 5],
+            ['book_id' => 36, 'category_id' => 5],
+            ['book_id' => 37, 'category_id' => 2],
+            ['book_id' => 38, 'category_id' => 2],
+            ['book_id' => 39, 'category_id' => 2],
+            ['book_id' => 40, 'category_id' => 2],
+            ['book_id' => 41, 'category_id' => 2],
+            ['book_id' => 42, 'category_id' => 2],
+            ['book_id' => 43, 'category_id' => 2],
+            ['book_id' => 44, 'category_id' => 2],
+            ['book_id' => 45, 'category_id' => 2],
+            ['book_id' => 46, 'category_id' => 4],
+            ['book_id' => 47, 'category_id' => 4],
+            ['book_id' => 48, 'category_id' => 4],
+            ['book_id' => 49, 'category_id' => 4],
+            ['book_id' => 50, 'category_id' => 4],
+            ['book_id' => 51, 'category_id' => 2],
+            ['book_id' => 52, 'category_id' => 2],
+            ['book_id' => 53, 'category_id' => 2],
+            ['book_id' => 54, 'category_id' => 2],
+            ['book_id' => 55, 'category_id' => 2],
+            ['book_id' => 56, 'category_id' => 3],
+            ['book_id' => 57, 'category_id' => 4],
+            ['book_id' => 58, 'category_id' => 4],
+        ]);
+
+        // Liên kết sách - tác giả (nhiều - nhiều)
+        DB::table('author_book')->insert([
+            ['author_id' => 1, 'book_id' => 1],
+            ['author_id' => 2, 'book_id' => 2],
+            ['author_id' => 3, 'book_id' => 3],
+            ['author_id' => 4, 'book_id' => 4],
+            ['author_id' => 5, 'book_id' => 5],
+            ['author_id' => 6, 'book_id' => 6],
+            ['author_id' => 7, 'book_id' => 7],
+            ['author_id' => 8, 'book_id' => 8],
+            ['author_id' => 9, 'book_id' => 9],
+            ['author_id' => 10, 'book_id' => 10],
+            ['author_id' => 11, 'book_id' => 11],
+            ['author_id' => 12, 'book_id' => 12],
+            ['author_id' => 13, 'book_id' => 13],
+            ['author_id' => 14, 'book_id' => 14],
+            ['author_id' => 15, 'book_id' => 15],
+            ['author_id' => 16, 'book_id' => 16],
+            ['author_id' => 17, 'book_id' => 16],
+            ['author_id' => 18, 'book_id' => 16],
+            ['author_id' => 19, 'book_id' => 17],
+            ['author_id' => 20, 'book_id' => 18],
+            ['author_id' => 21, 'book_id' => 19],
+            ['author_id' => 22, 'book_id' => 20],
+            ['author_id' => 23, 'book_id' => 20],
+            ['author_id' => 24, 'book_id' => 20],
+            ['author_id' => 25, 'book_id' => 21],
+            ['author_id' => 26, 'book_id' => 22],
+            ['author_id' => 27, 'book_id' => 23],
+            ['author_id' => 28, 'book_id' => 24],
+            ['author_id' => 29, 'book_id' => 25],
+            ['author_id' => 30, 'book_id' => 26],
+            ['author_id' => 31, 'book_id' => 27],
+            ['author_id' => 32, 'book_id' => 28],
+            ['author_id' => 33, 'book_id' => 29],
+            ['author_id' => 34, 'book_id' => 30],
+            ['author_id' => 35, 'book_id' => 31],
+            ['author_id' => 36, 'book_id' => 31],
+            ['author_id' => 37, 'book_id' => 32],
+            ['author_id' => 38, 'book_id' => 33],
+            ['author_id' => 39, 'book_id' => 33],
+            ['author_id' => 40, 'book_id' => 33],
+            ['author_id' => 41, 'book_id' => 33],
+            ['author_id' => 42, 'book_id' => 34],
+            ['author_id' => 43, 'book_id' => 35],
+            ['author_id' => 44, 'book_id' => 36],
+            ['author_id' => 45, 'book_id' => 36],
+            ['author_id' => 46, 'book_id' => 37],
+            ['author_id' => 47, 'book_id' => 38],
+            ['author_id' => 48, 'book_id' => 39],
+            ['author_id' => 49, 'book_id' => 40],
+            ['author_id' => 50, 'book_id' => 41],
+            ['author_id' => 51, 'book_id' => 42],
+            ['author_id' => 52, 'book_id' => 43],
+            ['author_id' => 53, 'book_id' => 44],
+            ['author_id' => 54, 'book_id' => 45],
+            ['author_id' => 55, 'book_id' => 45],
+            ['author_id' => 56, 'book_id' => 46],
+            ['author_id' => 57, 'book_id' => 47],
+            ['author_id' => 58, 'book_id' => 48],
+            ['author_id' => 59, 'book_id' => 49],
+            ['author_id' => 60, 'book_id' => 50],
+            ['author_id' => 61, 'book_id' => 51],
+            ['author_id' => 62, 'book_id' => 52],
+            ['author_id' => 63, 'book_id' => 53],
+            ['author_id' => 64, 'book_id' => 54],
+            ['author_id' => 65, 'book_id' => 55],
+            ['author_id' => 66, 'book_id' => 56],
+            ['author_id' => 67, 'book_id' => 57],
+            ['author_id' => 68, 'book_id' => 58],
+        ]);
     }
 }

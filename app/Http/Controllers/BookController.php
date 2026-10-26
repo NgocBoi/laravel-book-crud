@@ -2,7 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Http\Requests\StoreBookRequest;
+use App\Http\Requests\UpdateBookRequest;
+use App\Models\Author;
+use App\Models\Book;
+use App\Models\Category;
+use App\Models\Publisher;
+use Illuminate\Contracts\View\View;
+use Illuminate\Database\QueryException;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 
 class BookController extends Controller
 {
@@ -11,54 +22,129 @@ class BookController extends Controller
      */
     public function index()
     {
-        //
+        // Khung danh sách: tìm kiếm / lọc do thành viên phụ trách bổ sung tại đây
+        $books = Book::with(['authors', 'categories', 'publisher'])
+            ->latest('id')
+            ->paginate(10)
+            ->withQueryString();
+
+        return view('books.index', compact('books'));
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(): View
     {
-        //
+        return view('books.create', $this->formOptions());
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreBookRequest $request): RedirectResponse
     {
-        //
+        try {
+            $book = $this->persist(new Book, $request->validated());
+        } catch (QueryException $e) {
+            return $this->saveFailed($e);
+        }
+
+        return to_route('books.edit', $book)->with('success', 'Đã thêm sách mới thành công.');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Book $book): View
     {
-        //
+        $book->load(['authors', 'categories', 'publisher']);
+
+        $related = Book::with('authors')
+            ->whereKeyNot($book->id)
+            ->whereHas('categories', fn ($q) => $q->whereIn('categories.id', $book->categories->modelKeys()))
+            ->limit(4)
+            ->get();
+
+        return view('books.show', compact('book', 'related'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Book $book): View
     {
-        //
+        return view('books.edit', [
+            ...$this->formOptions(),
+            'book' => $book->load(['authors', 'categories', 'publisher']),
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateBookRequest $request, Book $book): RedirectResponse
     {
-        //
+        try {
+            $this->persist($book, $request->validated());
+        } catch (QueryException $e) {
+            return $this->saveFailed($e);
+        }
+
+        return to_route('books.index')->with('success', 'Đã cập nhật sách thành công.');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Book $book): RedirectResponse
     {
-        //
+        // Xóa mềm: chỉ ghi deleted_at, giữ bản ghi, liên kết tác giả/thể loại và ảnh bìa để còn khôi phục
+        $book->delete();
+
+        return to_route('books.index')->with('success', "Đã chuyển sách \"{$book->title}\" vào thùng rác.");
+    }
+
+    /**
+     * Lưu sách (thêm mới hoặc cập nhật) cùng quan hệ tác giả / thể loại trong một transaction:
+     * hoặc lưu đủ tất cả, hoặc không lưu gì.
+     *
+     * @param  array<string, mixed>  $data  dữ liệu đã validate
+     */
+    private function persist(Book $book, array $data): Book
+    {
+        return DB::transaction(function () use ($book, $data): Book {
+            $book->fill(Arr::except($data, ['author_ids', 'category_ids']))->save();
+            $book->authors()->sync($data['author_ids']);
+            $book->categories()->sync($data['category_ids']);
+
+            return $book;
+        });
+    }
+
+    /**
+     * Lỗi CSDL khi lưu (trùng khóa, mất kết nối...): ghi log, giữ nguyên dữ liệu đã nhập và báo người dùng.
+     */
+    private function saveFailed(QueryException $e): RedirectResponse
+    {
+        report($e);
+
+        return back()->withInput()->with('error', 'Không thể lưu sách do lỗi hệ thống. Vui lòng kiểm tra lại dữ liệu và thử lại.');
+    }
+
+    /**
+     * @return array{
+     *     authors: Collection<int, Author>,
+     *     categories: Collection<int, Category>,
+     *     publishers: Collection<int, Publisher>
+     * }
+     */
+    private function formOptions(): array
+    {
+        return [
+            'authors' => Author::orderBy('name')->get(),
+            'categories' => Category::orderBy('name')->get(),
+            'publishers' => Publisher::orderBy('name')->get(),
+        ];
     }
 }

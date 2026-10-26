@@ -1,0 +1,1504 @@
+{
+    "categories":  [
+                       {
+                           "id":  1,
+                           "name":  "Tâm Lý - Kĩ Năng Sống"
+                       },
+                       {
+                           "id":  2,
+                           "name":  "Văn Học"
+                       },
+                       {
+                           "id":  3,
+                           "name":  "Kinh Tế"
+                       },
+                       {
+                           "id":  4,
+                           "name":  "Thiếu Nhi"
+                       },
+                       {
+                           "id":  5,
+                           "name":  "Sách Học Ngoại Ngữ"
+                       },
+                       {
+                           "id":  6,
+                           "name":  "Sách Giáo Khoa - Tham Khảo"
+                       }
+                   ],
+    "authors":  [
+                    {
+                        "id":  1,
+                        "name":  "Ca Tây",
+                        "biography":  "Tác giả Ca Tây với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận."
+                    },
+                    {
+                        "id":  2,
+                        "name":  "Jayita Bhattacharjee",
+                        "biography":  "Tác giả Jayita Bhattacharjee với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận."
+                    },
+                    {
+                        "id":  3,
+                        "name":  "David McRaney",
+                        "biography":  "Tác giả David McRaney với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận."
+                    },
+                    {
+                        "id":  4,
+                        "name":  "Sasha Fenton",
+                        "biography":  "Tác giả Sasha Fenton với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận."
+                    },
+                    {
+                        "id":  5,
+                        "name":  "Đường Bảo Nhi",
+                        "biography":  "Tác giả Đường Bảo Nhi với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận."
+                    },
+                    {
+                        "id":  6,
+                        "name":  "Leader Thanh",
+                        "biography":  "Tác giả Leader Thanh với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận."
+                    },
+                    {
+                        "id":  7,
+                        "name":  "Nguyễn Duy Linh",
+                        "biography":  "Tác giả Nguyễn Duy Linh với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận."
+                    },
+                    {
+                        "id":  8,
+                        "name":  "Trần Quang Sang",
+                        "biography":  "Tác giả Trần Quang Sang với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận."
+                    },
+                    {
+                        "id":  9,
+                        "name":  "Russ Laraway",
+                        "biography":  "Tác giả Russ Laraway với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận."
+                    },
+                    {
+                        "id":  10,
+                        "name":  "Peter F. Drucker",
+                        "biography":  "Tác giả Peter F. Drucker với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận."
+                    },
+                    {
+                        "id":  11,
+                        "name":  "Tần Hạo",
+                        "biography":  "Tác giả Tần Hạo với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận."
+                    },
+                    {
+                        "id":  12,
+                        "name":  "Jeong JiA",
+                        "biography":  "Tác giả Jeong JiA với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận."
+                    },
+                    {
+                        "id":  13,
+                        "name":  "Lavende",
+                        "biography":  "Tác giả Lavende với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận."
+                    },
+                    {
+                        "id":  14,
+                        "name":  "Chỉ Văn",
+                        "biography":  "Tác giả Chỉ Văn với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận."
+                    },
+                    {
+                        "id":  15,
+                        "name":  "Kawabata Yasunari",
+                        "biography":  "Tác giả Kawabata Yasunari với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận."
+                    },
+                    {
+                        "id":  16,
+                        "name":  "Trần Cao Ngọc Bội",
+                        "biography":  "Tác giả Trần Cao Ngọc Bội với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận."
+                    },
+                    {
+                        "id":  17,
+                        "name":  "Vũ Vạn Xuân",
+                        "biography":  "Tác giả Vũ Vạn Xuân với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận."
+                    },
+                    {
+                        "id":  18,
+                        "name":  "Trần Nguyễn Thụy Thoại Lan",
+                        "biography":  "Tác giả Trần Nguyễn Thụy Thoại Lan với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận."
+                    },
+                    {
+                        "id":  19,
+                        "name":  "Khánh Hà",
+                        "biography":  "Tác giả Khánh Hà với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận."
+                    },
+                    {
+                        "id":  20,
+                        "name":  "Tô Hà Thanh Phương",
+                        "biography":  "Tác giả Tô Hà Thanh Phương với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận."
+                    },
+                    {
+                        "id":  21,
+                        "name":  "Trang Anh",
+                        "biography":  "Tác giả Trang Anh với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận."
+                    },
+                    {
+                        "id":  22,
+                        "name":  "Dung Vũ",
+                        "biography":  "Tác giả Dung Vũ với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận."
+                    },
+                    {
+                        "id":  23,
+                        "name":  "Hà Thùy Linh",
+                        "biography":  "Tác giả Hà Thùy Linh với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận."
+                    },
+                    {
+                        "id":  24,
+                        "name":  "Cao Hằng",
+                        "biography":  "Tác giả Cao Hằng với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận."
+                    },
+                    {
+                        "id":  25,
+                        "name":  "Hạt Mầm Khéo Tay",
+                        "biography":  "Tác giả Hạt Mầm Khéo Tay với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận."
+                    },
+                    {
+                        "id":  26,
+                        "name":  "Shizi Culture",
+                        "biography":  "Tác giả Shizi Culture với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận."
+                    },
+                    {
+                        "id":  27,
+                        "name":  "Bún",
+                        "biography":  "Tác giả Bún với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận."
+                    },
+                    {
+                        "id":  28,
+                        "name":  "Dagmar Geisler",
+                        "biography":  "Tác giả Dagmar Geisler với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận."
+                    },
+                    {
+                        "id":  29,
+                        "name":  "Chính An",
+                        "biography":  "Tác giả Chính An với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận."
+                    },
+                    {
+                        "id":  30,
+                        "name":  "The School of Life",
+                        "biography":  "Tác giả The School of Life với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận."
+                    },
+                    {
+                        "id":  31,
+                        "name":  "Jun Phạm",
+                        "biography":  "Tác giả Jun Phạm với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận."
+                    },
+                    {
+                        "id":  32,
+                        "name":  "Mai Thanh Hạ",
+                        "biography":  "Tác giả Mai Thanh Hạ với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận."
+                    },
+                    {
+                        "id":  33,
+                        "name":  "Nguyên Trần",
+                        "biography":  "Tác giả Nguyên Trần với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận."
+                    },
+                    {
+                        "id":  34,
+                        "name":  "Tô Hoài",
+                        "biography":  "Tác giả Tô Hoài với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận."
+                    },
+                    {
+                        "id":  35,
+                        "name":  "Malcom Mann",
+                        "biography":  "Tác giả Malcom Mann với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận."
+                    },
+                    {
+                        "id":  36,
+                        "name":  "Steve Taylore-Knowles",
+                        "biography":  "Tác giả Steve Taylore-Knowles với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận."
+                    },
+                    {
+                        "id":  37,
+                        "name":  "Lighthouse Writers",
+                        "biography":  "Tác giả Lighthouse Writers với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận."
+                    },
+                    {
+                        "id":  38,
+                        "name":  "Khương Lệ Bình",
+                        "biography":  "Tác giả Khương Lệ Bình với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận."
+                    },
+                    {
+                        "id":  39,
+                        "name":  "Vương Phương",
+                        "biography":  "Tác giả Vương Phương với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận."
+                    },
+                    {
+                        "id":  40,
+                        "name":  "Vương Phong",
+                        "biography":  "Tác giả Vương Phong với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận."
+                    },
+                    {
+                        "id":  41,
+                        "name":  "Lưu Lệ Bình",
+                        "biography":  "Tác giả Lưu Lệ Bình với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận."
+                    },
+                    {
+                        "id":  42,
+                        "name":  "Mã Tiễn Phi",
+                        "biography":  "Tác giả Mã Tiễn Phi với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận."
+                    },
+                    {
+                        "id":  43,
+                        "name":  "Nhiều Tác Giả",
+                        "biography":  "Tác giả Nhiều Tác Giả với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận."
+                    },
+                    {
+                        "id":  44,
+                        "name":  "Min Jin Young",
+                        "biography":  "Tác giả Min Jin Young với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận."
+                    },
+                    {
+                        "id":  45,
+                        "name":  "Ahn Jean Myung",
+                        "biography":  "Tác giả Ahn Jean Myung với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận."
+                    },
+                    {
+                        "id":  46,
+                        "name":  "Thiếu Tướng Hoàng Đan",
+                        "biography":  "Tác giả Thiếu Tướng Hoàng Đan với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận."
+                    },
+                    {
+                        "id":  47,
+                        "name":  "Nguyễn Văn Tàu",
+                        "biography":  "Tác giả Nguyễn Văn Tàu với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận."
+                    },
+                    {
+                        "id":  48,
+                        "name":  "Dũng Phan",
+                        "biography":  "Tác giả Dũng Phan với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận."
+                    },
+                    {
+                        "id":  49,
+                        "name":  "Hà Minh",
+                        "biography":  "Tác giả Hà Minh với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận."
+                    },
+                    {
+                        "id":  50,
+                        "name":  "Gilles Diederichs",
+                        "biography":  "Tác giả Gilles Diederichs với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận."
+                    },
+                    {
+                        "id":  51,
+                        "name":  "Vương Trung Hiếu",
+                        "biography":  "Tác giả Vương Trung Hiếu với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận."
+                    },
+                    {
+                        "id":  52,
+                        "name":  "Trần Thị Huyên Thảo",
+                        "biography":  "Tác giả Trần Thị Huyên Thảo với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận."
+                    },
+                    {
+                        "id":  53,
+                        "name":  "Trạch Quế Vinh",
+                        "biography":  "Tác giả Trạch Quế Vinh với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận."
+                    },
+                    {
+                        "id":  54,
+                        "name":  "Lý Thuyết Minh",
+                        "biography":  "Tác giả Lý Thuyết Minh với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận."
+                    },
+                    {
+                        "id":  55,
+                        "name":  "Thu Hằng",
+                        "biography":  "Tác giả Thu Hằng với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận."
+                    },
+                    {
+                        "id":  56,
+                        "name":  "Gosho Aoyama",
+                        "biography":  "Tác giả Gosho Aoyama với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận."
+                    },
+                    {
+                        "id":  57,
+                        "name":  "Fujiko F Fujio",
+                        "biography":  "Tác giả Fujiko F Fujio với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận."
+                    },
+                    {
+                        "id":  58,
+                        "name":  "Aida Iro",
+                        "biography":  "Tác giả Aida Iro với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận."
+                    },
+                    {
+                        "id":  59,
+                        "name":  "Akane Tamura",
+                        "biography":  "Tác giả Akane Tamura với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận."
+                    },
+                    {
+                        "id":  60,
+                        "name":  "Koyoharu Gotouge",
+                        "biography":  "Tác giả Koyoharu Gotouge với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận."
+                    },
+                    {
+                        "id":  61,
+                        "name":  "Chu Lai",
+                        "biography":  "Tác giả Chu Lai với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận."
+                    },
+                    {
+                        "id":  62,
+                        "name":  "Tuế Kiến",
+                        "biography":  "Tác giả Tuế Kiến với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận."
+                    },
+                    {
+                        "id":  63,
+                        "name":  "Paulo Coelho",
+                        "biography":  "Tác giả Paulo Coelho với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận."
+                    },
+                    {
+                        "id":  64,
+                        "name":  "Thương Thái Vi",
+                        "biography":  "Tác giả Thương Thái Vi với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận."
+                    },
+                    {
+                        "id":  65,
+                        "name":  "Phạm Lữ Ân",
+                        "biography":  "Tác giả Phạm Lữ Ân với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận."
+                    },
+                    {
+                        "id":  66,
+                        "name":  "Hoàng Nam Tiến",
+                        "biography":  "Tác giả Hoàng Nam Tiến với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận."
+                    },
+                    {
+                        "id":  67,
+                        "name":  "Sơn Tùng",
+                        "biography":  "Tác giả Sơn Tùng với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận."
+                    },
+                    {
+                        "id":  68,
+                        "name":  "Phùng Quán",
+                        "biography":  "Tác giả Phùng Quán với các tác phẩm tiêu biểu được đông đảo bạn đọc yêu mến và đón nhận."
+                    }
+                ],
+    "publishers":  [
+                       {
+                           "id":  1,
+                           "name":  "Thế Giới",
+                           "address":  "Hà Nội / TP. Hồ Chí Minh, Việt Nam"
+                       },
+                       {
+                           "id":  2,
+                           "name":  "Phụ Nữ Việt Nam",
+                           "address":  "Hà Nội / TP. Hồ Chí Minh, Việt Nam"
+                       },
+                       {
+                           "id":  3,
+                           "name":  "Dân Trí",
+                           "address":  "Hà Nội / TP. Hồ Chí Minh, Việt Nam"
+                       },
+                       {
+                           "id":  4,
+                           "name":  "Lao Động",
+                           "address":  "Hà Nội / TP. Hồ Chí Minh, Việt Nam"
+                       },
+                       {
+                           "id":  5,
+                           "name":  "Công Thương",
+                           "address":  "Hà Nội / TP. Hồ Chí Minh, Việt Nam"
+                       },
+                       {
+                           "id":  6,
+                           "name":  "Văn học",
+                           "address":  "Hà Nội / TP. Hồ Chí Minh, Việt Nam"
+                       },
+                       {
+                           "id":  7,
+                           "name":  "Hà Nội",
+                           "address":  "Hà Nội / TP. Hồ Chí Minh, Việt Nam"
+                       },
+                       {
+                           "id":  8,
+                           "name":  "NXB Giáo Dục",
+                           "address":  "Hà Nội / TP. Hồ Chí Minh, Việt Nam"
+                       },
+                       {
+                           "id":  9,
+                           "name":  "NXB Đại học Quốc gia Hà Nội",
+                           "address":  "Hà Nội / TP. Hồ Chí Minh, Việt Nam"
+                       },
+                       {
+                           "id":  10,
+                           "name":  "Hồng Đức",
+                           "address":  "Hà Nội / TP. Hồ Chí Minh, Việt Nam"
+                       },
+                       {
+                           "id":  11,
+                           "name":  "Thanh Niên",
+                           "address":  "Hà Nội / TP. Hồ Chí Minh, Việt Nam"
+                       },
+                       {
+                           "id":  12,
+                           "name":  "NXB Kim Đồng",
+                           "address":  "Hà Nội / TP. Hồ Chí Minh, Việt Nam"
+                       },
+                       {
+                           "id":  13,
+                           "name":  "NXB Tổng Hợp TPHCM",
+                           "address":  "Hà Nội / TP. Hồ Chí Minh, Việt Nam"
+                       },
+                       {
+                           "id":  14,
+                           "name":  "Đại học Quốc Gia Hà Nội",
+                           "address":  "Hà Nội / TP. Hồ Chí Minh, Việt Nam"
+                       },
+                       {
+                           "id":  15,
+                           "name":  "NXB Thông Tấn",
+                           "address":  "Hà Nội / TP. Hồ Chí Minh, Việt Nam"
+                       },
+                       {
+                           "id":  16,
+                           "name":  "NXB Hội Nhà Văn",
+                           "address":  "Hà Nội / TP. Hồ Chí Minh, Việt Nam"
+                       },
+                       {
+                           "id":  17,
+                           "name":  "NXB Trẻ",
+                           "address":  "Hà Nội / TP. Hồ Chí Minh, Việt Nam"
+                       },
+                       {
+                           "id":  18,
+                           "name":  "NXB Văn Hoá Thông Tin",
+                           "address":  "Hà Nội / TP. Hồ Chí Minh, Việt Nam"
+                       },
+                       {
+                           "id":  19,
+                           "name":  "Quân Đội Nhân Dân",
+                           "address":  "Hà Nội / TP. Hồ Chí Minh, Việt Nam"
+                       },
+                       {
+                           "id":  20,
+                           "name":  "Kim Đồng",
+                           "address":  "Hà Nội / TP. Hồ Chí Minh, Việt Nam"
+                       }
+                   ],
+    "books":  [
+                  {
+                      "id":  1,
+                      "isbn":  "8935325032561",
+                      "title":  "Kỷ Luật Không Phải Cuộc Chiến Với Bản Thân",
+                      "published_year":  2025,
+                      "price":  116100,
+                      "publisher_id":  1,
+                      "stock_quantity":  33
+                  },
+                  {
+                      "id":  2,
+                      "isbn":  "8935325032554",
+                      "title":  "Viết Để Chữa Lành - Ánh Sáng Chữa Lành Từ Ngòi Bút Vỡ Tan",
+                      "published_year":  2025,
+                      "price":  121500,
+                      "publisher_id":  2,
+                      "stock_quantity":  9
+                  },
+                  {
+                      "id":  3,
+                      "isbn":  "8935325032677",
+                      "title":  "Tâm Trí Chúng Ta Thay Đổi Như Thế Nào",
+                      "published_year":  2025,
+                      "price":  143100,
+                      "publisher_id":  1,
+                      "stock_quantity":  46
+                  },
+                  {
+                      "id":  4,
+                      "isbn":  "8935325032370",
+                      "title":  "Giải Mã Thần Số Học - Các Kỹ Thuật Ứng Dụng Thần Số Học Vào Khám Phá Bản Thân Và Dự Đoán Vận Mệnh",
+                      "published_year":  2025,
+                      "price":  116100,
+                      "publisher_id":  1,
+                      "stock_quantity":  22
+                  },
+                  {
+                      "id":  5,
+                      "isbn":  "8935325032301",
+                      "title":  "Đối Thân, Vững Thế - Thấu Suốt Bên Trong, Vững Vàng Giữa Bão Giông",
+                      "published_year":  2025,
+                      "price":  107100,
+                      "publisher_id":  3,
+                      "stock_quantity":  0
+                  },
+                  {
+                      "id":  6,
+                      "isbn":  "9786043455168",
+                      "title":  "Đặt Tên Thương Hiệu",
+                      "published_year":  2024,
+                      "price":  80000,
+                      "publisher_id":  1,
+                      "stock_quantity":  35
+                  },
+                  {
+                      "id":  7,
+                      "isbn":  "8935278609643",
+                      "title":  "Lựa Chọn, Thiết Kế Và Nuôi Sống Trải Nghiệm Khách Hàng",
+                      "published_year":  2025,
+                      "price":  135200,
+                      "publisher_id":  1,
+                      "stock_quantity":  11
+                  },
+                  {
+                      "id":  8,
+                      "isbn":  "9786326049350",
+                      "title":  "Khởi Nghiệp Kinh Doanh Food Apps - Công Thức Bán Hàng Thành Công Trên Các Nền Tảng Giao Đồ Ăn",
+                      "published_year":  2025,
+                      "price":  159200,
+                      "publisher_id":  1,
+                      "stock_quantity":  48
+                  },
+                  {
+                      "id":  9,
+                      "isbn":  "8935325030604",
+                      "title":  "Giữ Người Bằng Tâm - Dẫn Dắt Bằng Tầm",
+                      "published_year":  2025,
+                      "price":  125100,
+                      "publisher_id":  4,
+                      "stock_quantity":  24
+                  },
+                  {
+                      "id":  10,
+                      "isbn":  "8936230473333",
+                      "title":  "Quản Lý Nhân Sự Trong Thời Đại Công Nghệ",
+                      "published_year":  2025,
+                      "price":  161100,
+                      "publisher_id":  5,
+                      "stock_quantity":  0
+                  },
+                  {
+                      "id":  11,
+                      "isbn":  "8935325032448",
+                      "title":  "Ngẩng Đầu Là Nắng - Cúi Đầu Là Hoa",
+                      "published_year":  2025,
+                      "price":  125100,
+                      "publisher_id":  2,
+                      "stock_quantity":  37
+                  },
+                  {
+                      "id":  12,
+                      "isbn":  "8935325032622",
+                      "title":  "Nhật Ký Của Cha",
+                      "published_year":  2025,
+                      "price":  107100,
+                      "publisher_id":  3,
+                      "stock_quantity":  13
+                  },
+                  {
+                      "id":  13,
+                      "isbn":  "8935325032646",
+                      "title":  "Mình Chia Tay Rồi, Có Nhớ Không?",
+                      "published_year":  2025,
+                      "price":  82800,
+                      "publisher_id":  6,
+                      "stock_quantity":  50
+                  },
+                  {
+                      "id":  14,
+                      "isbn":  "8935325032608",
+                      "title":  "Bạch Dạ Truy Hung - Tập 2",
+                      "published_year":  2025,
+                      "price":  197100,
+                      "publisher_id":  1,
+                      "stock_quantity":  26
+                  },
+                  {
+                      "id":  15,
+                      "isbn":  "8935235246119",
+                      "title":  "Đẹp Và Buồn (Tái Bản 2025)",
+                      "published_year":  2025,
+                      "price":  118800,
+                      "publisher_id":  7,
+                      "stock_quantity":  2
+                  },
+                  {
+                      "id":  16,
+                      "isbn":  "9786040311719",
+                      "title":  "Tiếng Anh 7 Friends Plus - Workbook",
+                      "published_year":  2021,
+                      "price":  67000,
+                      "publisher_id":  8,
+                      "stock_quantity":  39
+                  },
+                  {
+                      "id":  17,
+                      "isbn":  "8936110989879",
+                      "title":  "Kỹ Năng Đọc Hiểu Tiếng Anh Lớp 6",
+                      "published_year":  2022,
+                      "price":  89000,
+                      "publisher_id":  9,
+                      "stock_quantity":  15
+                  },
+                  {
+                      "id":  18,
+                      "isbn":  "8935309505326",
+                      "title":  "IELTS Listening Dictation",
+                      "published_year":  2025,
+                      "price":  127000,
+                      "publisher_id":  1,
+                      "stock_quantity":  52
+                  },
+                  {
+                      "id":  19,
+                      "isbn":  "9786043895537",
+                      "title":  "Tổng Ôn Ngữ Pháp Tiếng Anh (Tái Bản 2023)",
+                      "published_year":  2023,
+                      "price":  179000,
+                      "publisher_id":  10,
+                      "stock_quantity":  28
+                  },
+                  {
+                      "id":  20,
+                      "isbn":  "9786044067186",
+                      "title":  "100 Đề Minh Họa Tốt Nghiệp THPT 2025 - Môn Ngữ Văn",
+                      "published_year":  2024,
+                      "price":  159000,
+                      "publisher_id":  3,
+                      "stock_quantity":  4
+                  },
+                  {
+                      "id":  21,
+                      "isbn":  "8935325032233",
+                      "title":  "Thế Giới Giấy Gấp - Origami Cho Bé - Vườn Thú Vui Nhộn",
+                      "published_year":  2025,
+                      "price":  40500,
+                      "publisher_id":  2,
+                      "stock_quantity":  41
+                  },
+                  {
+                      "id":  22,
+                      "isbn":  "9786042260718",
+                      "title":  "Tớ Tự Tin Vượt Qua Thử Thách - Rèn Khả Năng Quản Lí Cảm Xúc - Những Bài Tự Rèn Luyện Không Thể Thiếu Cho Học Sinh Tiểu Học",
+                      "published_year":  2025,
+                      "price":  67500,
+                      "publisher_id":  3,
+                      "stock_quantity":  17
+                  },
+                  {
+                      "id":  23,
+                      "isbn":  "8935325032714",
+                      "title":  "Vòng Quanh Thế Giới - Tô Màu Lễ Hội",
+                      "published_year":  2025,
+                      "price":  79200,
+                      "publisher_id":  3,
+                      "stock_quantity":  54
+                  },
+                  {
+                      "id":  24,
+                      "isbn":  "8935325007910",
+                      "title":  "Con Có Thể Tự Bảo Vệ Mình - Con Không Bao Giờ Đi Cùng Người Lạ",
+                      "published_year":  2022,
+                      "price":  67500,
+                      "publisher_id":  1,
+                      "stock_quantity":  30
+                  },
+                  {
+                      "id":  25,
+                      "isbn":  "8931805100089",
+                      "title":  "10 Vạn Câu Hỏi Vì Sao? - Thiên Nhiên Và Các Hiện Tượng Huyền Bí",
+                      "published_year":  2022,
+                      "price":  41600,
+                      "publisher_id":  11,
+                      "stock_quantity":  6
+                  },
+                  {
+                      "id":  26,
+                      "isbn":  "8935325032509",
+                      "title":  "Tìm Người Để Yêu - Hiểu Người Để Thương",
+                      "published_year":  2025,
+                      "price":  71100,
+                      "publisher_id":  2,
+                      "stock_quantity":  43
+                  },
+                  {
+                      "id":  27,
+                      "isbn":  "8935325032486",
+                      "title":  "Thức Dậy Anh Vẫn Là Mơ",
+                      "published_year":  2025,
+                      "price":  94500,
+                      "publisher_id":  2,
+                      "stock_quantity":  19
+                  },
+                  {
+                      "id":  28,
+                      "isbn":  "8935325030420",
+                      "title":  "Đóa Hoa Tỉnh Thức Nở Giữa Vô Thường",
+                      "published_year":  2025,
+                      "price":  98100,
+                      "publisher_id":  1,
+                      "stock_quantity":  56
+                  },
+                  {
+                      "id":  29,
+                      "isbn":  "8935325031755",
+                      "title":  "365 Ngày Manifest",
+                      "published_year":  2025,
+                      "price":  89100,
+                      "publisher_id":  2,
+                      "stock_quantity":  32
+                  },
+                  {
+                      "id":  30,
+                      "isbn":  "9786042264709",
+                      "title":  "Kẻ Cướp Bến Bỏi",
+                      "published_year":  2008,
+                      "price":  63000,
+                      "publisher_id":  12,
+                      "stock_quantity":  8
+                  },
+                  {
+                      "id":  31,
+                      "isbn":  "8935246947753",
+                      "title":  "Destination C1\u0026C2 - Grammar \u0026 Vocabulary With Answer Key (Tái Bản 2024)",
+                      "published_year":  2025,
+                      "price":  144540,
+                      "publisher_id":  10,
+                      "stock_quantity":  45
+                  },
+                  {
+                      "id":  32,
+                      "isbn":  "8794069305733",
+                      "title":  "Giải Thích Ngữ Pháp Tiếng Anh (Ấn Phẩm Mới)",
+                      "published_year":  2025,
+                      "price":  152000,
+                      "publisher_id":  1,
+                      "stock_quantity":  21
+                  },
+                  {
+                      "id":  33,
+                      "isbn":  "9786043775662",
+                      "title":  "Giáo Trình Chuẩn HSK 1 (Tái Bản 2023)",
+                      "published_year":  2023,
+                      "price":  152460,
+                      "publisher_id":  13,
+                      "stock_quantity":  0
+                  },
+                  {
+                      "id":  34,
+                      "isbn":  "9786045891940",
+                      "title":  "Luyện Nói Tiếng Trung Quốc Cấp Tốc Cho Người Bắt Đầu - Tập 1",
+                      "published_year":  2019,
+                      "price":  129360,
+                      "publisher_id":  13,
+                      "stock_quantity":  34
+                  },
+                  {
+                      "id":  35,
+                      "isbn":  "8935246937945",
+                      "title":  "Tiếng Hàn Tổng Hợp Dành Cho Người Việt Nam - Sơ Cấp 1 - Sách Bài Tập (Tái Bản 2023)",
+                      "published_year":  2023,
+                      "price":  132000,
+                      "publisher_id":  14,
+                      "stock_quantity":  10
+                  },
+                  {
+                      "id":  36,
+                      "isbn":  "8935246936917",
+                      "title":  "Ngữ Pháp Tiếng Hàn Thông Dụng - Trung Cấp (Tái Bản)",
+                      "published_year":  2022,
+                      "price":  229500,
+                      "publisher_id":  10,
+                      "stock_quantity":  47
+                  },
+                  {
+                      "id":  37,
+                      "isbn":  "8935251422320",
+                      "title":  "Từ Sông Bến Hải Đến Dinh Độc Lập",
+                      "published_year":  2025,
+                      "price":  186000,
+                      "publisher_id":  15,
+                      "stock_quantity":  23
+                  },
+                  {
+                      "id":  38,
+                      "isbn":  "9786043773927",
+                      "title":  "Tình Báo Kể Chuyện",
+                      "published_year":  2025,
+                      "price":  127000,
+                      "publisher_id":  13,
+                      "stock_quantity":  0
+                  },
+                  {
+                      "id":  39,
+                      "isbn":  "8936117741920",
+                      "title":  "Sử Việt - 12 Khúc Tráng Ca (Tái Bản 2019)",
+                      "published_year":  2017,
+                      "price":  99000,
+                      "publisher_id":  16,
+                      "stock_quantity":  36
+                  },
+                  {
+                      "id":  40,
+                      "isbn":  "8936067605211",
+                      "title":  "Phương Pháp Giáo Dục Con Của Người Do Thái - Giúp Trẻ Tự Tin Bước Vào Cuộc Sống",
+                      "published_year":  2022,
+                      "price":  55000,
+                      "publisher_id":  2,
+                      "stock_quantity":  12
+                  },
+                  {
+                      "id":  41,
+                      "isbn":  "8934974178910",
+                      "title":  "Giúp Con Hạnh Phúc: Giúp Con Điều Hòa Cảm Xúc - 35 Hoạt Động Dành Cho Trẻ Từ 3 Đến 10 Tuổi",
+                      "published_year":  2022,
+                      "price":  22500,
+                      "publisher_id":  17,
+                      "stock_quantity":  49
+                  },
+                  {
+                      "id":  42,
+                      "isbn":  "8935073101878",
+                      "title":  "Chăm Sóc Dinh Dưỡng Cho Trẻ (Tái Bản 2015)",
+                      "published_year":  2015,
+                      "price":  25000,
+                      "publisher_id":  18,
+                      "stock_quantity":  25
+                  },
+                  {
+                      "id":  43,
+                      "isbn":  "8934974165583",
+                      "title":  "Bác Sĩ Riêng Của Bé Yêu - Bước Đệm Vững Chắc Vào Đời (Tái Bản 2020)",
+                      "published_year":  2020,
+                      "price":  78000,
+                      "publisher_id":  17,
+                      "stock_quantity":  1
+                  },
+                  {
+                      "id":  44,
+                      "isbn":  "8936067604511",
+                      "title":  "Thai Giáo Theo Chuyên Gia - 280 Ngày - Mỗi Ngày Đọc Một Trang (Tái Bản 2021)",
+                      "published_year":  2021,
+                      "price":  81000,
+                      "publisher_id":  2,
+                      "stock_quantity":  38
+                  },
+                  {
+                      "id":  45,
+                      "isbn":  "9786043983135",
+                      "title":  "Chăm Sóc Sản Phụ Và Trẻ Sơ Sinh",
+                      "published_year":  2023,
+                      "price":  44000,
+                      "publisher_id":  10,
+                      "stock_quantity":  14
+                  },
+                  {
+                      "id":  46,
+                      "isbn":  "9786042255875",
+                      "title":  "Thám Tử Lừng Danh Conan - Tập 106",
+                      "published_year":  2025,
+                      "price":  23500,
+                      "publisher_id":  12,
+                      "stock_quantity":  51
+                  },
+                  {
+                      "id":  47,
+                      "isbn":  "9786042264747",
+                      "title":  "Perman - Cậu Bé Siêu Nhân - Tập 4",
+                      "published_year":  2025,
+                      "price":  23500,
+                      "publisher_id":  12,
+                      "stock_quantity":  27
+                  },
+                  {
+                      "id":  48,
+                      "isbn":  "9786042253468",
+                      "title":  "\"Cậu\" Ma Nhà Xí Hanako - Tập 23 - Tặng Kèm Postcard Phong Thư",
+                      "published_year":  2025,
+                      "price":  33000,
+                      "publisher_id":  12,
+                      "stock_quantity":  3
+                  },
+                  {
+                      "id":  49,
+                      "isbn":  "8934974210931",
+                      "title":  "Tình Yêu Nhân Vật Phụ - Tập 11",
+                      "published_year":  2025,
+                      "price":  42500,
+                      "publisher_id":  17,
+                      "stock_quantity":  40
+                  },
+                  {
+                      "id":  50,
+                      "isbn":  "8935352624913",
+                      "title":  "Thanh Gươm Diệt Quỷ - Kimetsu No Yaiba - Tập 21 - Kí Ức Xa Xăm (Tái Bản 2025)",
+                      "published_year":  2025,
+                      "price":  28500,
+                      "publisher_id":  12,
+                      "stock_quantity":  16
+                  },
+                  {
+                      "id":  51,
+                      "isbn":  "8935075961890",
+                      "title":  "Mưa Đỏ",
+                      "published_year":  2025,
+                      "price":  184500,
+                      "publisher_id":  19,
+                      "stock_quantity":  53
+                  },
+                  {
+                      "id":  52,
+                      "isbn":  "8935212370189",
+                      "title":  "Hồ Điệp Và Kình Ngư",
+                      "published_year":  2024,
+                      "price":  111600,
+                      "publisher_id":  1,
+                      "stock_quantity":  29
+                  },
+                  {
+                      "id":  53,
+                      "isbn":  "8935235226272",
+                      "title":  "Nhà Giả Kim (Tái Bản 2020)",
+                      "published_year":  2020,
+                      "price":  67000,
+                      "publisher_id":  16,
+                      "stock_quantity":  5
+                  },
+                  {
+                      "id":  54,
+                      "isbn":  "8935212349208",
+                      "title":  "Bến Xe (Tái Bản 2020)",
+                      "published_year":  2020,
+                      "price":  143000,
+                      "publisher_id":  1,
+                      "stock_quantity":  42
+                  },
+                  {
+                      "id":  55,
+                      "isbn":  "8932000134749",
+                      "title":  "Nếu Biết Trăm Năm Là Hữu Hạn - Ấn Bản Kỉ Niệm 10 Năm Xuất Bản (Tái Bản 2024)",
+                      "published_year":  2024,
+                      "price":  143000,
+                      "publisher_id":  1,
+                      "stock_quantity":  18
+                  },
+                  {
+                      "id":  56,
+                      "isbn":  "8936219420648",
+                      "title":  "Ứng Dụng AI Vào Doanh Nghiệp - Những Bài Giảng Của Giáo Tiến Về Nhân Tố Thay Đổi Cuộc Chơi Trong Kỉ Nguyên Mới",
+                      "published_year":  2025,
+                      "price":  216000,
+                      "publisher_id":  1,
+                      "stock_quantity":  55
+                  },
+                  {
+                      "id":  57,
+                      "isbn":  "9786042253741",
+                      "title":  "Búp Sen Xanh - Bìa Cứng - Tặng Kèm Obi + Postcard Hành Trình Cứu Nước",
+                      "published_year":  2025,
+                      "price":  88000,
+                      "publisher_id":  20,
+                      "stock_quantity":  31
+                  },
+                  {
+                      "id":  58,
+                      "isbn":  "8935244827972",
+                      "title":  "Tuổi Thơ Dữ Dội - Tập 1 (Tái Bản 2019)",
+                      "published_year":  2019,
+                      "price":  64000,
+                      "publisher_id":  20,
+                      "stock_quantity":  7
+                  }
+              ],
+    "book_category":  [
+                          {
+                              "book_id":  1,
+                              "category_id":  1
+                          },
+                          {
+                              "book_id":  2,
+                              "category_id":  1
+                          },
+                          {
+                              "book_id":  3,
+                              "category_id":  1
+                          },
+                          {
+                              "book_id":  4,
+                              "category_id":  1
+                          },
+                          {
+                              "book_id":  5,
+                              "category_id":  1
+                          },
+                          {
+                              "book_id":  6,
+                              "category_id":  3
+                          },
+                          {
+                              "book_id":  7,
+                              "category_id":  3
+                          },
+                          {
+                              "book_id":  8,
+                              "category_id":  3
+                          },
+                          {
+                              "book_id":  9,
+                              "category_id":  3
+                          },
+                          {
+                              "book_id":  10,
+                              "category_id":  3
+                          },
+                          {
+                              "book_id":  11,
+                              "category_id":  2
+                          },
+                          {
+                              "book_id":  12,
+                              "category_id":  2
+                          },
+                          {
+                              "book_id":  13,
+                              "category_id":  2
+                          },
+                          {
+                              "book_id":  14,
+                              "category_id":  2
+                          },
+                          {
+                              "book_id":  15,
+                              "category_id":  2
+                          },
+                          {
+                              "book_id":  16,
+                              "category_id":  6
+                          },
+                          {
+                              "book_id":  17,
+                              "category_id":  6
+                          },
+                          {
+                              "book_id":  18,
+                              "category_id":  6
+                          },
+                          {
+                              "book_id":  19,
+                              "category_id":  6
+                          },
+                          {
+                              "book_id":  20,
+                              "category_id":  6
+                          },
+                          {
+                              "book_id":  21,
+                              "category_id":  4
+                          },
+                          {
+                              "book_id":  22,
+                              "category_id":  4
+                          },
+                          {
+                              "book_id":  23,
+                              "category_id":  4
+                          },
+                          {
+                              "book_id":  24,
+                              "category_id":  4
+                          },
+                          {
+                              "book_id":  25,
+                              "category_id":  4
+                          },
+                          {
+                              "book_id":  26,
+                              "category_id":  2
+                          },
+                          {
+                              "book_id":  27,
+                              "category_id":  2
+                          },
+                          {
+                              "book_id":  28,
+                              "category_id":  2
+                          },
+                          {
+                              "book_id":  29,
+                              "category_id":  2
+                          },
+                          {
+                              "book_id":  30,
+                              "category_id":  2
+                          },
+                          {
+                              "book_id":  31,
+                              "category_id":  5
+                          },
+                          {
+                              "book_id":  32,
+                              "category_id":  5
+                          },
+                          {
+                              "book_id":  33,
+                              "category_id":  5
+                          },
+                          {
+                              "book_id":  34,
+                              "category_id":  5
+                          },
+                          {
+                              "book_id":  35,
+                              "category_id":  5
+                          },
+                          {
+                              "book_id":  36,
+                              "category_id":  5
+                          },
+                          {
+                              "book_id":  37,
+                              "category_id":  2
+                          },
+                          {
+                              "book_id":  38,
+                              "category_id":  2
+                          },
+                          {
+                              "book_id":  39,
+                              "category_id":  2
+                          },
+                          {
+                              "book_id":  40,
+                              "category_id":  2
+                          },
+                          {
+                              "book_id":  41,
+                              "category_id":  2
+                          },
+                          {
+                              "book_id":  42,
+                              "category_id":  2
+                          },
+                          {
+                              "book_id":  43,
+                              "category_id":  2
+                          },
+                          {
+                              "book_id":  44,
+                              "category_id":  2
+                          },
+                          {
+                              "book_id":  45,
+                              "category_id":  2
+                          },
+                          {
+                              "book_id":  46,
+                              "category_id":  4
+                          },
+                          {
+                              "book_id":  47,
+                              "category_id":  4
+                          },
+                          {
+                              "book_id":  48,
+                              "category_id":  4
+                          },
+                          {
+                              "book_id":  49,
+                              "category_id":  4
+                          },
+                          {
+                              "book_id":  50,
+                              "category_id":  4
+                          },
+                          {
+                              "book_id":  51,
+                              "category_id":  2
+                          },
+                          {
+                              "book_id":  52,
+                              "category_id":  2
+                          },
+                          {
+                              "book_id":  53,
+                              "category_id":  2
+                          },
+                          {
+                              "book_id":  54,
+                              "category_id":  2
+                          },
+                          {
+                              "book_id":  55,
+                              "category_id":  2
+                          },
+                          {
+                              "book_id":  56,
+                              "category_id":  3
+                          },
+                          {
+                              "book_id":  57,
+                              "category_id":  4
+                          },
+                          {
+                              "book_id":  58,
+                              "category_id":  4
+                          }
+                      ],
+    "author_book":  [
+                        {
+                            "author_id":  1,
+                            "book_id":  1
+                        },
+                        {
+                            "author_id":  2,
+                            "book_id":  2
+                        },
+                        {
+                            "author_id":  3,
+                            "book_id":  3
+                        },
+                        {
+                            "author_id":  4,
+                            "book_id":  4
+                        },
+                        {
+                            "author_id":  5,
+                            "book_id":  5
+                        },
+                        {
+                            "author_id":  6,
+                            "book_id":  6
+                        },
+                        {
+                            "author_id":  7,
+                            "book_id":  7
+                        },
+                        {
+                            "author_id":  8,
+                            "book_id":  8
+                        },
+                        {
+                            "author_id":  9,
+                            "book_id":  9
+                        },
+                        {
+                            "author_id":  10,
+                            "book_id":  10
+                        },
+                        {
+                            "author_id":  11,
+                            "book_id":  11
+                        },
+                        {
+                            "author_id":  12,
+                            "book_id":  12
+                        },
+                        {
+                            "author_id":  13,
+                            "book_id":  13
+                        },
+                        {
+                            "author_id":  14,
+                            "book_id":  14
+                        },
+                        {
+                            "author_id":  15,
+                            "book_id":  15
+                        },
+                        {
+                            "author_id":  16,
+                            "book_id":  16
+                        },
+                        {
+                            "author_id":  17,
+                            "book_id":  16
+                        },
+                        {
+                            "author_id":  18,
+                            "book_id":  16
+                        },
+                        {
+                            "author_id":  19,
+                            "book_id":  17
+                        },
+                        {
+                            "author_id":  20,
+                            "book_id":  18
+                        },
+                        {
+                            "author_id":  21,
+                            "book_id":  19
+                        },
+                        {
+                            "author_id":  22,
+                            "book_id":  20
+                        },
+                        {
+                            "author_id":  23,
+                            "book_id":  20
+                        },
+                        {
+                            "author_id":  24,
+                            "book_id":  20
+                        },
+                        {
+                            "author_id":  25,
+                            "book_id":  21
+                        },
+                        {
+                            "author_id":  26,
+                            "book_id":  22
+                        },
+                        {
+                            "author_id":  27,
+                            "book_id":  23
+                        },
+                        {
+                            "author_id":  28,
+                            "book_id":  24
+                        },
+                        {
+                            "author_id":  29,
+                            "book_id":  25
+                        },
+                        {
+                            "author_id":  30,
+                            "book_id":  26
+                        },
+                        {
+                            "author_id":  31,
+                            "book_id":  27
+                        },
+                        {
+                            "author_id":  32,
+                            "book_id":  28
+                        },
+                        {
+                            "author_id":  33,
+                            "book_id":  29
+                        },
+                        {
+                            "author_id":  34,
+                            "book_id":  30
+                        },
+                        {
+                            "author_id":  35,
+                            "book_id":  31
+                        },
+                        {
+                            "author_id":  36,
+                            "book_id":  31
+                        },
+                        {
+                            "author_id":  37,
+                            "book_id":  32
+                        },
+                        {
+                            "author_id":  38,
+                            "book_id":  33
+                        },
+                        {
+                            "author_id":  39,
+                            "book_id":  33
+                        },
+                        {
+                            "author_id":  40,
+                            "book_id":  33
+                        },
+                        {
+                            "author_id":  41,
+                            "book_id":  33
+                        },
+                        {
+                            "author_id":  42,
+                            "book_id":  34
+                        },
+                        {
+                            "author_id":  43,
+                            "book_id":  35
+                        },
+                        {
+                            "author_id":  44,
+                            "book_id":  36
+                        },
+                        {
+                            "author_id":  45,
+                            "book_id":  36
+                        },
+                        {
+                            "author_id":  46,
+                            "book_id":  37
+                        },
+                        {
+                            "author_id":  47,
+                            "book_id":  38
+                        },
+                        {
+                            "author_id":  48,
+                            "book_id":  39
+                        },
+                        {
+                            "author_id":  49,
+                            "book_id":  40
+                        },
+                        {
+                            "author_id":  50,
+                            "book_id":  41
+                        },
+                        {
+                            "author_id":  51,
+                            "book_id":  42
+                        },
+                        {
+                            "author_id":  52,
+                            "book_id":  43
+                        },
+                        {
+                            "author_id":  53,
+                            "book_id":  44
+                        },
+                        {
+                            "author_id":  54,
+                            "book_id":  45
+                        },
+                        {
+                            "author_id":  55,
+                            "book_id":  45
+                        },
+                        {
+                            "author_id":  56,
+                            "book_id":  46
+                        },
+                        {
+                            "author_id":  57,
+                            "book_id":  47
+                        },
+                        {
+                            "author_id":  58,
+                            "book_id":  48
+                        },
+                        {
+                            "author_id":  59,
+                            "book_id":  49
+                        },
+                        {
+                            "author_id":  60,
+                            "book_id":  50
+                        },
+                        {
+                            "author_id":  61,
+                            "book_id":  51
+                        },
+                        {
+                            "author_id":  62,
+                            "book_id":  52
+                        },
+                        {
+                            "author_id":  63,
+                            "book_id":  53
+                        },
+                        {
+                            "author_id":  64,
+                            "book_id":  54
+                        },
+                        {
+                            "author_id":  65,
+                            "book_id":  55
+                        },
+                        {
+                            "author_id":  66,
+                            "book_id":  56
+                        },
+                        {
+                            "author_id":  67,
+                            "book_id":  57
+                        },
+                        {
+                            "author_id":  68,
+                            "book_id":  58
+                        }
+                    ]
+}
