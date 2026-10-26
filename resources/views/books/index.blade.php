@@ -11,6 +11,7 @@
     <div class="page-actions">
         @include('books.partials.action-buttons')
         @if(auth()->user()->isAdmin())
+            <a href="{{ route('books.trash') }}" class="btn btn-outline-secondary"><i class="bi bi-trash3 me-1" aria-hidden="true"></i> Thùng rác</a>
             <a href="{{ route('books.create') }}" class="btn btn-primary"><i class="bi bi-plus-lg me-1" aria-hidden="true"></i> Thêm sách</a>
         @endif
     </div>
