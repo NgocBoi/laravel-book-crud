@@ -9,9 +9,9 @@ use App\Models\Book;
 use App\Models\Category;
 use App\Models\Publisher;
 use Illuminate\Contracts\View\View;
+use Illuminate\Database\QueryException;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 
@@ -20,33 +20,15 @@ class BookController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index()
     {
+        // Khung danh sách: tìm kiếm / lọc do thành viên phụ trách bổ sung tại đây
         $books = Book::with(['authors', 'categories', 'publisher'])
-            ->when($request->filled('keyword'), function ($query) use ($request) {
-                $keyword = $request->string('keyword')->trim();
-
-                $query->where(function ($q) use ($keyword) {
-                    $q->where('title', 'like', "%{$keyword}%")
-                        ->orWhere('isbn', 'like', "%{$keyword}%")
-                        ->orWhereHas('authors', fn ($a) => $a->where('name', 'like', "%{$keyword}%"));
-                });
-            })
-            ->when($request->filled('category_id'), fn ($query) => $query->whereHas(
-                'categories',
-                fn ($c) => $c->where('categories.id', $request->input('category_id'))
-            ))
-            ->when($request->input('stock') === 'in', fn ($query) => $query->where('stock_quantity', '>=', Book::LOW_STOCK))
-            ->when($request->input('stock') === 'low', fn ($query) => $query->whereBetween('stock_quantity', [1, Book::LOW_STOCK - 1]))
-            ->when($request->input('stock') === 'out', fn ($query) => $query->where('stock_quantity', 0))
             ->latest('id')
             ->paginate(10)
             ->withQueryString();
 
-        return view('books.index', [
-            'books' => $books,
-            'categories' => Category::orderBy('name')->get(),
-        ]);
+        return view('books.index', compact('books'));
     }
 
     /**
@@ -63,13 +45,18 @@ class BookController extends Controller
     public function store(StoreBookRequest $request): RedirectResponse
     {
         $data = $request->validated();
-        $book = DB::transaction(function () use ($data): Book {
-            $book = Book::create(Arr::except($data, ['author_ids', 'category_ids']));
-            $book->authors()->sync($data['author_ids']);
-            $book->categories()->sync($data['category_ids']);
 
-            return $book;
-        });
+        try {
+            $book = DB::transaction(function () use ($data): Book {
+                $book = Book::create(Arr::except($data, ['author_ids', 'category_ids']));
+                $book->authors()->sync($data['author_ids']);
+                $book->categories()->sync($data['category_ids']);
+
+                return $book;
+            });
+        } catch (QueryException $e) {
+            return $this->saveFailed($e);
+        }
 
         return to_route('books.edit', $book)->with('success', 'Đã thêm sách mới thành công.');
     }
@@ -77,9 +64,9 @@ class BookController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Book $book): View
     {
-        $book = Book::with(['authors', 'categories', 'publisher'])->findOrFail($id);
+        $book->load(['authors', 'categories', 'publisher']);
 
         $related = Book::with('authors')
             ->whereKeyNot($book->id)
@@ -107,21 +94,39 @@ class BookController extends Controller
     public function update(UpdateBookRequest $request, Book $book): RedirectResponse
     {
         $data = $request->validated();
-        DB::transaction(function () use ($book, $data): void {
-            $book->update(Arr::except($data, ['author_ids', 'category_ids']));
-            $book->authors()->sync($data['author_ids']);
-            $book->categories()->sync($data['category_ids']);
-        });
 
-        return to_route('books.edit', $book)->with('success', 'Đã cập nhật sách thành công.');
+        try {
+            DB::transaction(function () use ($book, $data): void {
+                $book->update(Arr::except($data, ['author_ids', 'category_ids']));
+                $book->authors()->sync($data['author_ids']);
+                $book->categories()->sync($data['category_ids']);
+            });
+        } catch (QueryException $e) {
+            return $this->saveFailed($e);
+        }
+
+        return to_route('books.index')->with('success', 'Đã cập nhật sách thành công.');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Book $book): RedirectResponse
     {
-        //
+        // Xóa mềm: chỉ ghi deleted_at, giữ bản ghi, liên kết tác giả/thể loại và ảnh bìa để còn khôi phục
+        $book->delete();
+
+        return to_route('books.index')->with('success', "Đã chuyển sách \"{$book->title}\" vào thùng rác.");
+    }
+
+    /**
+     * Lỗi CSDL khi lưu (trùng khóa, mất kết nối...): ghi log, giữ nguyên dữ liệu đã nhập và báo người dùng.
+     */
+    private function saveFailed(QueryException $e): RedirectResponse
+    {
+        report($e);
+
+        return back()->withInput()->with('error', 'Không thể lưu sách do lỗi hệ thống. Vui lòng kiểm tra lại dữ liệu và thử lại.');
     }
 
     /**
