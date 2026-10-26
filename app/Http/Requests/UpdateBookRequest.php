@@ -2,28 +2,16 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Contracts\Validation\ValidationRule;
-use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Arr;
 
-class UpdateBookRequest extends FormRequest
+class UpdateBookRequest extends StoreBookRequest
 {
     /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
-    {
-        return false;
-    }
-
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, ValidationRule|array<mixed>|string>
+     * Giống khi thêm mới (kế thừa StoreBookRequest), trừ mã sách (ISBN) chỉ đọc sau khi đã tạo.
+     * Bỏ isbn khỏi rules nên dù client cố gửi lên cũng không lọt vào dữ liệu đã validate.
      */
     public function rules(): array
     {
-        return [
-            //
-        ];
+        return Arr::except(parent::rules(), ['isbn']);
     }
 }
