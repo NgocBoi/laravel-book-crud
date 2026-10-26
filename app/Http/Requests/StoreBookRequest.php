@@ -34,6 +34,16 @@ class StoreBookRequest extends FormRequest
             'page_count' => ['nullable', 'integer', 'min:1', 'max:100000'],
             'dimensions' => ['nullable', 'string', 'max:50'],
             'description' => ['nullable', 'string'],
+
+            // Khóa ngoại: chỉ nhận id đang tồn tại
+            'publisher_id' => ['nullable', 'integer', 'exists:publishers,id'],
+            'author_ids' => ['required', 'array', 'min:1'],
+            'author_ids.*' => ['integer', 'distinct', 'exists:authors,id'],
+            'category_ids' => ['required', 'array', 'min:1'],
+            'category_ids.*' => ['integer', 'distinct', 'exists:categories,id'],
+
+            // Ảnh bìa: chỉ nhận file ảnh, tối đa 2MB
+            'cover_image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
         ];
     }
 
