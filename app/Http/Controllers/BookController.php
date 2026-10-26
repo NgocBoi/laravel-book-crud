@@ -9,11 +9,12 @@ use App\Models\Book;
 use App\Models\Category;
 use App\Models\Publisher;
 use Illuminate\Contracts\View\View;
-use Illuminate\Database\QueryException;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Throwable;
 
 class BookController extends Controller
 {
@@ -45,7 +46,7 @@ class BookController extends Controller
     public function store(StoreBookRequest $request): RedirectResponse
     {
         try {
-            $book = $this->persist(new Book, $request->validated());
+            $book = $this->persist(new Book, $request);
         } catch (QueryException $e) {
             return $this->saveFailed($e);
         }
@@ -86,7 +87,7 @@ class BookController extends Controller
     public function update(UpdateBookRequest $request, Book $book): RedirectResponse
     {
         try {
-            $this->persist($book, $request->validated());
+            $this->persist($book, $request);
         } catch (QueryException $e) {
             return $this->saveFailed($e);
         }
@@ -108,18 +109,38 @@ class BookController extends Controller
     /**
      * Lưu sách (thêm mới hoặc cập nhật) cùng quan hệ tác giả / thể loại trong một transaction:
      * hoặc lưu đủ tất cả, hoặc không lưu gì.
-     *
-     * @param  array<string, mixed>  $data  dữ liệu đã validate
+     * Có chọn ảnh bìa mới thì lưu ảnh mới, lưu xong mới xóa ảnh cũ; lưu CSDL lỗi thì xóa ảnh vừa upload.
      */
-    private function persist(Book $book, array $data): Book
+    private function persist(Book $book, StoreBookRequest $request): Book
     {
-        return DB::transaction(function () use ($book, $data): Book {
-            $book->fill(Arr::except($data, ['author_ids', 'category_ids']))->save();
-            $book->authors()->sync($data['author_ids']);
-            $book->categories()->sync($data['category_ids']);
+        $previous = clone $book;
+        $newCover = $request->storeCover();
 
-            return $book;
-        });
+        try {
+            DB::transaction(function () use ($book, $request, $newCover): void {
+                $book->fill($request->bookData());
+
+                if ($newCover) {
+                    $book->cover_image_url = $newCover;
+                }
+
+                $book->save();
+                $book->authors()->sync($request->validated('author_ids'));
+                $book->categories()->sync($request->validated('category_ids'));
+            });
+        } catch (Throwable $e) {
+            if ($newCover) {
+                Storage::disk('public')->delete($newCover);
+            }
+
+            throw $e;
+        }
+
+        if ($newCover) {
+            $previous->deleteCoverFile();
+        }
+
+        return $book;
     }
 
     /**

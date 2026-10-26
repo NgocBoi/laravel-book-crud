@@ -170,6 +170,67 @@ class BookRequestValidationTest extends TestCase
         $this->assertSame('9786047654321', $book->fresh()->isbn);
     }
 
+    public function test_store_saves_uploaded_cover(): void
+    {
+        Storage::fake('public');
+
+        $this->post(route('books.store'), $this->validData([
+            'cover_image' => UploadedFile::fake()->image('bia.jpg'),
+        ]))->assertSessionHasNoErrors();
+
+        $cover = Book::firstOrFail()->cover_image_url;
+        $this->assertStringStartsWith(Book::COVER_DIR.'/', $cover);
+        Storage::disk('public')->assertExists($cover);
+    }
+
+    public function test_update_replaces_cover_and_deletes_old_file(): void
+    {
+        Storage::fake('public');
+        Storage::disk('public')->put('covers/cu.jpg', 'ảnh cũ');
+        $book = $this->createBook('9786041234567');
+        $book->update(['cover_image_url' => 'covers/cu.jpg']);
+
+        $this->put(route('books.update', $book), $this->validData([
+            'isbn' => $book->isbn,
+            'cover_image' => UploadedFile::fake()->image('moi.png'),
+        ]))->assertSessionHasNoErrors();
+
+        $newCover = $book->fresh()->cover_image_url;
+        $this->assertNotSame('covers/cu.jpg', $newCover);
+        Storage::disk('public')->assertExists($newCover);
+        Storage::disk('public')->assertMissing('covers/cu.jpg');
+    }
+
+    public function test_update_without_new_cover_keeps_current_file(): void
+    {
+        Storage::fake('public');
+        Storage::disk('public')->put('covers/cu.jpg', 'ảnh cũ');
+        $book = $this->createBook('9786041234567');
+        $book->update(['cover_image_url' => 'covers/cu.jpg']);
+
+        $this->put(route('books.update', $book), $this->validData(['isbn' => $book->isbn]))
+            ->assertSessionHasNoErrors();
+
+        $this->assertSame('covers/cu.jpg', $book->fresh()->cover_image_url);
+        Storage::disk('public')->assertExists('covers/cu.jpg');
+    }
+
+    public function test_forms_accept_cover_upload_and_lock_existing_isbn(): void
+    {
+        $book = $this->createBook('9786041234567');
+
+        $this->get(route('books.create'))
+            ->assertOk()
+            ->assertSee('enctype="multipart/form-data"', false)
+            ->assertSee('name="cover_image"', false)
+            ->assertDontSee('readonly', false);
+
+        $this->get(route('books.edit', $book))
+            ->assertOk()
+            ->assertSee('name="cover_image"', false)
+            ->assertSee('readonly', false);
+    }
+
     private function createBook(?string $isbn): Book
     {
         $book = Book::create(['title' => 'Sách ban đầu', 'isbn' => $isbn, 'price' => 100000]);
