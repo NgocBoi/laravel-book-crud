@@ -30,6 +30,22 @@
                     </li>
                 </ul>
                 <span class="nav-context d-none d-lg-inline-flex"><i class="bi bi-grid-1x2 me-2" aria-hidden="true"></i> Danh mục sách</span>
+                <div class="d-flex align-items-center gap-3 ms-lg-3">
+                    @auth
+                        <span class="small text-secondary">
+                            {{ auth()->user()->name }}
+                            <span class="badge text-bg-{{ auth()->user()->isAdmin() ? 'primary' : 'secondary' }}">
+                                {{ auth()->user()->isAdmin() ? 'Admin' : 'User' }}
+                            </span>
+                        </span>
+                        <form action="{{ route('logout') }}" method="POST">
+                            @csrf
+                            <button type="submit" class="btn btn-outline-danger btn-sm">Đăng xuất</button>
+                        </form>
+                    @else
+                        <a href="{{ route('login') }}" class="btn btn-outline-primary btn-sm">Đăng nhập</a>
+                    @endauth
+                </div>
             </div>
         </div>
     </nav>

@@ -6,6 +6,7 @@ use App\Models\Author;
 use App\Models\Book;
 use App\Models\Category;
 use App\Models\Publisher;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
@@ -21,6 +22,7 @@ class BookControllerTest extends TestCase
         parent::setUp();
 
         Storage::fake('public');
+        $this->actingAs(User::factory()->create(['role' => 'admin']));
     }
 
     public function test_store_creates_book_with_relations_and_cover(): void
@@ -144,5 +146,54 @@ class BookControllerTest extends TestCase
         $this->get(route('books.create'))->assertOk();
         $this->get(route('books.show', $book))->assertOk()->assertViewHas('relatedBooks');
         $this->get(route('books.edit', $book))->assertOk();
+    }
+
+    // Kiểm thử phân quyền: admin được truy cập trang thêm và sửa sách.
+    public function test_admin_can_access_book_management_pages(): void
+    {
+        $book = Book::create(['title' => 'Sách quản trị', 'price' => 1]);
+
+        $this->get(route('books.create'))->assertOk();
+        $this->get(route('books.edit', $book))->assertOk();
+    }
+
+    // Kiểm thử phân quyền: khách chưa đăng nhập bị chuyển về trang đăng nhập.
+    public function test_guest_must_log_in_before_accessing_books(): void
+    {
+        auth()->logout();
+        $book = Book::create(['title' => 'Sách', 'price' => 1]);
+
+        $this->get(route('books.index'))->assertRedirect(route('login'));
+        $this->get(route('books.show', $book))->assertRedirect(route('login'));
+        $this->get(route('books.create'))->assertRedirect(route('login'));
+        $this->get(route('books.edit', $book))->assertRedirect(route('login'));
+        $this->post(route('books.store'))->assertRedirect(route('login'));
+        $this->put(route('books.update', $book))->assertRedirect(route('login'));
+        $this->delete(route('books.destroy', $book))->assertRedirect(route('login'));
+        $this->get(route('books.trash'))->assertRedirect(route('login'));
+    }
+
+    // Kiểm thử phân quyền: user được xem sách nhưng bị từ chối các route quản trị.
+    public function test_regular_user_can_read_books_but_cannot_manage_them(): void
+    {
+        $user = User::factory()->create(['role' => 'user']);
+        $book = Book::create(['title' => 'Sách chỉ đọc', 'price' => 1]);
+        $this->actingAs($user);
+
+        $this->get(route('books.index'))
+            ->assertOk()
+            ->assertSee('Sách chỉ đọc')
+            ->assertDontSee('aria-label="Sửa sách')
+            ->assertDontSee('Thêm sách');
+        $this->get(route('books.show', $book))->assertOk();
+        $this->get(route('books.create'))->assertForbidden();
+        $this->post(route('books.store'))->assertForbidden();
+        $this->get(route('books.edit', $book))->assertForbidden();
+        $this->put(route('books.update', $book))->assertForbidden();
+        $this->delete(route('books.destroy', $book))->assertForbidden();
+        $this->get(route('books.trash'))->assertForbidden();
+        $this->get(route('books.exportExcel'))->assertForbidden();
+
+        $this->assertDatabaseHas('books', ['id' => $book->id, 'title' => 'Sách chỉ đọc']);
     }
 }
