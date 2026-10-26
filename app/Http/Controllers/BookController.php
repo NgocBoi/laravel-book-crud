@@ -2,9 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreBookRequest;
+use App\Http\Requests\UpdateBookRequest;
+use App\Models\Author;
 use App\Models\Book;
 use App\Models\Category;
+use App\Models\Publisher;
+use Illuminate\Contracts\View\View;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 
 class BookController extends Controller
 {
@@ -43,17 +52,26 @@ class BookController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(): View
     {
-        //
+        return view('books.create', $this->formOptions());
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreBookRequest $request): RedirectResponse
     {
-        //
+        $data = $request->validated();
+        $book = DB::transaction(function () use ($data): Book {
+            $book = Book::create(Arr::except($data, ['author_ids', 'category_ids']));
+            $book->authors()->sync($data['author_ids']);
+            $book->categories()->sync($data['category_ids']);
+
+            return $book;
+        });
+
+        return to_route('books.edit', $book)->with('success', 'Đã thêm sách mới thành công.');
     }
 
     /**
@@ -75,17 +93,27 @@ class BookController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Book $book): View
     {
-        //
+        return view('books.edit', [
+            ...$this->formOptions(),
+            'book' => $book->load(['authors', 'categories', 'publisher']),
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateBookRequest $request, Book $book): RedirectResponse
     {
-        //
+        $data = $request->validated();
+        DB::transaction(function () use ($book, $data): void {
+            $book->update(Arr::except($data, ['author_ids', 'category_ids']));
+            $book->authors()->sync($data['author_ids']);
+            $book->categories()->sync($data['category_ids']);
+        });
+
+        return to_route('books.edit', $book)->with('success', 'Đã cập nhật sách thành công.');
     }
 
     /**
@@ -94,5 +122,21 @@ class BookController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    /**
+     * @return array{
+     *     authors: Collection<int, Author>,
+     *     categories: Collection<int, Category>,
+     *     publishers: Collection<int, Publisher>
+     * }
+     */
+    private function formOptions(): array
+    {
+        return [
+            'authors' => Author::orderBy('name')->get(),
+            'categories' => Category::orderBy('name')->get(),
+            'publishers' => Publisher::orderBy('name')->get(),
+        ];
     }
 }
