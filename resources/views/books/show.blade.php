@@ -9,7 +9,9 @@
     <div><h1 class="page-title">Chi tiết sách</h1><p class="page-subtitle">Thông tin xuất bản, giá bán và số lượng tồn kho.</p></div>
     <div class="page-actions">
         <a href="{{ route('books.index') }}" class="btn btn-outline-secondary"><i class="bi bi-arrow-left me-1"></i> Danh sách sách</a>
-        <a href="{{ route('books.edit', $book) }}" class="btn btn-primary"><i class="bi bi-pencil-square me-1"></i> Chỉnh sửa</a>
+        @if(auth()->user()->isAdmin())
+            <a href="{{ route('books.edit', $book) }}" class="btn btn-primary"><i class="bi bi-pencil-square me-1"></i> Chỉnh sửa</a>
+        @endif
     </div>
 </div>
 <section class="section-card mb-4" aria-labelledby="book-detail-heading">

@@ -10,7 +10,9 @@
     </div>
     <div class="page-actions">
         @include('books.partials.action-buttons')
-        <a href="{{ route('books.create') }}" class="btn btn-primary"><i class="bi bi-plus-lg me-1" aria-hidden="true"></i> Thêm sách</a>
+        @if(auth()->user()->isAdmin())
+            <a href="{{ route('books.create') }}" class="btn btn-primary"><i class="bi bi-plus-lg me-1" aria-hidden="true"></i> Thêm sách</a>
+        @endif
     </div>
 </div>
 
@@ -66,30 +68,35 @@
                                         aria-label="Xem nhanh sách {{ $book->title }}">
                                     <i class="bi bi-eye me-1" aria-hidden="true"></i>Xem
                                 </button>
-                                <a class="action-link" href="{{ route('books.edit', $book) }}" aria-label="Sửa sách {{ $book->title }}"><i class="bi bi-pencil-square me-1" aria-hidden="true"></i>Sửa</a>
-                                <button type="button" class="action-link danger" data-bs-toggle="modal" data-bs-target="#deleteBook{{ $book->id }}" aria-label="Xóa sách {{ $book->title }}">
-                                    <i class="bi bi-trash3 me-1" aria-hidden="true"></i>Xóa
-                                </button>
+                                @if(auth()->user()->isAdmin())
+                                    <a class="action-link" href="{{ route('books.edit', $book) }}" aria-label="Sửa sách {{ $book->title }}"><i class="bi bi-pencil-square me-1" aria-hidden="true"></i>Sửa</a>
+                                    <button type="button" class="action-link danger" data-bs-toggle="modal" data-bs-target="#deleteBook{{ $book->id }}" aria-label="Xóa sách {{ $book->title }}">
+                                        <i class="bi bi-trash3 me-1" aria-hidden="true"></i>Xóa
+                                    </button>
+                                @endif
                             </div>
-                            <div class="modal fade" id="deleteBook{{ $book->id }}" tabindex="-1" aria-labelledby="deleteBookTitle{{ $book->id }}" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered"><div class="modal-content">
-                                    <div class="modal-header px-4 py-3">
-                                        <h2 class="modal-title fs-5 fw-bold" id="deleteBookTitle{{ $book->id }}"><i class="bi bi-exclamation-triangle text-danger me-2" aria-hidden="true"></i>Xác nhận xóa sách</h2>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+                            @if(auth()->user()->isAdmin())
+                                <div class="modal fade" id="deleteBook{{ $book->id }}" tabindex="-1" aria-labelledby="deleteBookTitle{{ $book->id }}" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered"><div class="modal-content">
+                                        <div class="modal-header px-4 py-3">
+                                            <h2 class="modal-title fs-5 fw-bold" id="deleteBookTitle{{ $book->id }}"><i class="bi bi-exclamation-triangle text-danger me-2" aria-hidden="true"></i>Xác nhận xóa sách</h2>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+                                        </div>
+                                        <div class="modal-body px-4 py-3">
+                                            Bạn có chắc muốn xóa sách <strong>{{ $book->title }}</strong>?
+                                            <p class="text-secondary small mt-2 mb-0">Thao tác sẽ gửi yêu cầu xóa đến hệ thống.</p>
+                                        </div>
+                                        <div class="modal-footer px-4 py-3">
+                                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Hủy</button>
+                                            <form action="{{ route('books.destroy', $book) }}" method="POST">
+                                                @csrf @method('DELETE')
+                                                <button type="submit" class="btn btn-danger"><i class="bi bi-trash3 me-1" aria-hidden="true"></i> Xác nhận xóa</button>
+                                            </form>
+                                        </div>
                                     </div>
-                                    <div class="modal-body px-4 py-3">
-                                        Bạn có chắc muốn xóa sách <strong>{{ $book->title }}</strong>?
-                                        <p class="text-secondary small mt-2 mb-0">Thao tác sẽ gửi yêu cầu xóa đến hệ thống.</p>
                                     </div>
-                                    <div class="modal-footer px-4 py-3">
-                                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Hủy</button>
-                                        <form action="{{ route('books.destroy', $book) }}" method="POST">
-                                            @csrf @method('DELETE')
-                                            <button type="submit" class="btn btn-danger"><i class="bi bi-trash3 me-1" aria-hidden="true"></i> Xác nhận xóa</button>
-                                        </form>
-                                    </div>
-                                </div></div>
-                            </div>
+                                </div>
+                            @endif
                         </td>
                     </tr>
                 @empty
@@ -100,7 +107,7 @@
                             <p>{{ request()->hasAny(['keyword', 'category_id', 'stock']) ? 'Hãy thử thay đổi từ khóa hoặc các điều kiện lọc để xem kết quả khác.' : 'Danh mục hiện chưa có dữ liệu. Bạn có thể bắt đầu bằng cách thêm sách mới.' }}</p>
                             @if(request()->hasAny(['keyword', 'category_id', 'stock']))
                                 <a class="btn btn-outline-primary" href="{{ route('books.index') }}"><i class="bi bi-arrow-counterclockwise me-1"></i> Xóa bộ lọc</a>
-                            @else
+                            @elseif(auth()->user()->isAdmin())
                                 <a class="btn btn-primary" href="{{ route('books.create') }}"><i class="bi bi-plus-lg me-1"></i> Thêm sách</a>
                             @endif
                         </div>
@@ -119,8 +126,3 @@
 
 @include('books.partials.quick-view-modal')
 @endsection
-<!-- Thêm nút đăng xuất để test -->
-<form action="{{ route('logout') }}" method="POST">
-    @csrf
-    <button type="submit" class="btn btn-outline-danger btn-sm">Đăng xuất</button>
-</form>
