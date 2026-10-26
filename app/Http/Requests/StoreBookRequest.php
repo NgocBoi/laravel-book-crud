@@ -59,7 +59,10 @@ class StoreBookRequest extends FormRequest
             'published_year' => ['nullable', 'integer', 'between:1901,2155'],
             'price' => ['required', 'numeric', 'min:0', 'max:9999999999.99', 'decimal:0,2'],
             'stock_quantity' => ['required', 'integer', 'min:0', 'max:4294967295'],
+            'page_count' => ['nullable', 'integer', 'min:1', 'max:4294967295'],
+            'dimensions' => ['nullable', 'string', 'max:50'],
             'description' => ['nullable', 'string', 'max:10000'],
+            'cover_image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
         ];
     }
 
@@ -79,7 +82,10 @@ class StoreBookRequest extends FormRequest
             'published_year' => 'Năm xuất bản',
             'price' => 'Giá bán',
             'stock_quantity' => 'Số lượng tồn kho',
+            'page_count' => 'Số trang',
+            'dimensions' => 'Kích thước',
             'description' => 'Mô tả sách',
+            'cover_image' => 'Ảnh bìa',
         ];
     }
 
@@ -107,7 +113,14 @@ class StoreBookRequest extends FormRequest
             'price.decimal' => 'Giá bán chỉ được có tối đa hai chữ số thập phân.',
             'stock_quantity.min' => 'Số lượng tồn kho không được âm.',
             'stock_quantity.max' => 'Số lượng tồn kho không được vượt quá 4.294.967.295.',
+            'page_count.min' => 'Số trang phải lớn hơn 0.',
+            'page_count.max' => 'Số trang không được vượt quá 4.294.967.295.',
+            'dimensions.max' => 'Kích thước không được vượt quá 50 ký tự.',
             'description.max' => 'Mô tả sách không được vượt quá 10.000 ký tự.',
+            'cover_image.uploaded' => 'Tải ảnh bìa lên thất bại. Vui lòng chọn lại ảnh.',
+            'cover_image.image' => 'Ảnh bìa phải là file hình ảnh.',
+            'cover_image.mimes' => 'Ảnh bìa chỉ nhận định dạng JPG, JPEG, PNG hoặc WEBP.',
+            'cover_image.max' => 'Ảnh bìa không được vượt quá 2MB.',
         ];
     }
 }
