@@ -68,3 +68,8 @@
 @include('books.partials.quick-view-modal')
 @include('books.partials.stock-modal')
 @endsection
+<!-- Thêm nút đăng xuất để test -->
+<form action="{{ route('logout') }}" method="POST">
+    @csrf
+    <button type="submit" class="btn btn-outline-danger btn-sm">Đăng xuất</button>
+</form>
