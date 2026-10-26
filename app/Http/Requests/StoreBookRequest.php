@@ -2,8 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Book;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Arr;
 use Illuminate\Validation\Rule;
 
 class StoreBookRequest extends FormRequest
@@ -122,5 +124,28 @@ class StoreBookRequest extends FormRequest
             'cover_image.mimes' => 'Ảnh bìa chỉ nhận định dạng JPG, JPEG, PNG hoặc WEBP.',
             'cover_image.max' => 'Ảnh bìa không được vượt quá 2MB.',
         ];
+    }
+
+    /**
+     * Dữ liệu các cột của bảng books đã kiểm tra, không gồm bảng nối tác giả / thể loại và file ảnh.
+     *
+     * @return array<string, mixed>
+     */
+    public function bookData(): array
+    {
+        return Arr::except($this->validated(), ['author_ids', 'category_ids', 'cover_image']);
+    }
+
+    /**
+     * Lưu ảnh bìa vừa upload vào storage/app/public/covers với tên ngẫu nhiên.
+     * Trả về đường dẫn để ghi vào cột cover_image_url, không chọn ảnh thì trả về null.
+     */
+    public function storeCover(): ?string
+    {
+        if (! $this->hasFile('cover_image')) {
+            return null;
+        }
+
+        return $this->file('cover_image')->store(Book::COVER_DIR, 'public') ?: null;
     }
 }
