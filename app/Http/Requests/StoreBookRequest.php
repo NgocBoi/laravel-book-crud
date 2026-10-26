@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreBookRequest extends FormRequest
 {
@@ -12,7 +13,7 @@ class StoreBookRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,7 +24,65 @@ class StoreBookRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'title' => ['required', 'string', 'max:255'],
+            'isbn' => ['nullable', 'string', 'max:20', Rule::unique('books', 'isbn')],
+            'author_ids' => ['required', 'array', 'min:1'],
+            'author_ids.*' => ['required', 'integer', 'distinct', Rule::exists('authors', 'id')],
+            'category_ids' => ['required', 'array', 'min:1'],
+            'category_ids.*' => ['required', 'integer', 'distinct', Rule::exists('categories', 'id')],
+            'publisher_id' => ['nullable', 'integer', Rule::exists('publishers', 'id')],
+            'published_year' => ['nullable', 'integer', 'between:1901,2155'],
+            'price' => ['required', 'numeric', 'min:0', 'max:9999999999.99', 'decimal:0,2'],
+            'stock_quantity' => ['required', 'integer', 'min:0', 'max:4294967295'],
+            'description' => ['nullable', 'string', 'max:10000'],
+        ];
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    public function attributes(): array
+    {
+        return [
+            'title' => 'Tên sách',
+            'isbn' => 'Mã sách / ISBN',
+            'author_ids' => 'Tác giả',
+            'author_ids.*' => 'Tác giả',
+            'category_ids' => 'Thể loại',
+            'category_ids.*' => 'Thể loại',
+            'publisher_id' => 'Nhà xuất bản',
+            'published_year' => 'Năm xuất bản',
+            'price' => 'Giá bán',
+            'stock_quantity' => 'Số lượng tồn kho',
+            'description' => 'Mô tả sách',
+        ];
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return [
+            'required' => ':attribute là bắt buộc.',
+            'string' => ':attribute phải là văn bản.',
+            'array' => ':attribute phải là danh sách lựa chọn.',
+            'integer' => ':attribute phải là số nguyên.',
+            'numeric' => ':attribute phải là một số hợp lệ.',
+            'exists' => ':attribute đã chọn không tồn tại. Vui lòng chọn lại.',
+            'distinct' => ':attribute không được chọn trùng.',
+            'isbn.unique' => 'Mã sách / ISBN đã tồn tại.',
+            'author_ids.min' => 'Vui lòng chọn ít nhất một tác giả.',
+            'category_ids.min' => 'Vui lòng chọn ít nhất một thể loại.',
+            'title.max' => 'Tên sách không được vượt quá 255 ký tự.',
+            'isbn.max' => 'Mã sách / ISBN không được vượt quá 20 ký tự.',
+            'published_year.between' => 'Năm xuất bản phải từ 1901 đến 2155.',
+            'price.min' => 'Giá bán không được âm.',
+            'price.max' => 'Giá bán không được vượt quá 9.999.999.999,99 VNĐ.',
+            'price.decimal' => 'Giá bán chỉ được có tối đa hai chữ số thập phân.',
+            'stock_quantity.min' => 'Số lượng tồn kho không được âm.',
+            'stock_quantity.max' => 'Số lượng tồn kho không được vượt quá 4.294.967.295.',
+            'description.max' => 'Mô tả sách không được vượt quá 10.000 ký tự.',
         ];
     }
 }
