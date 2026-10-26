@@ -19,6 +19,27 @@ class StoreBookRequest extends FormRequest
     }
 
     /**
+     * Chuẩn hóa dữ liệu trước khi kiểm tra.
+     */
+    protected function prepareForValidation(): void
+    {
+        // ISBN thường được nhập kèm dấu gạch / khoảng trắng: 978-604-1-23456-7
+        if (is_string($this->input('isbn'))) {
+            $this->merge(['isbn' => preg_replace('/[\s-]+/', '', $this->input('isbn')) ?: null]);
+        }
+
+        // Form chọn nhiều có thể gửi cả ô để trống -> bỏ đi
+        foreach (['author_ids', 'category_ids'] as $field) {
+            if (is_array($this->input($field))) {
+                $this->merge([$field => array_values(array_filter(
+                    $this->input($field),
+                    fn ($id) => $id !== null && $id !== '',
+                ))]);
+            }
+        }
+    }
+
+    /**
      * Get the validation rules that apply to the request.
      *
      * @return array<string, ValidationRule|array<mixed>|string>
@@ -99,6 +120,33 @@ class StoreBookRequest extends FormRequest
                 'array' => 'Vui lòng chọn ít nhất :min :attribute.',
             ],
         ];
+    }
+
+    /**
+     * Các cột của bảng books đã qua kiểm tra, dùng cho Book::create() / $book->update().
+     * Không gồm danh sách tác giả, thể loại (bảng nối) và file ảnh (xử lý riêng).
+     *
+     * @return array<string, mixed>
+     */
+    public function bookData(): array
+    {
+        return $this->safe()->except(['author_ids', 'category_ids', 'cover_image']);
+    }
+
+    /**
+     * @return array<int, int> id tác giả đã chọn, dùng cho $book->authors()->sync()
+     */
+    public function authorIds(): array
+    {
+        return array_map('intval', $this->validated('author_ids', []));
+    }
+
+    /**
+     * @return array<int, int> id thể loại đã chọn, dùng cho $book->categories()->sync()
+     */
+    public function categoryIds(): array
+    {
+        return array_map('intval', $this->validated('category_ids', []));
     }
 
     /**
