@@ -8,10 +8,12 @@ use App\Models\Author;
 use App\Models\Book;
 use App\Models\Category;
 use App\Models\Publisher;
+use App\Services\BookFilterService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Throwable;
@@ -21,15 +23,25 @@ class BookController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request, BookFilterService $bookFilterService): View
     {
-        // Khung danh sách: tìm kiếm / lọc do thành viên phụ trách bổ sung tại đây
-        $books = Book::with(['authors', 'categories', 'publisher'])
-            ->latest('id')
-            ->paginate(10)
-            ->withQueryString();
+        $filters = $request->validate([
+            'keyword' => ['nullable', 'string', 'max:255'],
+            'category_id' => ['nullable', 'integer', 'exists:categories,id'],
+            'author_id' => ['nullable', 'integer', 'exists:authors,id'],
+            'publisher_id' => ['nullable', 'integer', 'exists:publishers,id'],
+            'min_price' => ['nullable', 'numeric', 'min:0'],
+            'max_price' => ['nullable', 'numeric', 'min:0'],
+            'stock' => ['nullable', 'in:in,low,out'],
+            'sort' => ['nullable', 'in:newest,oldest,price_asc,price_desc'],
+        ]);
 
-        return view('books.index', compact('books'));
+        return view('books.index', [
+            'books' => $bookFilterService->paginate($filters),
+            'authors' => Author::orderBy('name')->get(),
+            'categories' => Category::orderBy('name')->get(),
+            'publishers' => Publisher::orderBy('name')->get(),
+        ]);
     }
 
     /**
