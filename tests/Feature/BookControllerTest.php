@@ -157,6 +157,18 @@ class BookControllerTest extends TestCase
         $this->get(route('books.edit', $book))->assertOk();
     }
 
+    public function test_logout_shows_a_short_notification_in_the_top_corner(): void
+    {
+        $this->post(route('logout'))
+            ->assertRedirect(route('login'))
+            ->assertSessionHas('logout_success', 'Bạn đã đăng xuất.');
+
+        $this->get(route('login'))
+            ->assertOk()
+            ->assertSee('logout-toast')
+            ->assertSee('Bạn đã đăng xuất.');
+    }
+
     // Kiểm thử phân quyền: khách chưa đăng nhập bị chuyển về trang đăng nhập.
     public function test_guest_must_log_in_before_accessing_books(): void
     {

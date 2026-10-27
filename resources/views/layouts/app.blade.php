@@ -52,6 +52,14 @@
         </div>
     </nav>
 
+    @if(session('logout_success'))
+        <div class="alert alert-success alert-dismissible fade show logout-toast" role="status">
+            <i class="bi bi-check-circle-fill" aria-hidden="true"></i>
+            <span>{{ session('logout_success') }}</span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Đóng"></button>
+        </div>
+    @endif
+
     <main class="container-fluid admin-shell px-3 px-lg-4 py-4 py-lg-5">
         @if(session('success'))
             <div class="admin-alert alert-success mb-4" role="status">
