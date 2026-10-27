@@ -100,7 +100,7 @@
             </div>
 
             <div class="book-field">
-                <label for="publisherId" class="form-label">Nhà xuất bản</label>
+                <label for="publisherId" class="form-label">Nhà xuất bản @unless($editing)<span aria-hidden="true">*</span>@endunless</label>
                 <select name="publisher_id" id="publisherId" class="form-select @error('publisher_id') is-invalid @enderror"
                         aria-invalid="{{ $errors->has('publisher_id') ? 'true' : 'false' }}" @error('publisher_id') aria-describedby="publisherError" @enderror>
                     <option value="">Chọn nhà xuất bản</option>
@@ -112,7 +112,7 @@
             </div>
 
             <div class="book-field">
-                <label for="publishedYear" class="form-label">Năm xuất bản</label>
+                <label for="publishedYear" class="form-label">Năm xuất bản @unless($editing)<span aria-hidden="true">*</span>@endunless</label>
                 <input type="number" name="published_year" id="publishedYear" min="1901" max="{{ now()->year }}" step="1"
                        class="form-control @error('published_year') is-invalid @enderror"
                        value="{{ old('published_year', $currentBook?->published_year) }}" placeholder="Chọn hoặc nhập thông tin"

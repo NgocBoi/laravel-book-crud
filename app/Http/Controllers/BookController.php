@@ -25,7 +25,7 @@ class BookController extends Controller
     public function index(Request $request): View
     {
         $books = Book::with(['authors', 'categories', 'publisher'])
-            ->filter($request->only(['keyword', 'category_id', 'stock']))
+            ->filter($request->only(Book::FILTER_KEYS))
             ->latest('id')
             ->paginate(10)
             ->withQueryString();
