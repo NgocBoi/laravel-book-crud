@@ -60,6 +60,6 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('login')->with('success', 'Bạn đã đăng xuất.');
+        return redirect()->route('login')->with('logout_success', 'Bạn đã đăng xuất.');
     }
 }

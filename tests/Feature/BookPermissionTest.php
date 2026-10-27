@@ -71,7 +71,14 @@ class BookPermissionTest extends TestCase
             ->assertRedirect(route('books.index'));
         $this->assertAuthenticatedAs($user);
 
-        $this->post(route('logout'))->assertRedirect(route('login'));
+        $this->post(route('logout'))
+            ->assertRedirect(route('login'))
+            ->assertSessionHas('logout_success', 'Bạn đã đăng xuất.');
         $this->assertGuest();
+
+        $this->get(route('login'))
+            ->assertOk()
+            ->assertSee('logout-toast')
+            ->assertSee('Bạn đã đăng xuất.');
     }
 }
