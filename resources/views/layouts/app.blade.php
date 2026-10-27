@@ -30,9 +30,35 @@
                     </li>
                 </ul>
                 <span class="nav-context d-none d-lg-inline-flex"><i class="bi bi-grid-1x2 me-2" aria-hidden="true"></i> Danh mục sách</span>
+
+                <!-- KHU VỰC ĐÃ CẬP NHẬT THEO GỢI Ý -->
+                <div class="d-flex align-items-center gap-3 ms-lg-3">
+                    @auth
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="small text-secondary fw-semibold">
+                                {{ auth()->user()->name }}
+                                <span class="text-muted fw-normal">({{ auth()->user()->role }})</span>
+                            </span>
+                            <form action="{{ route('logout') }}" method="POST" class="mb-0">
+                                @csrf
+                                <button type="submit" class="btn btn-outline-danger btn-sm">Đăng xuất</button>
+                            </form>
+                        </div>
+                    @else
+                        <a href="{{ route('login') }}" class="btn btn-outline-primary btn-sm">Đăng nhập</a>
+                    @endauth
+                </div>
             </div>
         </div>
     </nav>
+
+    @if(session('logout_success'))
+        <div class="alert alert-success alert-dismissible fade show logout-toast" role="status">
+            <i class="bi bi-check-circle-fill" aria-hidden="true"></i>
+            <span>{{ session('logout_success') }}</span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Đóng"></button>
+        </div>
+    @endif
 
     <main class="container-fluid admin-shell px-3 px-lg-4 py-4 py-lg-5">
         @if(session('success'))
