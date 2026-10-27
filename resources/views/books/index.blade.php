@@ -2,6 +2,7 @@
 @section('title', 'Quản lý sách')
 
 @section('content')
+@php($isAdmin = auth()->user()?->isAdmin())
 <div class="d-flex justify-content-between align-items-start flex-wrap gap-3 mb-4">
     <div>
         <div class="eyebrow mb-2">Danh mục / Sách</div>
@@ -10,7 +11,9 @@
     </div>
     <div class="page-actions">
         @include('books.partials.action-buttons')
+        @if($isAdmin)
         <a href="{{ route('books.create') }}" class="btn btn-primary"><i class="bi bi-plus-lg me-1" aria-hidden="true"></i> Thêm sách</a>
+        @endif
     </div>
 </div>
 
@@ -66,10 +69,12 @@
                                         aria-label="Xem nhanh sách {{ $book->title }}">
                                     <i class="bi bi-eye me-1" aria-hidden="true"></i>Xem
                                 </button>
+                                @if($isAdmin)
                                 <a class="action-link" href="{{ route('books.edit', $book) }}" aria-label="Sửa sách {{ $book->title }}"><i class="bi bi-pencil-square me-1" aria-hidden="true"></i>Sửa</a>
                                 <button type="button" class="action-link danger" data-bs-toggle="modal" data-bs-target="#deleteBook{{ $book->id }}" aria-label="Xóa sách {{ $book->title }}">
                                     <i class="bi bi-trash3 me-1" aria-hidden="true"></i>Xóa
                                 </button>
+                                @endif
                             </div>
                             <div class="modal fade" id="deleteBook{{ $book->id }}" tabindex="-1" aria-labelledby="deleteBookTitle{{ $book->id }}" aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-centered"><div class="modal-content">
@@ -101,7 +106,9 @@
                             @if(request()->hasAny(['keyword', 'category_id', 'stock']))
                                 <a class="btn btn-outline-primary" href="{{ route('books.index') }}"><i class="bi bi-arrow-counterclockwise me-1"></i> Xóa bộ lọc</a>
                             @else
+                            @if($isAdmin)
                                 <a class="btn btn-primary" href="{{ route('books.create') }}"><i class="bi bi-plus-lg me-1"></i> Thêm sách</a>
+                             @endif
                             @endif
                         </div>
                     </td></tr>
@@ -118,9 +125,12 @@
 </section>
 
 @include('books.partials.quick-view-modal')
+
+{{-- Nút đăng xuất: đặt cuối trang, canh phải, nằm trong <main> --}}
+<div class="d-flex justify-content-end mt-3">
+    <form action="{{ route('logout') }}" method="POST">
+        @csrf
+        <button type="submit" class="btn btn-outline-danger btn-sm">Đăng xuất</button>
+    </form>
+</div>
 @endsection
-<!-- Thêm nút đăng xuất để test -->
-<form action="{{ route('logout') }}" method="POST">
-    @csrf
-    <button type="submit" class="btn btn-outline-danger btn-sm">Đăng xuất</button>
-</form>

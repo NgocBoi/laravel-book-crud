@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\BookTrashController;
-use App\Http\Controllers\BookStockController;
+// use App\Http\Controllers\BookStockController;
 use App\Http\Controllers\BookExportController;
 use App\Http\Controllers\AuthController;
 
@@ -37,9 +37,9 @@ Route::prefix('books/trash')->middleware(['auth', 'admin'])->group(function () {
 
 // TV7: Nhập thêm số lượng tồn kho
 // Route::post('/books/{id}/stock-in', [BookStockController::class, 'stockIn'])->name('books.stockIn');
-Route::post('/books/{id}/stock-in', [BookStockController::class, 'stockIn'])
-    ->name('books.stockIn')
-    ->middleware(['auth', 'admin']);
+// Route::post('/books/{id}/stock-in', [BookStockController::class, 'stockIn'])
+//     ->name('books.stockIn')
+//     ->middleware(['auth', 'admin']);
     
 // TV8: Xuất dữ liệu Excel/PDF
 Route::get('/books/export/excel', [BookExportController::class, 'exportExcel'])->name('books.exportExcel');
@@ -48,6 +48,7 @@ Route::get('/books/export/excel', [BookExportController::class, 'exportExcel'])-
 // Route::resource('books', BookController::class);
 // Chỉ Admin được Thêm / Sửa / Xóa 
 Route::resource('books', BookController::class)
+    ->middlewareFor(['index', 'show'], ['auth'])
     ->middlewareFor(['create', 'store', 'edit', 'update', 'destroy'], ['auth', 'admin']);
 // Sách: CRUD đầy đủ
-Route::resource('books', BookController::class);
+// Route::resource('books', BookController::class);
