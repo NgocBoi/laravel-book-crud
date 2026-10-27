@@ -90,6 +90,18 @@ class BookFilterExportTest extends TestCase
         $this->assertStringNotContainsString('Nhà Giả Kim', $sheet);
     }
 
+    public function test_detail_page_shows_categories_in_its_own_box(): void
+    {
+        $this->actingAs(User::factory()->create(['role' => 'user']));
+        $book = Book::firstWhere('title', 'Vũ Trụ');
+        $book->categories()->attach($this->novel);
+
+        $this->get(route('books.show', $book))
+            ->assertOk()
+            ->assertSeeInOrder(['<dt>Thể loại</dt>', 'Khoa học', 'Nhà xuất bản'], false)
+            ->assertSeeInOrder(['<dt>Thể loại</dt>', 'Tiểu thuyết', 'Nhà xuất bản'], false);
+    }
+
     public function test_trash_and_export_buttons_are_shown_only_to_admin(): void
     {
         $this->actingAs(User::factory()->create(['role' => 'admin']));
