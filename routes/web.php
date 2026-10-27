@@ -52,3 +52,5 @@ Route::resource('books', BookController::class)
     ->middlewareFor(['create', 'store', 'edit', 'update', 'destroy'], ['auth', 'admin']);
 // Sách: CRUD đầy đủ
 // Route::resource('books', BookController::class);
+// Sách: CRUD đầy đủ
+Route::resource('books', BookController::class);

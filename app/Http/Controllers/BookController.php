@@ -25,7 +25,7 @@ class BookController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): View
     {
         // Khung danh sách: tìm kiếm / lọc do thành viên phụ trách bổ sung tại đây
         $books = Book::with(['authors', 'categories', 'publisher'])
