@@ -9,9 +9,8 @@ use Illuminate\View\View;
 
 class AuthController extends Controller
 {
-    
     //  Hiển thị form đăng nhập.
-    
+
     public function showLoginForm(): View|RedirectResponse
     {
         // Đã đăng nhập rồi thì không cho vào lại trang login
@@ -22,9 +21,8 @@ class AuthController extends Controller
         return view('auth.login');
     }
 
-    
     //   Xử lý đăng nhập.
-     
+
     public function login(Request $request): RedirectResponse
     {
         $credentials = $request->validate([
@@ -53,9 +51,8 @@ class AuthController extends Controller
         return redirect()->intended(route('books.index'));
     }
 
-    
-        //  * Đăng xuất.
-     
+    //  * Đăng xuất.
+
     public function logout(Request $request): RedirectResponse
     {
         Auth::logout();
@@ -63,6 +60,6 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('login')->with('success', 'Bạn đã đăng xuất.');
+        return redirect()->route('login')->with('logout_success', 'Bạn đã đăng xuất.');
     }
 }
