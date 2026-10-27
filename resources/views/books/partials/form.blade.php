@@ -33,8 +33,7 @@
     @endif
 
     <section class="section-card book-form-card" aria-labelledby="bookFormTitle">
-        <h2 class="section-title" id="bookFormTitle">{{ $editing ? 'Cập nhật thông tin sách' : 'Thông tin sách' }}</h2>
-        <p class="section-note book-form-note">Các trường có dấu * là bắt buộc.</p>
+        <h2 class="section-title mb-4" id="bookFormTitle">{{ $editing ? 'Cập nhật thông tin sách' : 'Thông tin sách' }}</h2>
 
         <div class="book-form-grid">
             <div class="book-field">
@@ -142,6 +141,24 @@
                     </span>
                     <span class="form-hint" id="stockHint">0: Hết hàng · 1–{{ \App\Models\Book::LOW_STOCK - 1 }}: Sắp hết</span>
                 </div>
+            </div>
+
+            <div class="book-field">
+                <label for="pageCount" class="form-label">Số trang</label>
+                <input type="number" name="page_count" id="pageCount" min="1" max="4294967295" step="1"
+                       class="form-control @error('page_count') is-invalid @enderror"
+                       value="{{ old('page_count', $currentBook?->page_count) }}" placeholder="Chọn hoặc nhập thông tin"
+                       aria-invalid="{{ $errors->has('page_count') ? 'true' : 'false' }}" @error('page_count') aria-describedby="pageCountError" @enderror>
+                @error('page_count')<p class="invalid-feedback" id="pageCountError">{{ $message }}</p>@enderror
+            </div>
+
+            <div class="book-field">
+                <label for="dimensions" class="form-label">Kích thước</label>
+                <input type="text" name="dimensions" id="dimensions" maxlength="50"
+                       class="form-control @error('dimensions') is-invalid @enderror"
+                       value="{{ old('dimensions', $currentBook?->dimensions) }}" placeholder="Ví dụ: 14 x 20 cm"
+                       aria-invalid="{{ $errors->has('dimensions') ? 'true' : 'false' }}" @error('dimensions') aria-describedby="dimensionsError" @enderror>
+                @error('dimensions')<p class="invalid-feedback" id="dimensionsError">{{ $message }}</p>@enderror
             </div>
 
             <div class="book-field book-field-wide">

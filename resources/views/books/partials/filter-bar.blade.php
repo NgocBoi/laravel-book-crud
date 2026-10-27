@@ -47,7 +47,15 @@
                 <input id="priceMax" name="price_max" type="number" min="0" step="1000" class="form-control"
                        placeholder="Không giới hạn" value="{{ is_scalar(request('price_max')) ? request('price_max') : '' }}">
             </div>
-            <div class="col-12 col-lg-2 d-grid">
+            <div class="col-12 col-sm-6 col-lg-2">
+                <label for="sortFilter" class="admin-filter-label">Sắp xếp giá</label>
+                <select name="sort" id="sortFilter" class="form-select">
+                    <option value="">Mặc định</option>
+                    <option value="price_asc" @selected(request('sort') === 'price_asc')>Giá thấp đến cao</option>
+                    <option value="price_desc" @selected(request('sort') === 'price_desc')>Giá cao đến thấp</option>
+                </select>
+            </div>
+            <div class="col-12 col-sm-6 col-lg-2 d-grid">
                 <button type="submit" class="btn btn-primary"><i class="bi bi-search me-1"></i> Tìm kiếm</button>
             </div>
         </div>
