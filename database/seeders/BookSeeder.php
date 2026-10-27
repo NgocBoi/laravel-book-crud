@@ -2,8 +2,11 @@
 
 namespace Database\Seeders;
 
+use App\Models\Book;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 
 class BookSeeder extends Seeder
 {
@@ -75,72 +78,12 @@ class BookSeeder extends Seeder
             DB::table('books')->where('id', $id)->update(['stock_quantity' => max(0, ($id * 37) % 61 - 4)]);
         }
 
-        // Ảnh bìa lưu trên Google Drive (thư mục book_covers, file {id}.jpg): id sách => mã file Drive
-        $coverDriveIds = [
-            1 => '1jecLczbaR8wovSn1OcvOV0tfEvyJdRlg',
-            2 => '1fVJUiizbLXy4dsERyygQUi8eFKI7jxet',
-            3 => '15plxAJ2YwuXg6NOm6hcDBlPVKMqLPAFE',
-            4 => '1sWieIszLxW-bC02_pWoM3mLYjWg3spwN',
-            5 => '1ZsrU3lJHCenJLSkSKb0P9-eU4xMtagu4',
-            6 => '1kGA1iKkdWWgbTEfvLmYa055sjTMMVQ7S',
-            7 => '10_dYLYvkruW8wTTIUcLX6GgWA995mNRb',
-            8 => '17a9RlET-yeOIdtB8eGI0kPdPAXsPcDuH',
-            9 => '1EafF19_v90eCZYrBPXEpQM41Z5nVAzqq',
-            10 => '1mauRYNYZL5-yBfozJqdjmnniduAjrJ2r',
-            11 => '1cBRENxq-i94zOo-EWeZiF7nIBde-nfOP',
-            12 => '1YMX6TFKv0BqbkAiWVbhGXGEMI16BMjkn',
-            13 => '1WNrUsCg9HPGyO20tpHxqZ2BQpisayeWx',
-            14 => '1HVV58i2aAmtwOH1OC_KAVqFGVI9h6ZHS',
-            15 => '1Vb3IGB1RQqJq5M81Ixoo4iO7gKPnE1gV',
-            16 => '1LgMG2PPX5fPOS2WlMjj1uiwAjMpoNzrT',
-            17 => '1CfBC3dfBuuDQzWD_7Bz2K3ZSXj9sMnU6',
-            18 => '1iuZsRJSZgSZgfLvhqekbXIR-vLBiB3NT',
-            19 => '1FzRKMqqSsxGZ9SQzWHQN9vNzy_rmIgHn',
-            20 => '1q2tyGPc3bUFgV9DKnzT86BRXBfYj-7bg',
-            21 => '1JlGglawKa40fvtcMsjiLU-gAPYPL57bC',
-            22 => '1NsWpQ0Av5Ka11-Zhv0GGR4nuGrR1-f26',
-            23 => '1hodhiZNcR-nLhYDVUtcy3vghPJ05ShMg',
-            24 => '1dWSSxxddM3-jNoYj1xz8kqECnn6QejOZ',
-            25 => '1GEQA-N_jhRxAKz3g__Qd3Rm9YSnFPZQq',
-            26 => '1vLLcG0fiNU33InAnEqfmEca3fk3Ye7dJ',
-            27 => '1qZL_ZuLd1uioSsNoKC-iFLvh497DeP6A',
-            28 => '1_KMYdzRPHj7ycEgFKq-MTOE_BpblgbgG',
-            29 => '1Aaf-sLgvnwYh3iNQyHMP_X_lSNTx1-bm',
-            30 => '1R9zr1GLrKjqw32YL5jm83Gi_T5Cv7FIl',
-            31 => '1uc5rERxH6oQqlx982hqx6t6IrFmKUqIU',
-            32 => '1PZkzZkpfw7OOVkiw62cY7friME6SlR9D',
-            33 => '12AAoz_d6Yta88YCVMIeo9Qy_rtuCc_Wg',
-            34 => '1o6lHqzVjJObC0QqzeaYWbnQtZ8JeNRp0',
-            35 => '157yFpB0F5oiIeuoNPSTjGGpit3oOKdnu',
-            36 => '1JUj7cE6P7F57rpfwIT5YlQG-yiEy70iG',
-            37 => '1pRzVMKTK92hEQIyKFbJTYGGsbyM8wsll',
-            38 => '1lt6FCM6m1eySCzYJJciJFSXVWetjIMCI',
-            39 => '151snU7h0JkRLPfSenQwalYVr1TMtg6m0',
-            40 => '1rNOrxTGGPG6NSSmi8OxBpzMhihaLp4Dv',
-            41 => '167GCofsWIolUZiX9SZ0PXsTfXb3QLHyq',
-            42 => '1NgobdB4LHRN46r3IDfb4zMhT41BNUqup',
-            43 => '1WzeKfRou9GLEbucQvCB18r7az2P4aImw',
-            44 => '1Fm1gxpyEoB0TXAb5O2eu2AM3KWcbVN49',
-            45 => '1HavrEVuAy_BvF1aggIRvbmVNE86C7MMh',
-            46 => '1-n6X8uIxcjZkKkhONVZxim1NkXOg3Aog',
-            47 => '1WypwSJC2SEd1kcdGM7sMam5RTXUaSHTp',
-            48 => '1Dnlxen0VrE5b9xidfyg2cem53AkRWcgu',
-            49 => '1ZB4druxJnDaHSfd686pUEbwxmIffPtBq',
-            50 => '1lTECQL_OTWE1PxptbIctYAszPNvhYNf1',
-            51 => '1_hq577NindAjHnK-UzHb2rWh0ZEgMagW',
-            52 => '1xu40Xrk1pWE0mh4LO_oYE9YdzIMLzSrZ',
-            53 => '1ZgbyASR0kdYYhnTsHTJhOgCPISvw9q43',
-            54 => '1ApAuWAWPLWlRzoNheIjRJfXfyw_fhlsf',
-            55 => '15rmF8mCk10UNGqfAcD9iP4gEDj2pYej8',
-            56 => '1BdQtlXjrIbbGcgX8yBe8xnrUY2QhFxXR',
-            57 => '1Br5u82LfHNkjYukf3nXGWrdtl4z4S5Ap',
-            58 => '1n2p23qsqKCFQeUyn9H6Y0U6MwH6w9lNA',
-        ];
+        // Ảnh bìa mẫu nằm trong database/data/covers/{id}.jpg, chép sang storage/app/public/covers để web tự phục vụ (không phụ thuộc Google Drive)
+        foreach (File::files(database_path('data/covers')) as $cover) {
+            $path = Book::COVER_DIR.'/'.$cover->getFilename();
+            Storage::disk('public')->put($path, $cover->getContents());
 
-        foreach ($coverDriveIds as $id => $driveId) {
-            DB::table('books')->where('id', $id)->update([
-                'cover_image_url' => "https://drive.google.com/thumbnail?id={$driveId}&sz=w800",
-            ]);
+            DB::table('books')->where('id', (int) $cover->getFilenameWithoutExtension())->update(['cover_image_url' => $path]);
         }
 
         // Số trang, kích thước (cao x rộng x dày) theo trang nhà sách/NXB; null = chưa tìm được nguồn khớp đúng sách
