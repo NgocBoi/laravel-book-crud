@@ -96,6 +96,7 @@ textarea.form-control { min-height: 112px; }
 .admin-alert.alert-success { color: #166534; background: #f0fdf4; border-color: #bbf7d0; }
 .admin-alert.alert-danger { color: #991b1b; background: #fef2f2; border-color: #fecaca; }
 .admin-alert.alert-warning { color: #92400e; background: #fffbeb; border-color: #fde68a; }
+.logout-toast { position: fixed; top: calc(72px + 1rem); right: 1rem; z-index: 1090; display: flex; align-items: center; gap: .65rem; width: min(22.5rem, calc(100vw - 2rem)); margin: 0; padding: .8rem 2.8rem .8rem 1rem; box-shadow: 0 8px 24px rgba(15, 23, 42, .14); }
 .book-cover-preview { max-width: 185px; width: 100%; min-height: 225px; object-fit: cover; border-radius: 10px; border: 1px solid var(--ui-border); }
 .book-image-empty { display: flex; height: 225px; align-items: center; justify-content: center; flex-direction: column; border: 1px dashed #c9d9ee; border-radius: 10px; background: #f8fbff; color: #7f95b5; gap: 10px; }
 .book-image-empty i { font-size: 2.6rem; }
