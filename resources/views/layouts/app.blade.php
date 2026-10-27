@@ -30,18 +30,20 @@
                     </li>
                 </ul>
                 <span class="nav-context d-none d-lg-inline-flex"><i class="bi bi-grid-1x2 me-2" aria-hidden="true"></i> Danh mục sách</span>
+               
+                <!-- KHU VỰC ĐÃ CẬP NHẬT THEO GỢI Ý -->
                 <div class="d-flex align-items-center gap-3 ms-lg-3">
-                    @auth
-                        <span class="small text-secondary">
-                            {{ auth()->user()->name }}
-                            <span class="badge text-bg-{{ auth()->user()->isAdmin() ? 'primary' : 'secondary' }}">
-                                {{ auth()->user()->isAdmin() ? 'Admin' : 'User' }}
+                        @auth
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="small text-secondary fw-semibold">
+                                {{ auth()->user()->name }} 
+                                <span class="text-muted fw-normal">({{ auth()->user()->role }})</span>
                             </span>
-                        </span>
-                        <form action="{{ route('logout') }}" method="POST">
-                            @csrf
-                            <button type="submit" class="btn btn-outline-danger btn-sm">Đăng xuất</button>
-                        </form>
+                            <form action="{{ route('logout') }}" method="POST" class="mb-0">
+                                @csrf
+                                <button type="submit" class="btn btn-outline-danger btn-sm">Đăng xuất</button>
+                            </form>
+                        </div>
                     @else
                         <a href="{{ route('login') }}" class="btn btn-outline-primary btn-sm">Đăng nhập</a>
                     @endauth
