@@ -44,7 +44,7 @@ class BookExportController extends Controller
         }
 
         $books = Book::with(['authors', 'categories', 'publisher'])
-            ->filter($request->only(['keyword', 'category_id', 'stock']))
+            ->filter($request->only(Book::FILTER_KEYS))
             ->latest('id')
             ->get();
 

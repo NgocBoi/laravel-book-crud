@@ -50,11 +50,23 @@ class BookFilterExportTest extends TestCase
         $this->assertListed(['category_id' => $this->science->id, 'stock' => 'out'], ['Vũ Trụ']);
     }
 
+    public function test_price_range_filter_is_inclusive_and_can_be_open_ended(): void
+    {
+        $this->actingAs(User::factory()->create(['role' => 'user']));
+        Book::firstWhere('title', 'Vũ Trụ')->update(['price' => 250000]);
+        Book::firstWhere('title', 'Lược Sử Thời Gian')->update(['price' => 150000]);
+
+        $this->assertListed(['price_min' => 150000], ['Lược Sử Thời Gian', 'Vũ Trụ']);
+        $this->assertListed(['price_max' => 150000], ['Nhà Giả Kim', 'Lược Sử Thời Gian']);
+        $this->assertListed(['price_min' => 120000, 'price_max' => 200000], ['Lược Sử Thời Gian']);
+        $this->assertListed(['price_min' => 0, 'price_max' => 0], []);
+    }
+
     public function test_invalid_filter_values_are_ignored(): void
     {
         $this->actingAs(User::factory()->create(['role' => 'user']));
 
-        $this->assertListed(['category_id' => 'abc', 'stock' => 'khac', 'keyword' => ['x']], ['Nhà Giả Kim', 'Lược Sử Thời Gian', 'Vũ Trụ']);
+        $this->assertListed(['price_min' => 'abc', 'price_max' => '-5', 'category_id' => 'abc', 'stock' => 'khac', 'keyword' => ['x']], ['Nhà Giả Kim', 'Lược Sử Thời Gian', 'Vũ Trụ']);
     }
 
     public function test_index_offers_category_options_and_export_link_with_current_filters(): void

@@ -151,7 +151,7 @@ class BookFormTest extends TestCase
             'author_ids' => [$replacementAuthor->id],
             'category_ids' => [$replacementCategory->id],
             'publisher_id' => null,
-        ]))->assertRedirect(route('books.edit', $book))
+        ]))->assertRedirect(route('books.index'))
             ->assertSessionHas('success', 'Đã cập nhật sách thành công.');
 
         $book->refresh();
