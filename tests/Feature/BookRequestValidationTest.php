@@ -6,6 +6,7 @@ use App\Http\Requests\StoreBookRequest;
 use App\Models\Author;
 use App\Models\Book;
 use App\Models\Category;
+use App\Models\Publisher;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
@@ -22,11 +23,14 @@ class BookRequestValidationTest extends TestCase
 
     private Category $category;
 
+    private Publisher $publisher;
+
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->actingAs(User::factory()->create(['role' => 'admin']));
+        $this->publisher = Publisher::create(['name' => 'NXB Kiểm thử']);
         $this->author = Author::create(['name' => 'Nguyễn Văn An']);
         $this->category = Category::create(['name' => 'Công nghệ thông tin']);
 
@@ -103,6 +107,19 @@ class BookRequestValidationTest extends TestCase
 
         $this->post(route('books.store'), $this->validData(['page_count' => 'abc']))
             ->assertSessionHasErrors(['page_count' => 'Số trang phải là số nguyên.']);
+    }
+
+    public function test_publisher_and_published_year_are_required_when_creating(): void
+    {
+        $data = $this->validData();
+        unset($data['publisher_id'], $data['published_year']);
+
+        $this->post(route('books.store'), $data)->assertSessionHasErrors([
+            'publisher_id' => 'Nhà xuất bản là bắt buộc.',
+            'published_year' => 'Năm xuất bản là bắt buộc.',
+        ]);
+
+        $this->assertDatabaseCount('books', 0);
     }
 
     public function test_published_year_cannot_be_in_the_future(): void
@@ -269,6 +286,8 @@ class BookRequestValidationTest extends TestCase
             'isbn' => '9786049999999',
             'author_ids' => [$this->author->id],
             'category_ids' => [$this->category->id],
+            'publisher_id' => $this->publisher->id,
+            'published_year' => 2024,
             'price' => '125000',
             'stock_quantity' => 0,
         ], $overrides);

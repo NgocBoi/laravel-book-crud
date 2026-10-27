@@ -9,7 +9,7 @@
     <div><h1 class="page-title">Chi tiết sách</h1><p class="page-subtitle">Thông tin xuất bản, giá bán và số lượng tồn kho.</p></div>
     <div class="page-actions">
         <a href="{{ route('books.index') }}" class="btn btn-outline-secondary"><i class="bi bi-arrow-left me-1"></i> Danh sách sách</a>
-        @if(auth()->user()->isAdmin())
+        @if(auth()->user()?->isAdmin())
             <a href="{{ route('books.edit', $book) }}" class="btn btn-primary"><i class="bi bi-pencil-square me-1"></i> Chỉnh sửa</a>
         @endif
     </div>
@@ -33,17 +33,11 @@
                     </div>
                     @include('books.partials.stock-badge')
                 </div>
-                <div class="d-flex gap-2 flex-wrap mb-3">
-                    @forelse($book->categories as $category)
-                        <span class="inline-state" style="background:#eff6ff;color:#2563eb">{{ $category->name }}</span>
-                    @empty
-                        <span class="section-note">Chưa phân loại</span>
-                    @endforelse
-                </div>
                 <div class="fs-3 fw-bold mb-4" style="color:#2563eb">{{ number_format($book->price, 0, ',', '.') }} ₫</div>
                 <div class="row g-3 mb-4">
-                    <div class="col-sm-6"><div class="summary-box h-100"><dl class="mb-0"><dt>Tác giả</dt><dd>{{ $book->authors->pluck('name')->join(', ') ?: '—' }}</dd></dl></div></div>
-                    <div class="col-sm-6"><div class="summary-box h-100"><dl class="mb-0"><dt>Nhà xuất bản</dt><dd>{{ $book->publisher?->name ?? '—' }}</dd></dl></div></div>
+                    <div class="col-sm-6 col-lg-4"><div class="summary-box h-100"><dl class="mb-0"><dt>Tác giả</dt><dd>{{ $book->authors->pluck('name')->join(', ') ?: '—' }}</dd></dl></div></div>
+                    <div class="col-sm-6 col-lg-4"><div class="summary-box h-100"><dl class="mb-0"><dt>Thể loại</dt><dd>{{ $book->categories->pluck('name')->join(', ') ?: 'Chưa phân loại' }}</dd></dl></div></div>
+                    <div class="col-sm-6 col-lg-4"><div class="summary-box h-100"><dl class="mb-0"><dt>Nhà xuất bản</dt><dd>{{ $book->publisher?->name ?? '—' }}</dd></dl></div></div>
                     <div class="col-sm-6 col-lg-3"><div class="summary-box h-100"><dl class="mb-0"><dt>Năm xuất bản</dt><dd>{{ $book->published_year ?: '—' }}</dd></dl></div></div>
                     <div class="col-sm-6 col-lg-3"><div class="summary-box h-100"><dl class="mb-0"><dt>Số trang</dt><dd>{{ $book->page_count ?: '—' }}</dd></dl></div></div>
                     <div class="col-sm-6 col-lg-3"><div class="summary-box h-100"><dl class="mb-0"><dt>Kích thước</dt><dd>{{ $book->dimensions ?: '—' }}</dd></dl></div></div>

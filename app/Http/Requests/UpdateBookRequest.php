@@ -16,6 +16,9 @@ class UpdateBookRequest extends StoreBookRequest
     {
         $rules = parent::rules();
         $rules['isbn'] = $this->isbnRules();
+        // Chỉ bắt buộc khi thêm sách; sách cũ chưa có thông tin này vẫn sửa được.
+        $rules['publisher_id'][0] = 'nullable';
+        $rules['published_year'][0] = 'nullable';
 
         return $rules;
     }
