@@ -1,4 +1,4 @@
-{{-- UI sử dụng đúng ba tham số lọc hiện có trong BookController::index. --}}
+{{-- Ba tham số lọc được xử lý bởi Book::scopeFilter (dùng chung cho danh sách và xuất Excel). --}}
 <form action="{{ route('books.index') }}" method="GET" class="section-card mb-4" role="search">
     <div class="section-card-body">
         <div class="search-head">
@@ -16,7 +16,7 @@
                 <div class="input-group">
                     <span class="input-group-text bg-white border-end-0 text-secondary"><i class="bi bi-search"></i></span>
                     <input id="searchKeyword" name="keyword" class="form-control border-start-0" type="search" maxlength="255"
-                           placeholder="Tên sách, tác giả, ISBN..." value="{{ request('keyword') }}">
+                           placeholder="Tên sách, tác giả, ISBN..." value="{{ is_string(request('keyword')) ? request('keyword') : '' }}">
                 </div>
             </div>
             <div class="col-12 col-sm-6 col-lg-3">
@@ -24,7 +24,7 @@
                 <select name="category_id" id="categoryFilter" class="form-select">
                     <option value="">Tất cả thể loại</option>
                     @foreach(($categories ?? collect()) as $category)
-                        <option value="{{ $category->id }}" @selected((string) request('category_id') === (string) $category->id)>{{ $category->name }}</option>
+                        <option value="{{ $category->id }}" @selected(request('category_id') == $category->id && is_scalar(request('category_id')))>{{ $category->name }}</option>
                     @endforeach
                 </select>
             </div>
