@@ -62,6 +62,23 @@ class BookFilterExportTest extends TestCase
         $this->assertListed(['price_min' => 0, 'price_max' => 0], []);
     }
 
+    public function test_books_can_be_sorted_by_price(): void
+    {
+        $this->actingAs(User::factory()->create(['role' => 'user']));
+        Book::firstWhere('title', 'Nhà Giả Kim')->update(['price' => 100000]);
+        Book::firstWhere('title', 'Lược Sử Thời Gian')->update(['price' => 150000]);
+        Book::firstWhere('title', 'Vũ Trụ')->update(['price' => 250000]);
+
+        $titlesFor = fn (string $sort): array => $this->get(route('books.index', ['sort' => $sort]))
+            ->assertOk()
+            ->viewData('books')
+            ->pluck('title')
+            ->all();
+
+        $this->assertSame(['Nhà Giả Kim', 'Lược Sử Thời Gian', 'Vũ Trụ'], $titlesFor('price_asc'));
+        $this->assertSame(['Vũ Trụ', 'Lược Sử Thời Gian', 'Nhà Giả Kim'], $titlesFor('price_desc'));
+    }
+
     public function test_invalid_filter_values_are_ignored(): void
     {
         $this->actingAs(User::factory()->create(['role' => 'user']));

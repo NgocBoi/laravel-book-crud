@@ -7,7 +7,6 @@
     <div>
         <div class="eyebrow mb-2">Danh mục / Sách</div>
         <h1 class="page-title">Quản lý sách</h1>
-        <p class="page-subtitle">Theo dõi thông tin đầu sách, tình trạng tồn kho và dữ liệu xuất bản.</p>
     </div>
     <div class="page-actions">
         @include('books.partials.action-buttons')
