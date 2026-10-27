@@ -12,6 +12,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Throwable;
@@ -21,15 +22,17 @@ class BookController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request): View
     {
-        // Khung danh sách: tìm kiếm / lọc do thành viên phụ trách bổ sung tại đây
         $books = Book::with(['authors', 'categories', 'publisher'])
+            ->filter($request->only(['keyword', 'category_id', 'stock']))
             ->latest('id')
             ->paginate(10)
             ->withQueryString();
 
-        return view('books.index', compact('books'));
+        $categories = Category::orderBy('name')->get(['id', 'name']);
+
+        return view('books.index', compact('books', 'categories'));
     }
 
     /**

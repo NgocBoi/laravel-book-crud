@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -55,6 +56,36 @@ class Book extends Model
     public function categories(): BelongsToMany
     {
         return $this->belongsToMany(Category::class, 'book_category');
+    }
+
+    /**
+     * Lọc sách theo từ khóa (tên, ISBN, tác giả), thể loại và tình trạng kho; giá trị không hợp lệ được bỏ qua.
+     *
+     * @param  array{keyword?: mixed, category_id?: mixed, stock?: mixed}  $filters
+     */
+    public function scopeFilter(Builder $query, array $filters): void
+    {
+        $keyword = is_string($filters['keyword'] ?? null) ? trim($filters['keyword']) : '';
+        $categoryId = filter_var($filters['category_id'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+
+        $query
+            ->when($keyword !== '', function (Builder $query) use ($keyword): void {
+                $query->where(function (Builder $query) use ($keyword): void {
+                    $query->whereLike('title', "%{$keyword}%")
+                        ->orWhereLike('isbn', '%'.preg_replace('/[\s-]+/', '', $keyword).'%')
+                        ->orWhereHas('authors', fn (Builder $query) => $query->whereLike('name', "%{$keyword}%"));
+                });
+            })
+            ->when($categoryId !== false, fn (Builder $query) => $query->whereHas(
+                'categories',
+                fn (Builder $query) => $query->whereKey($categoryId),
+            ))
+            ->when($filters['stock'] ?? null, fn (Builder $query, mixed $stock) => match ($stock) {
+                'out' => $query->where('stock_quantity', 0),
+                'low' => $query->whereBetween('stock_quantity', [1, self::LOW_STOCK - 1]),
+                'in' => $query->where('stock_quantity', '>=', self::LOW_STOCK),
+                default => $query,
+            });
     }
 
     /**
