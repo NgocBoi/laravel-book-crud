@@ -2,8 +2,8 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookController;
-use App\Http\Controllers\BookExportController;
-use App\Http\Controllers\BookStockController;
+//use App\Http\Controllers\BookExportController;
+//use App\Http\Controllers\BookStockController;
 use App\Http\Controllers\BookTrashController;
 use Illuminate\Support\Facades\Route;
 
@@ -24,17 +24,23 @@ Route::middleware('auth')->group(function () {
         Route::delete('/{id}/force-delete', [BookTrashController::class, 'forceDelete'])->name('books.forceDelete');
     });
 
-    // Chỉ admin được nhập thêm số lượng tồn kho.
-    Route::post('/books/{id}/stock-in', [BookStockController::class, 'stockIn'])
-        ->name('books.stockIn')
-        ->middleware('admin');
+    // Chỉ admin được nhập thêm số lượng tồn kho.-> đã xóa bản này nên không dùng
+  //  Route::post('/books/{id}/stock-in', [BookStockController::class, 'stockIn'])
+    //    ->name('books.stockIn')
+    //    ->middleware('admin');
 
     // Chỉ admin được xuất dữ liệu.
+    /*
     Route::get('/books/export/excel', [BookExportController::class, 'exportExcel'])
         ->name('books.exportExcel')
         ->middleware('admin');
-
+*/
     // User đã đăng nhập được xem danh sách/chi tiết; chỉ admin được thêm, sửa, xóa.
-    Route::resource('books', BookController::class)
-        ->middlewareFor(['create', 'store', 'edit', 'update', 'destroy'], 'admin');
+  //  Route::resource('books', BookController::class)
+  //      ->middlewareFor(['create', 'store', 'edit', 'update', 'destroy'], 'admin');
+
+//  Chỉ Admin được Thêm / Sửa / Xóa; khách phải đăng nhập mới xem được 
+  Route::resource('books', BookController::class)
+    ->middlewareFor(['index', 'show'], ['auth'])
+    ->middlewareFor(['create', 'store', 'edit', 'update', 'destroy'], ['auth', 'admin']);
 });
