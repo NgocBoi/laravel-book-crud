@@ -14,8 +14,6 @@ use Illuminate\Database\QueryException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
-use Throwable;
 
 class BookController extends Controller
 {
@@ -112,36 +110,15 @@ class BookController extends Controller
     /**
      * Lưu sách (thêm mới hoặc cập nhật) cùng quan hệ tác giả / thể loại trong một transaction:
      * hoặc lưu đủ tất cả, hoặc không lưu gì.
-     * Có chọn ảnh bìa mới thì lưu ảnh mới, lưu xong mới xóa ảnh cũ; lưu CSDL lỗi thì xóa ảnh vừa upload.
      */
     private function persist(Book $book, StoreBookRequest $request): Book
     {
-        $previous = clone $book;
-        $newCover = $request->storeCover();
-
-        try {
-            DB::transaction(function () use ($book, $request, $newCover): void {
-                $book->fill($request->bookData());
-
-                if ($newCover) {
-                    $book->cover_image_url = $newCover;
-                }
-
-                $book->save();
-                $book->authors()->sync($request->validated('author_ids'));
-                $book->categories()->sync($request->validated('category_ids'));
-            });
-        } catch (Throwable $e) {
-            if ($newCover) {
-                Storage::disk('public')->delete($newCover);
-            }
-
-            throw $e;
-        }
-
-        if ($newCover) {
-            $previous->deleteCoverFile();
-        }
+        DB::transaction(function () use ($book, $request): void {
+            $book->fill($request->bookData());
+            $book->save();
+            $book->authors()->sync($request->validated('author_ids'));
+            $book->categories()->sync($request->validated('category_ids'));
+        });
 
         return $book;
     }

@@ -26,7 +26,7 @@
 @endif
 
 <form action="{{ $editing ? route('books.update', $currentBook) : route('books.store') }}"
-      method="POST" enctype="multipart/form-data" id="bookForm" class="book-editor" novalidate>
+      method="POST" id="bookForm" class="book-editor" novalidate>
     @csrf
     @if($editing)
         @method('PUT')
@@ -170,16 +170,17 @@
             </div>
 
             <div class="book-field book-field-wide">
-                <label for="coverImage" class="form-label">Ảnh bìa</label>
+                <label for="coverImageUrl" class="form-label">Link ảnh bìa</label>
                 @if($currentBook?->cover_url)
                     <img src="{{ $currentBook->cover_url }}" alt="Ảnh bìa hiện tại của {{ $currentBook->title }}"
                          style="max-height:140px;width:auto;align-self:flex-start;border-radius:8px;border:1px solid #dee2e6">
                 @endif
-                <input type="file" name="cover_image" id="coverImage" accept=".jpg,.jpeg,.png,.webp"
-                       class="form-control @error('cover_image') is-invalid @enderror"
-                       aria-invalid="{{ $errors->has('cover_image') ? 'true' : 'false' }}" aria-describedby="coverHint{{ $errors->has('cover_image') ? ' coverError' : '' }}">
-                <span class="form-hint" id="coverHint">JPG, PNG hoặc WEBP, tối đa 2MB.{{ $currentBook?->cover_url ? ' Chọn ảnh mới để thay ảnh hiện tại.' : '' }}</span>
-                @error('cover_image')<p class="invalid-feedback" id="coverError">{{ $message }}</p>@enderror
+                <input type="url" name="cover_image_url" id="coverImageUrl" maxlength="255"
+                       class="form-control @error('cover_image_url') is-invalid @enderror"
+                       value="{{ old('cover_image_url', $currentBook?->cover_image_url) }}" placeholder="https://example.com/bia-sach.jpg"
+                       aria-invalid="{{ $errors->has('cover_image_url') ? 'true' : 'false' }}" aria-describedby="coverHint{{ $errors->has('cover_image_url') ? ' coverError' : '' }}">
+                <span class="form-hint" id="coverHint">Dán link ảnh bắt đầu bằng http:// hoặc https://.</span>
+                @error('cover_image_url')<p class="invalid-feedback" id="coverError">{{ $message }}</p>@enderror
             </div>
         </div>
 
