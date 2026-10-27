@@ -2,6 +2,7 @@
 @section('title', 'Quản lý sách')
 
 @section('content')
+@php($isAdmin = auth()->user()?->isAdmin())
 <div class="d-flex justify-content-between align-items-start flex-wrap gap-3 mb-4">
     <div>
         <div class="eyebrow mb-2">Danh mục / Sách</div>
@@ -10,7 +11,8 @@
     </div>
     <div class="page-actions">
         @include('books.partials.action-buttons')
-        @if(auth()->user()->isAdmin())
+        @if($isAdmin)
+            <a href="{{ route('books.trash') }}" class="btn btn-outline-secondary"><i class="bi bi-trash3 me-1" aria-hidden="true"></i> Thùng rác</a>
             <a href="{{ route('books.create') }}" class="btn btn-primary"><i class="bi bi-plus-lg me-1" aria-hidden="true"></i> Thêm sách</a>
         @endif
     </div>
@@ -68,14 +70,14 @@
                                         aria-label="Xem nhanh sách {{ $book->title }}">
                                     <i class="bi bi-eye me-1" aria-hidden="true"></i>Xem
                                 </button>
-                                @if(auth()->user()->isAdmin())
+                                @if($isAdmin)
                                     <a class="action-link" href="{{ route('books.edit', $book) }}" aria-label="Sửa sách {{ $book->title }}"><i class="bi bi-pencil-square me-1" aria-hidden="true"></i>Sửa</a>
                                     <button type="button" class="action-link danger" data-bs-toggle="modal" data-bs-target="#deleteBook{{ $book->id }}" aria-label="Xóa sách {{ $book->title }}">
                                         <i class="bi bi-trash3 me-1" aria-hidden="true"></i>Xóa
                                     </button>
                                 @endif
                             </div>
-                            @if(auth()->user()->isAdmin())
+                            @if($isAdmin)
                                 <div class="modal fade" id="deleteBook{{ $book->id }}" tabindex="-1" aria-labelledby="deleteBookTitle{{ $book->id }}" aria-hidden="true">
                                     <div class="modal-dialog modal-dialog-centered"><div class="modal-content">
                                         <div class="modal-header px-4 py-3">
@@ -107,7 +109,7 @@
                             <p>{{ request()->hasAny(['keyword', 'category_id', 'stock']) ? 'Hãy thử thay đổi từ khóa hoặc các điều kiện lọc để xem kết quả khác.' : 'Danh mục hiện chưa có dữ liệu. Bạn có thể bắt đầu bằng cách thêm sách mới.' }}</p>
                             @if(request()->hasAny(['keyword', 'category_id', 'stock']))
                                 <a class="btn btn-outline-primary" href="{{ route('books.index') }}"><i class="bi bi-arrow-counterclockwise me-1"></i> Xóa bộ lọc</a>
-                            @elseif(auth()->user()->isAdmin())
+                            @elseif($isAdmin)
                                 <a class="btn btn-primary" href="{{ route('books.create') }}"><i class="bi bi-plus-lg me-1"></i> Thêm sách</a>
                             @endif
                         </div>
