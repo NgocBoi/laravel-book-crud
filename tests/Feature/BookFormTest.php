@@ -6,6 +6,7 @@ use App\Models\Author;
 use App\Models\Book;
 use App\Models\Category;
 use App\Models\Publisher;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
@@ -26,6 +27,7 @@ class BookFormTest extends TestCase
 
         $this->startSession();
         $this->withCookie(config('session.cookie'), session()->getId());
+        $this->actingAs(User::factory()->create(['role' => 'admin']));
 
         $this->author = Author::create(['name' => 'Nguyễn Văn An']);
         $this->category = Category::create(['name' => 'Công nghệ thông tin']);

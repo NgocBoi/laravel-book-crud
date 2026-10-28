@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -40,7 +41,17 @@ class Book extends Model
         'price' => 'decimal:2',
         'stock_quantity' => 'integer',
         'page_count' => 'integer',
+        'created_at' => 'datetime',
     ];
+
+    protected static function booted(): void
+    {
+        static::creating(function (Book $book): void {
+            if ($book->getAttribute('created_at') === null) {
+                $book->setAttribute('created_at', now());
+            }
+        });
+    }
 
     public function publisher(): BelongsTo
     {
@@ -55,6 +66,60 @@ class Book extends Model
     public function categories(): BelongsToMany
     {
         return $this->belongsToMany(Category::class, 'book_category');
+    }
+
+    /**
+     * @param  array<string, mixed>  $filters
+     */
+    public function scopeFilter(Builder $query, array $filters): Builder
+    {
+        $minPrice = $filters['min_price'] ?? null;
+        $maxPrice = $filters['max_price'] ?? null;
+
+        return $query
+            ->when($filters['keyword'] ?? null, function (Builder $query, string $keyword): void {
+                $query->where(function (Builder $query) use ($keyword): void {
+                    $query->where('title', 'like', "%{$keyword}%")
+                        ->orWhere('isbn', 'like', "%{$keyword}%")
+                        ->orWhereHas('authors', fn (Builder $authors) => $authors->where('name', 'like', "%{$keyword}%"));
+                });
+            })
+            ->when($filters['category_id'] ?? null, function (Builder $query, int|string $categoryId): void {
+                $query->whereHas('categories', fn (Builder $categories) => $categories->whereKey($categoryId));
+            })
+            ->when($filters['author_id'] ?? null, function (Builder $query, int|string $authorId): void {
+                $query->whereHas('authors', fn (Builder $authors) => $authors->whereKey($authorId));
+            })
+            ->when($filters['publisher_id'] ?? null, function (Builder $query, int|string $publisherId): void {
+                $query->where('publisher_id', $publisherId);
+            })
+            ->when($minPrice !== null && $minPrice !== '', function (Builder $query) use ($minPrice): void {
+                $query->where('price', '>=', $minPrice);
+            })
+            ->when($maxPrice !== null && $maxPrice !== '', function (Builder $query) use ($maxPrice): void {
+                $query->where('price', '<=', $maxPrice);
+            })
+            ->when($filters['stock'] ?? null, function (Builder $query, string $stock): void {
+                match ($stock) {
+                    'in' => $query->where('stock_quantity', '>', self::LOW_STOCK),
+                    'low' => $query->whereBetween('stock_quantity', [1, self::LOW_STOCK]),
+                    'out' => $query->where('stock_quantity', 0),
+                };
+            })
+            ->when($filters['sort'] ?? 'newest', function (Builder $query, string $sort): void {
+                match ($sort) {
+                    'price_asc' => $query->orderBy('price')->orderByDesc('id'),
+                    'price_desc' => $query->orderByDesc('price')->orderByDesc('id'),
+                    'oldest' => $query
+                        ->orderByRaw('CASE WHEN created_at IS NULL THEN 0 ELSE 1 END')
+                        ->orderBy('created_at')
+                        ->orderBy('id'),
+                    default => $query
+                        ->orderByRaw('CASE WHEN created_at IS NULL THEN 1 ELSE 0 END')
+                        ->orderByDesc('created_at')
+                        ->orderByDesc('id'),
+                };
+            });
     }
 
     /**

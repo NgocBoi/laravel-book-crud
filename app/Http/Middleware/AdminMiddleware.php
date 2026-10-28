@@ -8,10 +8,9 @@ use Symfony\Component\HttpFoundation\Response;
 
 class AdminMiddleware
 {
-    
     //  Chỉ cho phép tài khoản role = 'admin' đi tiếp.
     //   Phải đặt SAU middleware 'auth' để $request->user() không bị null.
-    
+
     public function handle(Request $request, Closure $next): Response
     {
         $user = $request->user();

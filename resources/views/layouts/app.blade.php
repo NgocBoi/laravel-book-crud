@@ -30,13 +30,11 @@
                     </li>
                 </ul>
                 <span class="nav-context d-none d-lg-inline-flex"><i class="bi bi-grid-1x2 me-2" aria-hidden="true"></i> Danh mục sách</span>
-               
-                <!-- KHU VỰC ĐÃ CẬP NHẬT THEO GỢI Ý -->
                 <div class="d-flex align-items-center gap-3 ms-lg-3">
-                        @auth
+                    @auth
                         <div class="d-flex align-items-center gap-2">
                             <span class="small text-secondary fw-semibold">
-                                {{ auth()->user()->name }} 
+                                {{ auth()->user()->name }}
                                 <span class="text-muted fw-normal">({{ auth()->user()->role }})</span>
                             </span>
                             <form action="{{ route('logout') }}" method="POST" class="mb-0">

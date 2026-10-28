@@ -2,11 +2,7 @@
 @section('title', 'Quản lý sách')
 
 @section('content')
-
-
 @php($isAdmin = auth()->user()?->isAdmin())
-
-
 <div class="d-flex justify-content-between align-items-start flex-wrap gap-3 mb-4">
     <div>
         <div class="eyebrow mb-2">Danh mục / Sách</div>
@@ -16,6 +12,7 @@
     <div class="page-actions">
         @include('books.partials.action-buttons')
         @if($isAdmin)
+            <a href="{{ route('books.trash') }}" class="btn btn-outline-secondary"><i class="bi bi-trash3 me-1" aria-hidden="true"></i> Thùng rác</a>
             <a href="{{ route('books.create') }}" class="btn btn-primary"><i class="bi bi-plus-lg me-1" aria-hidden="true"></i> Thêm sách</a>
         @endif
     </div>
@@ -104,20 +101,18 @@
                             @endif
                         </td>
                     </tr>
-               @empty
+                @empty
                     <tr><td colspan="8">
                         <div class="empty-state">
                             <div class="empty-icon"><i class="bi bi-journal-x" aria-hidden="true"></i></div>
-                            <h3>{{ request()->hasAny(['keyword', 'category_id', 'stock']) ? 'Không tìm thấy sách phù hợp' : 'Chưa có sách nào' }}</h3>
-                            <p>{{ request()->hasAny(['keyword', 'category_id', 'stock']) ? 'Hãy thử thay đổi từ khóa hoặc các điều kiện lọc để xem kết quả khác.' : 'Danh mục hiện chưa có dữ liệu. Bạn có thể bắt đầu bằng cách thêm sách mới.' }}</p>
-                            @if(request()->hasAny(['keyword', 'category_id', 'stock']))
+                            <h3>{{ request()->hasAny(['keyword', 'category_id', 'author_id', 'publisher_id', 'min_price', 'max_price', 'stock', 'sort']) ? 'Không tìm thấy sách phù hợp' : 'Chưa có sách nào' }}</h3>
+                            <p>{{ request()->hasAny(['keyword', 'category_id', 'author_id', 'publisher_id', 'min_price', 'max_price', 'stock', 'sort']) ? 'Hãy thử thay đổi từ khóa hoặc các điều kiện lọc để xem kết quả khác.' : 'Danh mục hiện chưa có dữ liệu. Bạn có thể bắt đầu bằng cách thêm sách mới.' }}</p>
+                            @if(request()->hasAny(['keyword', 'category_id', 'author_id', 'publisher_id', 'min_price', 'max_price', 'stock', 'sort']))
                                 <a class="btn btn-outline-primary" href="{{ route('books.index') }}"><i class="bi bi-arrow-counterclockwise me-1"></i> Xóa bộ lọc</a>
-                            @else
-                                @if($isAdmin)
-                                    <a class="btn btn-primary" href="{{ route('books.create') }}"><i class="bi bi-plus-lg me-1"></i> Thêm sách</a>
-                                @endif
-                                @endif
-                            </div>
+                            @elseif($isAdmin)
+                                <a class="btn btn-primary" href="{{ route('books.create') }}"><i class="bi bi-plus-lg me-1"></i> Thêm sách</a>
+                            @endif
+                        </div>
                     </td></tr>
                 @endforelse
             </tbody>
