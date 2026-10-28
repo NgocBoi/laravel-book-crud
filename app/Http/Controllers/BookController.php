@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Http\Requests\StoreBookRequest;
 use App\Http\Requests\UpdateBookRequest;
 use App\Models\Author;
@@ -127,7 +128,13 @@ class BookController extends Controller
                 }
 
                 $book->save();
-                $book->authors()->sync($request->validated('author_ids'));
+
+                $authorIds = $request->validated('author_ids', []);
+                foreach ($request->validated('new_authors', []) as $authorName) {
+                    $authorIds[] = Author::firstOrCreate(['name' => $authorName])->id;
+                }
+
+                $book->authors()->sync(array_values(array_unique($authorIds)));
                 $book->categories()->sync($request->validated('category_ids'));
             });
         } catch (Throwable $e) {
