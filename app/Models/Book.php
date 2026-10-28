@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -21,6 +22,9 @@ class Book extends Model
 
     /** Thư mục lưu ảnh bìa trên disk "public". */
     public const COVER_DIR = 'covers';
+
+    /** Các tham số query được Book::scopeFilter xử lý. */
+    public const FILTER_KEYS = ['keyword', 'category_id', 'stock', 'price_min', 'price_max', 'sort'];
 
     protected $fillable = [
         'isbn',
@@ -55,6 +59,45 @@ class Book extends Model
     public function categories(): BelongsToMany
     {
         return $this->belongsToMany(Category::class, 'book_category');
+    }
+
+    /**
+     * Lọc sách theo từ khóa (tên, ISBN, tác giả), thể loại, tình trạng kho và khoảng giá và sắp xếp theo giá (sort = price_asc|price_desc); giá trị không hợp lệ được bỏ qua.
+     *
+     * @param  array{keyword?: mixed, category_id?: mixed, stock?: mixed, price_min?: mixed, price_max?: mixed, sort?: mixed}  $filters
+     */
+    public function scopeFilter(Builder $query, array $filters): void
+    {
+        $keyword = is_string($filters['keyword'] ?? null) ? trim($filters['keyword']) : '';
+        $categoryId = filter_var($filters['category_id'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+        $priceMin = filter_var($filters['price_min'] ?? null, FILTER_VALIDATE_FLOAT, ['options' => ['min_range' => 0]]);
+        $priceMax = filter_var($filters['price_max'] ?? null, FILTER_VALIDATE_FLOAT, ['options' => ['min_range' => 0]]);
+
+        $query
+            ->when($keyword !== '', function (Builder $query) use ($keyword): void {
+                $query->where(function (Builder $query) use ($keyword): void {
+                    $query->whereLike('title', "%{$keyword}%")
+                        ->orWhereLike('isbn', '%'.preg_replace('/[\s-]+/', '', $keyword).'%')
+                        ->orWhereHas('authors', fn (Builder $query) => $query->whereLike('name', "%{$keyword}%"));
+                });
+            })
+            ->when($categoryId !== false, fn (Builder $query) => $query->whereHas(
+                'categories',
+                fn (Builder $query) => $query->whereKey($categoryId),
+            ))
+            ->when($priceMin !== false, fn (Builder $query) => $query->where('price', '>=', $priceMin))
+            ->when($priceMax !== false, fn (Builder $query) => $query->where('price', '<=', $priceMax))
+            ->when($filters['stock'] ?? null, fn (Builder $query, mixed $stock) => match ($stock) {
+                'out' => $query->where('stock_quantity', 0),
+                'low' => $query->whereBetween('stock_quantity', [1, self::LOW_STOCK - 1]),
+                'in' => $query->where('stock_quantity', '>=', self::LOW_STOCK),
+                default => $query,
+            })
+            ->when($filters['sort'] ?? null, fn (Builder $query, mixed $sort) => match ($sort) {
+                'price_asc' => $query->orderBy('price'),
+                'price_desc' => $query->orderByDesc('price'),
+                default => $query,
+            });
     }
 
     /**

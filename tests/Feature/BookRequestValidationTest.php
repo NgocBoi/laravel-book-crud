@@ -6,6 +6,8 @@ use App\Http\Requests\StoreBookRequest;
 use App\Models\Author;
 use App\Models\Book;
 use App\Models\Category;
+use App\Models\Publisher;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Route;
@@ -21,10 +23,14 @@ class BookRequestValidationTest extends TestCase
 
     private Category $category;
 
+    private Publisher $publisher;
+
     protected function setUp(): void
     {
         parent::setUp();
 
+        $this->actingAs(User::factory()->create(['role' => 'admin']));
+        $this->publisher = Publisher::create(['name' => 'NXB Kiểm thử']);
         $this->author = Author::create(['name' => 'Nguyễn Văn An']);
         $this->category = Category::create(['name' => 'Công nghệ thông tin']);
 
@@ -103,6 +109,35 @@ class BookRequestValidationTest extends TestCase
             ->assertSessionHasErrors(['page_count' => 'Số trang phải là số nguyên.']);
     }
 
+    public function test_publisher_and_published_year_are_required_when_creating(): void
+    {
+        $data = $this->validData();
+        unset($data['publisher_id'], $data['published_year']);
+
+        $this->post(route('books.store'), $data)->assertSessionHasErrors([
+            'publisher_id' => 'Nhà xuất bản là bắt buộc.',
+            'published_year' => 'Năm xuất bản là bắt buộc.',
+        ]);
+
+        $this->assertDatabaseCount('books', 0);
+    }
+
+    public function test_published_year_cannot_be_in_the_future(): void
+    {
+        $currentYear = now()->year;
+
+        $this->post(route('books.store'), $this->validData(['published_year' => $currentYear + 1]))
+            ->assertSessionHasErrors(['published_year' => "Năm xuất bản không được lớn hơn năm hiện tại ({$currentYear})."]);
+
+        $this->post(route('books.store'), $this->validData(['published_year' => 1900]))
+            ->assertSessionHasErrors(['published_year' => 'Năm xuất bản phải từ 1901 trở về sau.']);
+
+        $this->post(route('books.store'), $this->validData(['published_year' => $currentYear]))
+            ->assertSessionHasNoErrors();
+
+        $this->assertSame($currentYear, Book::firstOrFail()->published_year);
+    }
+
     public function test_isbn_is_normalized_and_blank_selections_are_ignored(): void
     {
         $this->post(route('books.store'), $this->validData([
@@ -170,6 +205,67 @@ class BookRequestValidationTest extends TestCase
         $this->assertSame('9786047654321', $book->fresh()->isbn);
     }
 
+    public function test_store_saves_uploaded_cover(): void
+    {
+        Storage::fake('public');
+
+        $this->post(route('books.store'), $this->validData([
+            'cover_image' => UploadedFile::fake()->image('bia.jpg'),
+        ]))->assertSessionHasNoErrors();
+
+        $cover = Book::firstOrFail()->cover_image_url;
+        $this->assertStringStartsWith(Book::COVER_DIR.'/', $cover);
+        Storage::disk('public')->assertExists($cover);
+    }
+
+    public function test_update_replaces_cover_and_deletes_old_file(): void
+    {
+        Storage::fake('public');
+        Storage::disk('public')->put('covers/cu.jpg', 'ảnh cũ');
+        $book = $this->createBook('9786041234567');
+        $book->update(['cover_image_url' => 'covers/cu.jpg']);
+
+        $this->put(route('books.update', $book), $this->validData([
+            'isbn' => $book->isbn,
+            'cover_image' => UploadedFile::fake()->image('moi.png'),
+        ]))->assertSessionHasNoErrors();
+
+        $newCover = $book->fresh()->cover_image_url;
+        $this->assertNotSame('covers/cu.jpg', $newCover);
+        Storage::disk('public')->assertExists($newCover);
+        Storage::disk('public')->assertMissing('covers/cu.jpg');
+    }
+
+    public function test_update_without_new_cover_keeps_current_file(): void
+    {
+        Storage::fake('public');
+        Storage::disk('public')->put('covers/cu.jpg', 'ảnh cũ');
+        $book = $this->createBook('9786041234567');
+        $book->update(['cover_image_url' => 'covers/cu.jpg']);
+
+        $this->put(route('books.update', $book), $this->validData(['isbn' => $book->isbn]))
+            ->assertSessionHasNoErrors();
+
+        $this->assertSame('covers/cu.jpg', $book->fresh()->cover_image_url);
+        Storage::disk('public')->assertExists('covers/cu.jpg');
+    }
+
+    public function test_forms_accept_cover_upload_and_lock_existing_isbn(): void
+    {
+        $book = $this->createBook('9786041234567');
+
+        $this->get(route('books.create'))
+            ->assertOk()
+            ->assertSee('enctype="multipart/form-data"', false)
+            ->assertSee('name="cover_image"', false)
+            ->assertDontSee('readonly', false);
+
+        $this->get(route('books.edit', $book))
+            ->assertOk()
+            ->assertSee('name="cover_image"', false)
+            ->assertSee('readonly', false);
+    }
+
     private function createBook(?string $isbn): Book
     {
         $book = Book::create(['title' => 'Sách ban đầu', 'isbn' => $isbn, 'price' => 100000]);
@@ -190,6 +286,8 @@ class BookRequestValidationTest extends TestCase
             'isbn' => '9786049999999',
             'author_ids' => [$this->author->id],
             'category_ids' => [$this->category->id],
+            'publisher_id' => $this->publisher->id,
+            'published_year' => 2024,
             'price' => '125000',
             'stock_quantity' => 0,
         ], $overrides);

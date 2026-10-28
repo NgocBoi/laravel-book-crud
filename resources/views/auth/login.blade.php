@@ -5,28 +5,47 @@
 @section('content')
 <style>
     .login-page {
+<<<<<<< HEAD
         min-height: 85vh;
+=======
+        min-height: 70vh;
+>>>>>>> hoan-thien-web
         display: flex;
         align-items: center;
         justify-content: center;
         padding: 40px 16px;
+<<<<<<< HEAD
         background: linear-gradient(135deg, #f0fdf4 0%, #f7fee7 50%, #ecfdf5 100%);
+=======
+        background: radial-gradient(circle at top, var(--ui-primary-light) 0%, transparent 65%);
+>>>>>>> hoan-thien-web
     }
 
     .login-card {
         width: 100%;
         max-width: 450px;
         background: #ffffff;
+<<<<<<< HEAD
         border: 1px solid #dcfce7;
         border-radius: 22px;
         overflow: hidden;
         box-shadow: 0 20px 55px rgba(22, 101, 52, 0.10);
+=======
+        border: 1px solid var(--ui-border);
+        border-radius: 22px;
+        overflow: hidden;
+        box-shadow: 0 20px 55px rgba(37, 99, 235, 0.10);
+>>>>>>> hoan-thien-web
     }
 
     .login-header {
         text-align: center;
         padding: 35px 30px 25px;
+<<<<<<< HEAD
         background: linear-gradient(135deg, #15803d, #16a34a);
+=======
+        background: linear-gradient(135deg, var(--ui-primary-hover), var(--ui-primary));
+>>>>>>> hoan-thien-web
         color: #ffffff;
     }
 
@@ -52,7 +71,11 @@
     .login-header p {
         margin: 0;
         font-size: 14px;
+<<<<<<< HEAD
         color: #dcfce7;
+=======
+        color: #dbeafe;
+>>>>>>> hoan-thien-web
     }
 
     .login-body {
@@ -62,7 +85,11 @@
     .login-label {
         display: block;
         margin-bottom: 9px;
+<<<<<<< HEAD
         color: #166534;
+=======
+        color: #334155;
+>>>>>>> hoan-thien-web
         font-size: 14px;
         font-weight: 600;
     }
@@ -76,7 +103,11 @@
         top: 50%;
         left: 15px;
         transform: translateY(-50%);
+<<<<<<< HEAD
         color: #16a34a;
+=======
+        color: var(--ui-primary);
+>>>>>>> hoan-thien-web
         font-size: 17px;
         pointer-events: none;
     }
@@ -84,17 +115,28 @@
     .login-input {
         min-height: 49px;
         padding: 12px 15px 12px 44px;
+<<<<<<< HEAD
         border: 1px solid #d1fae5;
         border-radius: 12px;
         background: #f9fefb;
+=======
+        border: 1px solid #dce4ed;
+        border-radius: 12px;
+        background: #ffffff;
+>>>>>>> hoan-thien-web
         font-size: 14px;
         transition: all 0.2s ease;
     }
 
     .login-input:focus {
         background: #ffffff;
+<<<<<<< HEAD
         border-color: #22c55e;
         box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.12);
+=======
+        border-color: #80a8ff;
+        box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+>>>>>>> hoan-thien-web
     }
 
     .login-input.is-invalid {
@@ -102,7 +144,11 @@
     }
 
     .login-check {
+<<<<<<< HEAD
         accent-color: #15803d;
+=======
+        accent-color: var(--ui-primary);
+>>>>>>> hoan-thien-web
         cursor: pointer;
     }
 
@@ -116,11 +162,16 @@
         min-height: 49px;
         border: none;
         border-radius: 12px;
+<<<<<<< HEAD
         background: linear-gradient(135deg, #15803d, #22c55e);
+=======
+        background: var(--ui-primary);
+>>>>>>> hoan-thien-web
         color: #ffffff;
         font-weight: 600;
         letter-spacing: 0.3px;
         transition: all 0.25s ease;
+<<<<<<< HEAD
         box-shadow: 0 7px 18px rgba(21, 128, 61, 0.20);
     }
 
@@ -129,6 +180,16 @@
         color: #ffffff;
         transform: translateY(-2px);
         box-shadow: 0 10px 22px rgba(21, 128, 61, 0.25);
+=======
+        box-shadow: 0 7px 18px rgba(37, 99, 235, 0.20);
+    }
+
+    .login-submit:hover {
+        background: var(--ui-primary-hover);
+        color: #ffffff;
+        transform: translateY(-2px);
+        box-shadow: 0 10px 22px rgba(37, 99, 235, 0.25);
+>>>>>>> hoan-thien-web
     }
 
     .login-submit:active {
@@ -140,6 +201,7 @@
         font-size: 14px;
     }
 
+<<<<<<< HEAD
     .login-footer {
         padding-top: 22px;
         margin-top: 25px;
@@ -154,6 +216,8 @@
         margin-right: 5px;
     }
 
+=======
+>>>>>>> hoan-thien-web
     @media (max-width: 480px) {
         .login-body {
             padding: 25px 22px;
@@ -178,6 +242,7 @@
 
         <div class="login-body">
 
+<<<<<<< HEAD
             @if (session('success'))
                 <div class="alert alert-success login-alert" role="alert">
                     <i class="bi bi-check-circle-fill me-2"></i>
@@ -185,6 +250,8 @@
                 </div>
             @endif
 
+=======
+>>>>>>> hoan-thien-web
             {{-- Hiển thị lỗi validation và lỗi đăng nhập --}}
             @if ($errors->any())
                 <div class="alert alert-danger login-alert" role="alert">
@@ -264,11 +331,14 @@
                 </button>
             </form>
 
+<<<<<<< HEAD
             <div class="login-footer">
                 <i class="bi bi-shield-check"></i>
                 Hệ thống quản lý sách
             </div>
 
+=======
+>>>>>>> hoan-thien-web
         </div>
     </div>
 </div>
