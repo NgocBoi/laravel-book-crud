@@ -26,15 +26,14 @@
 @endif
 
 <form action="{{ $editing ? route('books.update', $currentBook) : route('books.store') }}"
-      method="POST" id="bookForm" class="book-editor" novalidate>
+      method="POST" enctype="multipart/form-data" id="bookForm" class="book-editor" novalidate>
     @csrf
     @if($editing)
         @method('PUT')
     @endif
 
     <section class="section-card book-form-card" aria-labelledby="bookFormTitle">
-        <h2 class="section-title" id="bookFormTitle">{{ $editing ? 'Cập nhật thông tin sách' : 'Thông tin sách' }}</h2>
-        <p class="section-note book-form-note">Các trường có dấu * là bắt buộc.</p>
+        <h2 class="section-title mb-4" id="bookFormTitle">{{ $editing ? 'Cập nhật thông tin sách' : 'Thông tin sách' }}</h2>
 
         <div class="book-form-grid">
             <div class="book-field">
@@ -48,7 +47,7 @@
 
             <div class="book-field">
                 <label for="bookIsbn" class="form-label">Mã sách / ISBN</label>
-                <input type="text" name="isbn" id="bookIsbn" maxlength="20"
+                <input type="text" name="isbn" id="bookIsbn" maxlength="20" @readonly($editing && filled($currentBook?->isbn))
                        class="form-control @error('isbn') is-invalid @enderror"
                        value="{{ old('isbn', $currentBook?->isbn) }}" placeholder="Chọn hoặc nhập thông tin"
                        aria-invalid="{{ $errors->has('isbn') ? 'true' : 'false' }}" @error('isbn') aria-describedby="isbnError" @enderror>
@@ -100,7 +99,7 @@
             </div>
 
             <div class="book-field">
-                <label for="publisherId" class="form-label">Nhà xuất bản</label>
+                <label for="publisherId" class="form-label">Nhà xuất bản @unless($editing)<span aria-hidden="true">*</span>@endunless</label>
                 <select name="publisher_id" id="publisherId" class="form-select @error('publisher_id') is-invalid @enderror"
                         aria-invalid="{{ $errors->has('publisher_id') ? 'true' : 'false' }}" @error('publisher_id') aria-describedby="publisherError" @enderror>
                     <option value="">Chọn nhà xuất bản</option>
@@ -112,8 +111,8 @@
             </div>
 
             <div class="book-field">
-                <label for="publishedYear" class="form-label">Năm xuất bản</label>
-                <input type="number" name="published_year" id="publishedYear" min="1901" max="2155" step="1"
+                <label for="publishedYear" class="form-label">Năm xuất bản @unless($editing)<span aria-hidden="true">*</span>@endunless</label>
+                <input type="number" name="published_year" id="publishedYear" min="1901" max="{{ now()->year }}" step="1"
                        class="form-control @error('published_year') is-invalid @enderror"
                        value="{{ old('published_year', $currentBook?->published_year) }}" placeholder="Chọn hoặc nhập thông tin"
                        aria-invalid="{{ $errors->has('published_year') ? 'true' : 'false' }}" @error('published_year') aria-describedby="yearError" @enderror>
@@ -144,12 +143,43 @@
                 </div>
             </div>
 
+            <div class="book-field">
+                <label for="pageCount" class="form-label">Số trang</label>
+                <input type="number" name="page_count" id="pageCount" min="1" max="4294967295" step="1"
+                       class="form-control @error('page_count') is-invalid @enderror"
+                       value="{{ old('page_count', $currentBook?->page_count) }}" placeholder="Chọn hoặc nhập thông tin"
+                       aria-invalid="{{ $errors->has('page_count') ? 'true' : 'false' }}" @error('page_count') aria-describedby="pageCountError" @enderror>
+                @error('page_count')<p class="invalid-feedback" id="pageCountError">{{ $message }}</p>@enderror
+            </div>
+
+            <div class="book-field">
+                <label for="dimensions" class="form-label">Kích thước</label>
+                <input type="text" name="dimensions" id="dimensions" maxlength="50"
+                       class="form-control @error('dimensions') is-invalid @enderror"
+                       value="{{ old('dimensions', $currentBook?->dimensions) }}" placeholder="Ví dụ: 14 x 20 cm"
+                       aria-invalid="{{ $errors->has('dimensions') ? 'true' : 'false' }}" @error('dimensions') aria-describedby="dimensionsError" @enderror>
+                @error('dimensions')<p class="invalid-feedback" id="dimensionsError">{{ $message }}</p>@enderror
+            </div>
+
             <div class="book-field book-field-wide">
                 <label for="description" class="form-label">Mô tả sách</label>
                 <textarea name="description" id="description" rows="1" maxlength="10000"
                           class="form-control @error('description') is-invalid @enderror" placeholder="Nhập nội dung mô tả..."
                           aria-invalid="{{ $errors->has('description') ? 'true' : 'false' }}" @error('description') aria-describedby="descriptionError" @enderror>{{ old('description', $currentBook?->description) }}</textarea>
                 @error('description')<p class="invalid-feedback" id="descriptionError">{{ $message }}</p>@enderror
+            </div>
+
+            <div class="book-field book-field-wide">
+                <label for="coverImage" class="form-label">Ảnh bìa</label>
+                @if($currentBook?->cover_url)
+                    <img src="{{ $currentBook->cover_url }}" alt="Ảnh bìa hiện tại của {{ $currentBook->title }}"
+                         style="max-height:140px;width:auto;align-self:flex-start;border-radius:8px;border:1px solid #dee2e6">
+                @endif
+                <input type="file" name="cover_image" id="coverImage" accept=".jpg,.jpeg,.png,.webp"
+                       class="form-control @error('cover_image') is-invalid @enderror"
+                       aria-invalid="{{ $errors->has('cover_image') ? 'true' : 'false' }}" aria-describedby="coverHint{{ $errors->has('cover_image') ? ' coverError' : '' }}">
+                <span class="form-hint" id="coverHint">JPG, PNG hoặc WEBP, tối đa 2MB.{{ $currentBook?->cover_url ? ' Chọn ảnh mới để thay ảnh hiện tại.' : '' }}</span>
+                @error('cover_image')<p class="invalid-feedback" id="coverError">{{ $message }}</p>@enderror
             </div>
         </div>
 
