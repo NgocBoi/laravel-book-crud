@@ -8,7 +8,6 @@ use App\Models\Category;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
-use ZipArchive;
 
 class BookFilterExportTest extends TestCase
 {
@@ -86,37 +85,13 @@ class BookFilterExportTest extends TestCase
         $this->assertListed(['price_min' => 'abc', 'price_max' => '-5', 'category_id' => 'abc', 'stock' => 'khac', 'keyword' => ['x']], ['Nhà Giả Kim', 'Lược Sử Thời Gian', 'Vũ Trụ']);
     }
 
-    public function test_index_offers_category_options_and_export_link_with_current_filters(): void
+    public function test_index_offers_category_options(): void
     {
         $this->actingAs(User::factory()->create(['role' => 'admin']));
 
         $this->get(route('books.index', ['stock' => 'low']))
             ->assertOk()
-            ->assertSee('<option value="'.$this->science->id.'"', false)
-            ->assertSee(e(route('books.exportExcel', ['stock' => 'low'])), false);
-    }
-
-    public function test_admin_exports_filtered_books_as_xlsx(): void
-    {
-        $this->actingAs(User::factory()->create(['role' => 'admin']));
-
-        $response = $this->get(route('books.exportExcel', ['category_id' => $this->science->id]))
-            ->assertOk()
-            ->assertHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-
-        $this->assertStringContainsString('.xlsx', $response->headers->get('Content-Disposition'));
-
-        $zip = new ZipArchive;
-        $this->assertTrue($zip->open($response->getFile()->getPathname()));
-        $sheet = $zip->getFromName('xl/worksheets/sheet1.xml');
-        $zip->close();
-
-        $this->assertNotFalse(simplexml_load_string($sheet));
-        $this->assertStringContainsString('Tên sách', $sheet);
-        $this->assertStringContainsString('Lược Sử Thời Gian', $sheet);
-        $this->assertStringContainsString('Vũ Trụ', $sheet);
-        $this->assertStringContainsString('Hết hàng', $sheet);
-        $this->assertStringNotContainsString('Nhà Giả Kim', $sheet);
+            ->assertSee('<option value="'.$this->science->id.'"', false);
     }
 
     public function test_detail_page_shows_categories_in_its_own_box(): void
@@ -131,18 +106,16 @@ class BookFilterExportTest extends TestCase
             ->assertSeeInOrder(['<dt>Thể loại</dt>', 'Tiểu thuyết', 'Nhà xuất bản'], false);
     }
 
-    public function test_trash_and_export_buttons_are_shown_only_to_admin(): void
+    public function test_trash_button_is_shown_only_to_admin(): void
     {
         $this->actingAs(User::factory()->create(['role' => 'admin']));
         $this->get(route('books.index'))
             ->assertSee('href="'.route('books.trash').'"', false)
-            ->assertSee('Xuất Excel')
             ->assertSee('Hệ thống quản lý sách');
 
         $this->actingAs(User::factory()->create(['role' => 'user']));
         $this->get(route('books.index'))
             ->assertDontSee('href="'.route('books.trash').'"', false)
-            ->assertDontSee('Xuất Excel')
             ->assertSee('Hệ thống quản lý sách');
     }
 

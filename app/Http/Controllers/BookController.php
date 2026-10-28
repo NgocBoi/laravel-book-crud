@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use App\Http\Requests\StoreBookRequest;
 use App\Http\Requests\UpdateBookRequest;
 use App\Models\Author;
@@ -22,11 +21,7 @@ class BookController extends Controller
     /**
      * Display a listing of the resource.
      */
-<<<<<<< HEAD
-    public function index(): View
-=======
     public function index(Request $request): View
->>>>>>> hoan-thien-web
     {
         $books = Book::with(['authors', 'categories', 'publisher'])
             ->filter($request->only(Book::FILTER_KEYS))
