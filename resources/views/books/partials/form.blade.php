@@ -3,9 +3,11 @@
     $currentBook = $editing ? $book : null;
     $hasOldInput = session()->hasOldInput();
     $selectedAuthors = array_map('strval', (array) old('author_ids', $hasOldInput ? [] : ($currentBook?->authors->modelKeys() ?? [])));
+    $newAuthors = array_values(array_filter(array_map('trim', (array) old('new_authors', []))));
     $selectedCategories = array_map('strval', (array) old('category_ids', $hasOldInput ? [] : ($currentBook?->categories->modelKeys() ?? [])));
-    $authorError = $errors->first('author_ids') ?: $errors->first('author_ids.*');
+    $authorError = $errors->first('author_ids') ?: $errors->first('author_ids.*') ?: $errors->first('new_authors') ?: $errors->first('new_authors.*');
     $categoryError = $errors->first('category_ids') ?: $errors->first('category_ids.*');
+    $authorDisplayNames = $authors->whereIn('id', $selectedAuthors)->pluck('name')->merge($newAuthors)->join(', ');
     $stockValue = old('stock_quantity', $currentBook?->stock_quantity ?? 0);
     $validStock = filter_var($stockValue, FILTER_VALIDATE_INT, ['options' => ['min_range' => 0, 'max_range' => 4294967295]]) !== false;
     $stock = $validStock ? (int) $stockValue : null;
@@ -33,8 +35,7 @@
     @endif
 
     <section class="section-card book-form-card" aria-labelledby="bookFormTitle">
-        <h2 class="section-title" id="bookFormTitle">{{ $editing ? 'Cập nhật thông tin sách' : 'Thông tin sách' }}</h2>
-        <p class="section-note book-form-note">Các trường có dấu * là bắt buộc.</p>
+        <h2 class="section-title mb-4" id="bookFormTitle">{{ $editing ? 'Cập nhật thông tin sách' : 'Thông tin sách' }}</h2>
 
         <div class="book-form-grid">
             <div class="book-field">
@@ -57,21 +58,38 @@
 
             <div class="book-field">
                 <span class="form-label" id="authorsLabel">Tác giả <span aria-hidden="true">*</span></span>
-                <details class="book-choice @if($authorError) is-invalid @endif" data-book-choice>
+                <details class="book-choice @if($authorError) is-invalid @endif" data-book-choice data-allow-create="new_authors[]">
                     <summary id="authorsSummary" aria-labelledby="authorsLabel authorsValue" aria-describedby="authorsHint{{ $authorError ? ' authorsError' : '' }}" aria-invalid="{{ $authorError ? 'true' : 'false' }}">
-                        <span id="authorsValue" data-choice-value data-placeholder="Chọn tác giả">{{ $authors->whereIn('id', $selectedAuthors)->pluck('name')->join(', ') ?: 'Chọn tác giả' }}</span>
+                        <span id="authorsValue" data-choice-value data-placeholder="Chọn tác giả">{{ $authorDisplayNames ?: 'Chọn tác giả' }}</span>
                     </summary>
                     <div class="book-choice-options" role="group" aria-labelledby="authorsLabel">
-                        <p class="book-choice-hint" id="authorsHint">Có thể chọn nhiều tác giả.</p>
-                        @forelse($authors as $author)
-                            <label class="book-choice-option" for="author-{{ $author->id }}">
-                                <input type="checkbox" name="author_ids[]" id="author-{{ $author->id }}" value="{{ $author->id }}"
-                                       class="form-check-input" @checked(in_array((string) $author->id, $selectedAuthors, true))>
-                                <span>{{ $author->name }}</span>
-                            </label>
-                        @empty
-                            <p class="book-choice-hint">Chưa có tác giả.</p>
-                        @endforelse
+                        <div class="book-choice-toolbar">
+                            <input type="search" class="form-control book-choice-search" data-choice-search placeholder="Tìm hoặc nhập tên tác giả mới..." aria-label="Tìm hoặc nhập tên tác giả mới">
+                            <button type="button" class="btn btn-sm btn-outline-primary book-choice-add d-none" data-choice-add>
+                                <i class="bi bi-plus-lg" aria-hidden="true"></i> <span data-choice-add-text>Thêm tác giả</span>
+                            </button>
+                        </div>
+                        <p class="book-choice-hint" id="authorsHint">Có thể chọn nhiều tác giả hoặc gõ tên mới để thêm nhanh.</p>
+                        <div data-choice-list>
+                            @foreach($newAuthors as $index => $newAuthor)
+                                <label class="book-choice-option" for="new-author-{{ $index }}">
+                                    <input type="checkbox" name="new_authors[]" id="new-author-{{ $index }}" value="{{ $newAuthor }}"
+                                           class="form-check-input" checked>
+                                    <span>{{ $newAuthor }}</span>
+                                    <span class="badge bg-primary-subtle text-primary ms-auto">Mới</span>
+                                </label>
+                            @endforeach
+                            @forelse($authors as $author)
+                                <label class="book-choice-option" for="author-{{ $author->id }}">
+                                    <input type="checkbox" name="author_ids[]" id="author-{{ $author->id }}" value="{{ $author->id }}"
+                                           class="form-check-input" @checked(in_array((string) $author->id, $selectedAuthors, true))>
+                                    <span>{{ $author->name }}</span>
+                                </label>
+                            @empty
+                                <p class="book-choice-hint" data-choice-empty>Chưa có tác giả.</p>
+                            @endforelse
+                        </div>
+                        <p class="book-choice-hint d-none" data-choice-no-match>Không tìm thấy tác giả khớp từ khóa.</p>
                     </div>
                 </details>
                 @if($authorError)<p class="invalid-feedback" id="authorsError">{{ $authorError }}</p>@endif
@@ -84,23 +102,29 @@
                         <span id="categoriesValue" data-choice-value data-placeholder="Chọn thể loại">{{ $categories->whereIn('id', $selectedCategories)->pluck('name')->join(', ') ?: 'Chọn thể loại' }}</span>
                     </summary>
                     <div class="book-choice-options" role="group" aria-labelledby="categoriesLabel">
+                        <div class="book-choice-toolbar">
+                            <input type="search" class="form-control book-choice-search" data-choice-search placeholder="Tìm nhanh thể loại..." aria-label="Tìm nhanh thể loại">
+                        </div>
                         <p class="book-choice-hint" id="categoriesHint">Có thể chọn nhiều thể loại.</p>
-                        @forelse($categories as $category)
-                            <label class="book-choice-option" for="category-{{ $category->id }}">
-                                <input type="checkbox" name="category_ids[]" id="category-{{ $category->id }}" value="{{ $category->id }}"
-                                       class="form-check-input" @checked(in_array((string) $category->id, $selectedCategories, true))>
-                                <span>{{ $category->name }}</span>
-                            </label>
-                        @empty
-                            <p class="book-choice-hint">Chưa có thể loại.</p>
-                        @endforelse
+                        <div data-choice-list>
+                            @forelse($categories as $category)
+                                <label class="book-choice-option" for="category-{{ $category->id }}">
+                                    <input type="checkbox" name="category_ids[]" id="category-{{ $category->id }}" value="{{ $category->id }}"
+                                           class="form-check-input" @checked(in_array((string) $category->id, $selectedCategories, true))>
+                                    <span>{{ $category->name }}</span>
+                                </label>
+                            @empty
+                                <p class="book-choice-hint" data-choice-empty>Chưa có thể loại.</p>
+                            @endforelse
+                        </div>
+                        <p class="book-choice-hint d-none" data-choice-no-match>Không tìm thấy thể loại khớp từ khóa.</p>
                     </div>
                 </details>
                 @if($categoryError)<p class="invalid-feedback" id="categoriesError">{{ $categoryError }}</p>@endif
             </div>
 
             <div class="book-field">
-                <label for="publisherId" class="form-label">Nhà xuất bản</label>
+                <label for="publisherId" class="form-label">Nhà xuất bản @unless($editing)<span aria-hidden="true">*</span>@endunless</label>
                 <select name="publisher_id" id="publisherId" class="form-select @error('publisher_id') is-invalid @enderror"
                         aria-invalid="{{ $errors->has('publisher_id') ? 'true' : 'false' }}" @error('publisher_id') aria-describedby="publisherError" @enderror>
                     <option value="">Chọn nhà xuất bản</option>
@@ -112,7 +136,7 @@
             </div>
 
             <div class="book-field">
-                <label for="publishedYear" class="form-label">Năm xuất bản</label>
+                <label for="publishedYear" class="form-label">Năm xuất bản @unless($editing)<span aria-hidden="true">*</span>@endunless</label>
                 <input type="number" name="published_year" id="publishedYear" min="1901" max="{{ now()->year }}" step="1"
                        class="form-control @error('published_year') is-invalid @enderror"
                        value="{{ old('published_year', $currentBook?->published_year) }}" placeholder="Chọn hoặc nhập thông tin"
@@ -142,6 +166,24 @@
                     </span>
                     <span class="form-hint" id="stockHint">0: Hết hàng · 1–{{ \App\Models\Book::LOW_STOCK - 1 }}: Sắp hết</span>
                 </div>
+            </div>
+
+            <div class="book-field">
+                <label for="pageCount" class="form-label">Số trang</label>
+                <input type="number" name="page_count" id="pageCount" min="1" max="4294967295" step="1"
+                       class="form-control @error('page_count') is-invalid @enderror"
+                       value="{{ old('page_count', $currentBook?->page_count) }}" placeholder="Chọn hoặc nhập thông tin"
+                       aria-invalid="{{ $errors->has('page_count') ? 'true' : 'false' }}" @error('page_count') aria-describedby="pageCountError" @enderror>
+                @error('page_count')<p class="invalid-feedback" id="pageCountError">{{ $message }}</p>@enderror
+            </div>
+
+            <div class="book-field">
+                <label for="dimensions" class="form-label">Kích thước</label>
+                <input type="text" name="dimensions" id="dimensions" maxlength="50"
+                       class="form-control @error('dimensions') is-invalid @enderror"
+                       value="{{ old('dimensions', $currentBook?->dimensions) }}" placeholder="Ví dụ: 14 x 20 cm"
+                       aria-invalid="{{ $errors->has('dimensions') ? 'true' : 'false' }}" @error('dimensions') aria-describedby="dimensionsError" @enderror>
+                @error('dimensions')<p class="invalid-feedback" id="dimensionsError">{{ $message }}</p>@enderror
             </div>
 
             <div class="book-field book-field-wide">

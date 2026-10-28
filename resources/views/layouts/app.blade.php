@@ -11,42 +11,34 @@
     @stack('styles')
 </head>
 <body class="admin-body @yield('body-class')">
-    <nav class="navbar navbar-expand-lg admin-navbar sticky-top" aria-label="Điều hướng chính">
+    <nav class="navbar admin-navbar sticky-top" aria-label="Điều hướng chính">
         <div class="container-fluid admin-shell px-3 px-lg-4">
             <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="{{ route('books.index') }}">
                 <span class="brand-symbol"><i class="bi bi-book-half" aria-hidden="true"></i></span>
                 <span>Book Management</span>
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"
-                    aria-controls="mainNav" aria-expanded="false" aria-label="Mở menu điều hướng">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="mainNav">
-                <ul class="navbar-nav mx-lg-auto">
-                    <li class="nav-item">
-                        <a href="{{ route('books.index') }}" class="nav-link {{ request()->routeIs('books.*') ? 'active' : '' }}" @if(request()->routeIs('books.*')) aria-current="page" @endif>
-                            <i class="bi bi-journal-bookmark me-1" aria-hidden="true"></i> Sách
-                        </a>
-                    </li>
-                </ul>
-                <span class="nav-context d-none d-lg-inline-flex"><i class="bi bi-grid-1x2 me-2" aria-hidden="true"></i> Danh mục sách</span>
-                <div class="d-flex align-items-center gap-3 ms-lg-3">
-                    @auth
-                        <div class="d-flex align-items-center gap-2">
-                            <span class="small text-secondary fw-semibold">
-                                {{ auth()->user()->name }}
-                                <span class="text-muted fw-normal">({{ auth()->user()->role }})</span>
-                            </span>
+            @auth
+                @php($currentUser = auth()->user())
+                <div class="dropdown ms-auto">
+                    <button class="user-menu dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <span class="user-avatar" aria-hidden="true">{{ mb_strtoupper(mb_substr($currentUser->name, 0, 1)) }}</span>
+                        <span class="text-start lh-sm">
+                            <span class="d-block fw-semibold">{{ $currentUser->name }}</span>
+                            <span class="user-role">{{ $currentUser->isAdmin() ? 'Quản trị viên' : 'Người dùng' }} ({{ $currentUser->role }})</span>
+                        </span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end user-dropdown">
+                        <li class="dropdown-header">{{ $currentUser->email }}</li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
                             <form action="{{ route('logout') }}" method="POST" class="mb-0">
                                 @csrf
-                                <button type="submit" class="btn btn-outline-danger btn-sm">Đăng xuất</button>
+                                <button type="submit" class="dropdown-item text-danger"><i class="bi bi-box-arrow-right me-2" aria-hidden="true"></i>Đăng xuất</button>
                             </form>
-                        </div>
-                    @else
-                        <a href="{{ route('login') }}" class="btn btn-outline-primary btn-sm">Đăng nhập</a>
-                    @endauth
+                        </li>
+                    </ul>
                 </div>
-            </div>
+            @endauth
         </div>
     </nav>
 
@@ -73,6 +65,13 @@
         @endif
         @yield('content')
     </main>
+
+    <footer class="admin-footer">
+        <div class="container-fluid admin-shell px-3 px-lg-4">
+            <span>© {{ now()->year }} Book Management</span>
+            <span>Hệ thống quản lý sách</span>
+        </div>
+    </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     @stack('scripts')

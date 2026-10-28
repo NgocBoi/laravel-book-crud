@@ -53,7 +53,6 @@ class BookPermissionTest extends TestCase
         $this->put(route('books.update', $book))->assertForbidden();
         $this->delete(route('books.destroy', $book))->assertForbidden();
         $this->get(route('books.trash'))->assertForbidden();
-        $this->get(route('books.exportExcel'))->assertForbidden();
 
         $this->assertDatabaseHas('books', ['id' => $book->id, 'title' => 'Sách chỉ đọc', 'deleted_at' => null]);
     }

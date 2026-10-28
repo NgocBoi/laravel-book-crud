@@ -21,28 +21,12 @@ use Throwable;
 class BookController extends Controller
 {
     /**
-     * Thư mục lưu ảnh bìa trên disk "public" (storage/app/public/books).
-     */
-    private const COVER_DIRECTORY = 'books';
-
-    /**
      * Display a listing of the resource.
      */
     public function index(Request $request, BookFilterService $bookFilterService): View
     {
-        $filters = $request->validate([
-            'keyword' => ['nullable', 'string', 'max:255'],
-            'category_id' => ['nullable', 'integer', 'exists:categories,id'],
-            'author_id' => ['nullable', 'integer', 'exists:authors,id'],
-            'publisher_id' => ['nullable', 'integer', 'exists:publishers,id'],
-            'min_price' => ['nullable', 'numeric', 'min:0'],
-            'max_price' => ['nullable', 'numeric', 'min:0'],
-            'stock' => ['nullable', 'in:in,low,out'],
-            'sort' => ['nullable', 'in:newest,oldest,price_asc,price_desc'],
-        ]);
-
         return view('books.index', [
-            'books' => $bookFilterService->paginate($filters),
+            'books' => $bookFilterService->paginate($request->only(Book::FILTER_KEYS)),
             'authors' => Author::orderBy('name')->get(),
             'categories' => Category::orderBy('name')->get(),
             'publishers' => Publisher::orderBy('name')->get(),
@@ -142,7 +126,13 @@ class BookController extends Controller
                 }
 
                 $book->save();
-                $book->authors()->sync($request->validated('author_ids'));
+
+                $authorIds = $request->validated('author_ids', []);
+                foreach ($request->validated('new_authors', []) as $authorName) {
+                    $authorIds[] = Author::firstOrCreate(['name' => $authorName])->id;
+                }
+
+                $book->authors()->sync(array_values(array_unique($authorIds)));
                 $book->categories()->sync($request->validated('category_ids'));
             });
         } catch (Throwable $e) {

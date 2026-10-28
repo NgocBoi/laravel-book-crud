@@ -90,6 +90,26 @@ class BookFormTest extends TestCase
             ->assertSee('Hết hàng');
     }
 
+    public function test_create_and_update_can_add_new_authors_inline(): void
+    {
+        $data = $this->validData([
+            'author_ids' => [],
+            'new_authors' => ['  Tác giả Mới Tinh  ', 'Nguyễn Nhật Ánh'],
+        ]);
+
+        $response = $this->post(route('books.store'), $data);
+        $book = Book::firstOrFail();
+
+        $response->assertRedirect(route('books.edit', $book))
+            ->assertSessionHasNoErrors();
+
+        $this->assertEqualsCanonicalizing(
+            ['Tác giả Mới Tinh', 'Nguyễn Nhật Ánh'],
+            $book->authors()->pluck('name')->all()
+        );
+        $this->assertDatabaseHas('authors', ['name' => 'Tác giả Mới Tinh']);
+    }
+
     public function test_empty_create_shows_vietnamese_banner_and_field_errors(): void
     {
         $this->from(route('books.create'))
@@ -151,7 +171,7 @@ class BookFormTest extends TestCase
             'author_ids' => [$replacementAuthor->id],
             'category_ids' => [$replacementCategory->id],
             'publisher_id' => null,
-        ]))->assertRedirect(route('books.edit', $book))
+        ]))->assertRedirect(route('books.index'))
             ->assertSessionHas('success', 'Đã cập nhật sách thành công.');
 
         $book->refresh();

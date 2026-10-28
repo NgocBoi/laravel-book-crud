@@ -23,6 +23,20 @@ class Book extends Model
     /** Thư mục lưu ảnh bìa trên disk "public". */
     public const COVER_DIR = 'covers';
 
+    /** Các tham số query được Book::scopeFilter xử lý. */
+    public const FILTER_KEYS = [
+        'keyword',
+        'category_id',
+        'author_id',
+        'publisher_id',
+        'stock',
+        'price_min',
+        'price_max',
+        'min_price',
+        'max_price',
+        'sort',
+    ];
+
     protected $fillable = [
         'isbn',
         'title',
@@ -69,44 +83,62 @@ class Book extends Model
     }
 
     /**
+     * Lọc sách theo từ khóa (tên, ISBN, tác giả), thể loại, tác giả, nhà xuất bản, tình trạng kho, khoảng giá và sắp xếp.
+     *
      * @param  array<string, mixed>  $filters
      */
     public function scopeFilter(Builder $query, array $filters): Builder
     {
-        $minPrice = $filters['min_price'] ?? null;
-        $maxPrice = $filters['max_price'] ?? null;
+        $keyword = is_string($filters['keyword'] ?? null) ? trim($filters['keyword']) : '';
+        $categoryId = filter_var($filters['category_id'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+        $authorId = filter_var($filters['author_id'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+        $publisherId = filter_var($filters['publisher_id'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+
+        $rawMinPrice = $filters['min_price'] ?? $filters['price_min'] ?? null;
+        $rawMaxPrice = $filters['max_price'] ?? $filters['price_max'] ?? null;
+
+        $minPrice = ($rawMinPrice !== null && $rawMinPrice !== '')
+            ? filter_var($rawMinPrice, FILTER_VALIDATE_FLOAT, ['options' => ['min_range' => 0]])
+            : false;
+        $maxPrice = ($rawMaxPrice !== null && $rawMaxPrice !== '')
+            ? filter_var($rawMaxPrice, FILTER_VALIDATE_FLOAT, ['options' => ['min_range' => 0]])
+            : false;
+
+        $stock = is_string($filters['stock'] ?? null) ? $filters['stock'] : null;
+        $sort = is_string($filters['sort'] ?? null) ? $filters['sort'] : 'newest';
 
         return $query
-            ->when($filters['keyword'] ?? null, function (Builder $query, string $keyword): void {
+            ->when($keyword !== '', function (Builder $query) use ($keyword): void {
                 $query->where(function (Builder $query) use ($keyword): void {
                     $query->where('title', 'like', "%{$keyword}%")
-                        ->orWhere('isbn', 'like', "%{$keyword}%")
+                        ->orWhere('isbn', 'like', '%'.preg_replace('/[\s-]+/', '', $keyword).'%')
                         ->orWhereHas('authors', fn (Builder $authors) => $authors->where('name', 'like', "%{$keyword}%"));
                 });
             })
-            ->when($filters['category_id'] ?? null, function (Builder $query, int|string $categoryId): void {
+            ->when($categoryId !== false && $categoryId !== null, function (Builder $query) use ($categoryId): void {
                 $query->whereHas('categories', fn (Builder $categories) => $categories->whereKey($categoryId));
             })
-            ->when($filters['author_id'] ?? null, function (Builder $query, int|string $authorId): void {
+            ->when($authorId !== false && $authorId !== null, function (Builder $query) use ($authorId): void {
                 $query->whereHas('authors', fn (Builder $authors) => $authors->whereKey($authorId));
             })
-            ->when($filters['publisher_id'] ?? null, function (Builder $query, int|string $publisherId): void {
+            ->when($publisherId !== false && $publisherId !== null, function (Builder $query) use ($publisherId): void {
                 $query->where('publisher_id', $publisherId);
             })
-            ->when($minPrice !== null && $minPrice !== '', function (Builder $query) use ($minPrice): void {
+            ->when($minPrice !== false, function (Builder $query) use ($minPrice): void {
                 $query->where('price', '>=', $minPrice);
             })
-            ->when($maxPrice !== null && $maxPrice !== '', function (Builder $query) use ($maxPrice): void {
+            ->when($maxPrice !== false, function (Builder $query) use ($maxPrice): void {
                 $query->where('price', '<=', $maxPrice);
             })
-            ->when($filters['stock'] ?? null, function (Builder $query, string $stock): void {
+            ->when($stock !== null, function (Builder $query) use ($stock): void {
                 match ($stock) {
-                    'in' => $query->where('stock_quantity', '>', self::LOW_STOCK),
-                    'low' => $query->whereBetween('stock_quantity', [1, self::LOW_STOCK]),
+                    'in' => $query->where('stock_quantity', '>=', self::LOW_STOCK),
+                    'low' => $query->whereBetween('stock_quantity', [1, self::LOW_STOCK - 1]),
                     'out' => $query->where('stock_quantity', 0),
+                    default => null,
                 };
             })
-            ->when($filters['sort'] ?? 'newest', function (Builder $query, string $sort): void {
+            ->when(true, function (Builder $query) use ($sort): void {
                 match ($sort) {
                     'price_asc' => $query->orderBy('price')->orderByDesc('id'),
                     'price_desc' => $query->orderByDesc('price')->orderByDesc('id'),
