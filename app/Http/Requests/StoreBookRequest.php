@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Book;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Arr;
@@ -64,7 +63,7 @@ class StoreBookRequest extends FormRequest
             'page_count' => ['nullable', 'integer', 'min:1', 'max:4294967295'],
             'dimensions' => ['nullable', 'string', 'max:50'],
             'description' => ['nullable', 'string', 'max:10000'],
-            'cover_image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            'cover_image_url' => ['nullable', 'url:http,https', 'max:255'],
         ];
     }
 
@@ -87,7 +86,7 @@ class StoreBookRequest extends FormRequest
             'page_count' => 'Số trang',
             'dimensions' => 'Kích thước',
             'description' => 'Mô tả sách',
-            'cover_image' => 'Ảnh bìa',
+            'cover_image_url' => 'Link ảnh bìa',
         ];
     }
 
@@ -120,33 +119,18 @@ class StoreBookRequest extends FormRequest
             'page_count.max' => 'Số trang không được vượt quá 4.294.967.295.',
             'dimensions.max' => 'Kích thước không được vượt quá 50 ký tự.',
             'description.max' => 'Mô tả sách không được vượt quá 10.000 ký tự.',
-            'cover_image.uploaded' => 'Tải ảnh bìa lên thất bại. Vui lòng chọn lại ảnh.',
-            'cover_image.image' => 'Ảnh bìa phải là file hình ảnh.',
-            'cover_image.mimes' => 'Ảnh bìa chỉ nhận định dạng JPG, JPEG, PNG hoặc WEBP.',
-            'cover_image.max' => 'Ảnh bìa không được vượt quá 2MB.',
+            'cover_image_url.url' => 'Link ảnh bìa phải là địa chỉ http:// hoặc https:// hợp lệ.',
+            'cover_image_url.max' => 'Link ảnh bìa không được vượt quá 255 ký tự.',
         ];
     }
 
     /**
-     * Dữ liệu các cột của bảng books đã kiểm tra, không gồm bảng nối tác giả / thể loại và file ảnh.
+     * Dữ liệu các cột của bảng books đã kiểm tra, không gồm bảng nối tác giả / thể loại.
      *
      * @return array<string, mixed>
      */
     public function bookData(): array
     {
-        return Arr::except($this->validated(), ['author_ids', 'category_ids', 'cover_image']);
-    }
-
-    /**
-     * Lưu ảnh bìa vừa upload vào storage/app/public/covers với tên ngẫu nhiên.
-     * Trả về đường dẫn để ghi vào cột cover_image_url, không chọn ảnh thì trả về null.
-     */
-    public function storeCover(): ?string
-    {
-        if (! $this->hasFile('cover_image')) {
-            return null;
-        }
-
-        return $this->file('cover_image')->store(Book::COVER_DIR, 'public') ?: null;
+        return Arr::except($this->validated(), ['author_ids', 'category_ids']);
     }
 }

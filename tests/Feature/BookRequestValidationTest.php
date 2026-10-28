@@ -9,9 +9,7 @@ use App\Models\Category;
 use App\Models\Publisher;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Storage;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
@@ -37,61 +35,43 @@ class BookRequestValidationTest extends TestCase
         // Route tạm để kiểm tra hàm lấy dữ liệu của Request đúng như Controller sẽ gọi
         Route::post('/_test/book-request', fn (StoreBookRequest $request) => response()->json([
             'data' => $request->bookData(),
-            'cover' => $request->storeCover(),
         ]));
     }
 
-    public function test_book_data_excludes_relations_and_valid_cover_is_stored(): void
+    public function test_book_data_excludes_relations_and_keeps_cover_url(): void
     {
-        Storage::fake('public');
-
         $response = $this->postJson('/_test/book-request', $this->validData([
             'page_count' => 320,
             'dimensions' => '16 x 24 cm',
-            'cover_image' => UploadedFile::fake()->image('bia.png', 300, 450),
+            'cover_image_url' => 'https://example.com/bia.png',
         ]))->assertOk();
 
         $data = $response->json('data');
         $this->assertSame('Sách kiểm thử', $data['title']);
         $this->assertSame(320, $data['page_count']);
+        $this->assertSame('https://example.com/bia.png', $data['cover_image_url']);
         $this->assertArrayNotHasKey('author_ids', $data);
         $this->assertArrayNotHasKey('category_ids', $data);
-        $this->assertArrayNotHasKey('cover_image', $data);
-
-        $cover = $response->json('cover');
-        $this->assertStringStartsWith(Book::COVER_DIR.'/', $cover);
-        $this->assertNotSame(Book::COVER_DIR.'/bia.png', $cover);
-        Storage::disk('public')->assertExists($cover);
     }
 
-    public function test_store_cover_returns_null_without_upload(): void
+    #[DataProvider('invalidCoverUrls')]
+    public function test_cover_image_url_must_be_a_valid_http_link(string $url, string $message): void
     {
-        $this->postJson('/_test/book-request', $this->validData())
-            ->assertOk()
-            ->assertJsonPath('cover', null);
-    }
-
-    #[DataProvider('invalidCovers')]
-    public function test_cover_image_must_be_supported_image_up_to_2mb(callable $makeFile, string $message): void
-    {
-        Storage::fake('public');
-
-        $this->post(route('books.store'), $this->validData(['cover_image' => $makeFile()]))
-            ->assertSessionHasErrors(['cover_image' => $message]);
+        $this->post(route('books.store'), $this->validData(['cover_image_url' => $url]))
+            ->assertSessionHasErrors(['cover_image_url' => $message]);
 
         $this->assertDatabaseCount('books', 0);
-        $this->assertEmpty(Storage::disk('public')->allFiles());
     }
 
     /**
-     * @return array<string, array{callable(): UploadedFile, string}>
+     * @return array<string, array{string, string}>
      */
-    public static function invalidCovers(): array
+    public static function invalidCoverUrls(): array
     {
         return [
-            'pdf file' => [fn () => UploadedFile::fake()->create('bia.pdf', 100, 'application/pdf'), 'Ảnh bìa phải là file hình ảnh.'],
-            'gif image' => [fn () => UploadedFile::fake()->image('bia.gif'), 'Ảnh bìa chỉ nhận định dạng JPG, JPEG, PNG hoặc WEBP.'],
-            'larger than 2MB' => [fn () => UploadedFile::fake()->image('bia.jpg')->size(2049), 'Ảnh bìa không được vượt quá 2MB.'],
+            'not a url' => ['abc', 'Link ảnh bìa phải là địa chỉ http:// hoặc https:// hợp lệ.'],
+            'ftp scheme' => ['ftp://example.com/bia.jpg', 'Link ảnh bìa phải là địa chỉ http:// hoặc https:// hợp lệ.'],
+            'too long' => ['https://example.com/'.str_repeat('a', 240), 'Link ảnh bìa không được vượt quá 255 ký tự.'],
         ];
     }
 
@@ -205,64 +185,35 @@ class BookRequestValidationTest extends TestCase
         $this->assertSame('9786047654321', $book->fresh()->isbn);
     }
 
-    public function test_store_saves_uploaded_cover(): void
+    public function test_store_and_update_save_cover_url(): void
     {
-        Storage::fake('public');
+        $this->post(route('books.store'), $this->validData(['cover_image_url' => 'https://example.com/bia.jpg']))
+            ->assertSessionHasNoErrors();
 
-        $this->post(route('books.store'), $this->validData([
-            'cover_image' => UploadedFile::fake()->image('bia.jpg'),
-        ]))->assertSessionHasNoErrors();
-
-        $cover = Book::firstOrFail()->cover_image_url;
-        $this->assertStringStartsWith(Book::COVER_DIR.'/', $cover);
-        Storage::disk('public')->assertExists($cover);
-    }
-
-    public function test_update_replaces_cover_and_deletes_old_file(): void
-    {
-        Storage::fake('public');
-        Storage::disk('public')->put('covers/cu.jpg', 'ảnh cũ');
-        $book = $this->createBook('9786041234567');
-        $book->update(['cover_image_url' => 'covers/cu.jpg']);
+        $book = Book::firstOrFail();
+        $this->assertSame('https://example.com/bia.jpg', $book->cover_image_url);
 
         $this->put(route('books.update', $book), $this->validData([
             'isbn' => $book->isbn,
-            'cover_image' => UploadedFile::fake()->image('moi.png'),
+            'cover_image_url' => 'https://example.com/moi.png',
         ]))->assertSessionHasNoErrors();
 
-        $newCover = $book->fresh()->cover_image_url;
-        $this->assertNotSame('covers/cu.jpg', $newCover);
-        Storage::disk('public')->assertExists($newCover);
-        Storage::disk('public')->assertMissing('covers/cu.jpg');
+        $this->assertSame('https://example.com/moi.png', $book->fresh()->cover_image_url);
     }
 
-    public function test_update_without_new_cover_keeps_current_file(): void
-    {
-        Storage::fake('public');
-        Storage::disk('public')->put('covers/cu.jpg', 'ảnh cũ');
-        $book = $this->createBook('9786041234567');
-        $book->update(['cover_image_url' => 'covers/cu.jpg']);
-
-        $this->put(route('books.update', $book), $this->validData(['isbn' => $book->isbn]))
-            ->assertSessionHasNoErrors();
-
-        $this->assertSame('covers/cu.jpg', $book->fresh()->cover_image_url);
-        Storage::disk('public')->assertExists('covers/cu.jpg');
-    }
-
-    public function test_forms_accept_cover_upload_and_lock_existing_isbn(): void
+    public function test_forms_offer_cover_url_input_and_lock_existing_isbn(): void
     {
         $book = $this->createBook('9786041234567');
 
         $this->get(route('books.create'))
             ->assertOk()
-            ->assertSee('enctype="multipart/form-data"', false)
-            ->assertSee('name="cover_image"', false)
+            ->assertSee('name="cover_image_url"', false)
+            ->assertDontSee('multipart/form-data', false)
             ->assertDontSee('readonly', false);
 
         $this->get(route('books.edit', $book))
             ->assertOk()
-            ->assertSee('name="cover_image"', false)
+            ->assertSee('name="cover_image_url"', false)
             ->assertSee('readonly', false);
     }
 
