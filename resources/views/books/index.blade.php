@@ -104,7 +104,7 @@
                         <div class="empty-state">
                             <div class="empty-icon"><i class="bi bi-journal-x" aria-hidden="true"></i></div>
                             <h3>{{ request()->hasAny(\App\Models\Book::FILTER_KEYS) ? 'Không tìm thấy sách phù hợp' : 'Chưa có sách nào' }}</h3>
-                            <p>{{ request()->hasAny(\App\Models\Book::FILTER_KEYS) ?'Hãy thử thay đổi từ khóa hoặc các điều kiện lọc để xem kết quả khác.' : 'Danh mục hiện chưa có dữ liệu. Bạn có thể bắt đầu bằng cách thêm sách mới.' }}</p>
+                            <p>{{ request()->hasAny(\App\Models\Book::FILTER_KEYS) ? 'Hãy thử thay đổi từ khóa hoặc các điều kiện lọc để xem kết quả khác.' : 'Danh mục hiện chưa có dữ liệu. Bạn có thể bắt đầu bằng cách thêm sách mới.' }}</p>
                             @if(request()->hasAny(\App\Models\Book::FILTER_KEYS))
                                 <a class="btn btn-outline-primary" href="{{ route('books.index') }}"><i class="bi bi-arrow-counterclockwise me-1"></i> Xóa bộ lọc</a>
                             @elseif($isAdmin)

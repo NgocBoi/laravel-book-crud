@@ -8,6 +8,7 @@ use App\Models\Author;
 use App\Models\Book;
 use App\Models\Category;
 use App\Models\Publisher;
+use App\Services\BookFilterService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\QueryException;
@@ -22,17 +23,14 @@ class BookController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request): View
+    public function index(Request $request, BookFilterService $bookFilterService): View
     {
-        $books = Book::with(['authors', 'categories', 'publisher'])
-            ->filter($request->only(Book::FILTER_KEYS))
-            ->latest('id')
-            ->paginate(10)
-            ->withQueryString();
-
-        $categories = Category::orderBy('name')->get(['id', 'name']);
-
-        return view('books.index', compact('books', 'categories'));
+        return view('books.index', [
+            'books' => $bookFilterService->paginate($request->only(Book::FILTER_KEYS)),
+            'authors' => Author::orderBy('name')->get(),
+            'categories' => Category::orderBy('name')->get(),
+            'publishers' => Publisher::orderBy('name')->get(),
+        ]);
     }
 
     /**
